@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<web-app id="SemanticTagServiceWebApp" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	
+	<display-name>Semantic Tag Service</display-name>
+		
+	<listener>
+  		<listener-class>com.ibm.lconn.core.web.util.config.startup.StartupConfigurator</listener-class> 
+  	</listener>
+
+    <filter>
+	<description></description>
+	<display-name>I18NFilter</display-name>
+	<filter-name>I18NFilter</filter-name>
+	<filter-class>com.ibm.lconn.core.web.util.lang.I18NFilter</filter-class>
+    </filter>
+
+   <filter-mapping>
+	<filter-name>I18NFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+    </filter-mapping>
+  
+    <servlet>
+      <display-name>RestServlet</display-name>
+      <servlet-name>RestServlet</servlet-name>
+      <servlet-class>com.ibm.connections.semtagframework.servlet.RestServlet</servlet-class>
+    </servlet> 	
+    <servlet-mapping>
+    	<servlet-name>RestServlet</servlet-name>
+    	<url-pattern>/rest/unsecure/*</url-pattern>
+    </servlet-mapping>
+</web-app>

@@ -1,0 +1,34 @@
+; you may want to add dirs parallel to sn.profiles or
+; change BUILD_HOME for copyrighting
+
+;[ROOT]/lwp/profiles.admin.scripts/**
+;[ROOT]/lwp/profiles.config.files/**
+;[ROOT]/lwp/profiles.core/**
+;[ROOT]/lwp/profiles.db/**
+;[ROOT]/lwp/profiles.ear/**
+;[ROOT]/lwp/profiles.events.publish.ejb/**
+;[ROOT]/lwp/profiles.examples/**
+;[ROOT]/lwp/profiles.migrate/**
+;[ROOT]/lwp/profiles.nicknames/**
+;[ROOT]/lwp/profiles.sched/**
+;[ROOT]/lwp/profiles.seedlist/**
+;[ROOT]/lwp/profiles.sn.install/**
+;[ROOT]/lwp/profiles.test/**
+;[ROOT]/lwp/profiles.web/**
+;[ROOT]/lwp/profiles.web.resources/**
+;[ROOT]/lwp/reference/**
+
+[ROOT]/lwp/build/**
+
+[ROOT]/lwp/logs/**
+
+[ROOT]/lwp/msgids/**
+
+[ROOT]/lwp/profiles.prereqs/**
+
+[ROOT]/lwp/profiles.tdi/serverapi/**
+
+; sample templates exclude from sn.infra
+;[ROOT]/lwp/sn.coreui/Web Content/templates/**
+;[ROOT]/lwp/sn.coreui/Web Content/templates/menu/**
+

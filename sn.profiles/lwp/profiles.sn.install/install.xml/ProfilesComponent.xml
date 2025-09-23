@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<iudd:iudd
+	xmlns:iudd="http://www.ibm.com/xmlns/prod/autonomic/solutioninstall/IUDD"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:OSRT="http://www.ibm.com/xmlns/prod/autonomic/resourcemodel/OS/resourcetypes"
+	xmlns:OSAT="http://www.ibm.com/xmlns/prod/autonomic/resourcemodel/OS/artifacttypes"
+	xmlns:J2EERT="http://www.ibm.com/xmlns/prod/autonomic/resourcemodel/J2EE/resourcetypes"
+	xsi:schemaLocation="http://www.ibm.com/xmlns/prod/autonomic/solutioninstall/IUDD ../iudd/iudd.xsd"
+	schemaVersion="2.0.0" buildID="112220" buildDate="2006-01-19T12:00:00">
+
+	<packageIdentity contentType="Component">
+		<name>profiles</name>
+		<version>1.0.0.0</version>
+		<displayName key="d0001" default="profiles" />
+		<manufacturer>
+			<displayName key="AC_01" default="IBM" />
+		</manufacturer>
+	</packageIdentity>
+
+	<topology>
+		<resource type="OSRT:OperatingSystem" id="OS"/>			
+	</topology>
+
+	<content xsi:type="iudd:RootIUContent">
+		<rootIU id="profiles">
+			<variables>
+				<parameters>
+					<parameter name="installLocation" defaultValue="/usr/profiles" />
+				</parameters>
+			</variables>
+			<SIU id="profilesJAR" targetRef="OS">
+				<identity>
+					<name>peoplepages_archive1</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Profiles archive 1"/>
+					<description key="keyInBundle" default="This archive contains the configuration of Profiles"/>
+				</identity>
+				<unit>
+					<installArtifact type="JAR" fileRef="profiles/profiles/profiles.jar">
+						<parameters>
+							<parameter name="installLocation" value="$(installLocation)"/>
+						</parameters>
+					</installArtifact>
+				</unit>				
+			</SIU>
+			<SCU id="transferDB" targetRef="OS">
+				<identity>
+					<name>Transfer Database</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Transfer Data to another database"/>
+					<description key="keyInBundle" default="This configuration task transfer data from one supported DBType to another and reconfigures WAS to use the new database"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="transfer-database"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="connectDB" targetRef="OS">
+				<identity>
+					<name>Connect Database</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Connect to another database"/>
+					<description key="keyInBundle" default="This configuration task reconfigures WAS to use a new database"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="connect-database"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="enableSecurityLDAP" targetRef="OS">
+				<identity>
+					<name>Enable Security LDAP</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Enables global security to LDAP"/>
+					<description key="keyInBundle" default="This configuration task enables WAS global security with LDAP"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="enable-security-ldap"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="setupDB" targetRef="OS">
+				<identity>
+					<name>Setup Database</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Setup Database"/>
+					<description key="keyInBundle" default="This configuration task creates bufferpools or tablespaces and does any other operation to setup a WKPLC database"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="setup-database"/>
+						</parameters>
+					</configArtifact>
+				</unit>			
+			</SCU>
+			<SCU id="createDB" targetRef="OS">
+				<identity>
+					<name>Create Database</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Create a new WKPLC database"/>
+					<description key="keyInBundle" default="This configuration task creates a new WKPLC compliant database"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="create-database"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="createear" targetRef="OS">
+				<identity>
+					<name>Create Ear</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Create an EAR"/>
+					<description key="keyInBundle" default="This configuration task creates an EAR object in WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="create-ear"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="removeear" targetRef="OS">
+				<identity>
+					<name>Remove Ear</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Uninstall an EAR"/>
+					<description key="keyInBundle" default="This configuration task uninstalls the specified EARs from WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="remove-ear"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="createjdbcprovider" targetRef="OS">
+				<identity>
+					<name>Create JDBC Provider</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Creates a JDBC Provider"/>
+					<description key="keyInBundle" default="This configuration task creates a JDBC Provider in WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="create-jdbc-provider"/>
+						</parameters>
+					</configArtifact>
+				</unit>			
+			</SCU>
+			<SCU id="removejdbcprovider" targetRef="OS">
+				<identity>
+					<name>Remove JDBC Provider</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Removes a JDBC Provider"/>
+					<description key="keyInBundle" default="This configuration task removes a JDBC Provider from WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="remove-jdbc-provider"/>
+						</parameters>
+					</configArtifact>
+				</unit>			
+			</SCU>
+			<SCU id="createdatasource" targetRef="OS">
+				<identity>
+					<name>Create DataSource</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Create a new DataSource"/>
+					<description key="keyInBundle" default="This configuration task creates a DataSource in WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="create-datasource"/>
+						</parameters>
+					</configArtifact>
+				</unit>			
+			</SCU>
+			<SCU id="removedatasource" targetRef="OS">
+				<identity>
+					<name>Remove DataSource</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Remove an existing DataSource"/>
+					<description key="keyInBundle" default="This configuration task removes an existing DataSource from WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="remove-datasource"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="createj2cauth" targetRef="OS">
+				<identity>
+					<name>Create J2C Auth</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Creates J2c AuthData"/>
+					<description key="keyInBundle" default="This configuration task creates the specified J2C authdata in WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="create-j2c-auth"/>
+						</parameters>
+					</configArtifact>
+				</unit>			
+			</SCU>
+			<SCU id="removej2cauth" targetRef="OS">
+				<identity>
+					<name>Remove J2C Auth</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Removes J2C AuthData"/>
+					<description key="keyInBundle" default="This configuration task removes the specified J2C authdata from WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="remove-j2c-auth"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="createwasvar" targetRef="OS">
+				<identity>
+					<name>Create WAS Variables</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Creates variables in WAS"/>
+					<description key="keyInBundle" default="This configuration task creates the specified variables in WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="create-was-variables"/>
+						</parameters>
+					</configArtifact>
+				</unit>			
+			</SCU>
+			<SCU id="removewasvar" targetRef="OS">
+				<identity>
+					<name>Remove Was Variables</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Removes variables from WAS"/>
+					<description key="keyInBundle" default="This configuration task removes the specified variables from WAS"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="remove-was-variables"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="postbasicconfig" targetRef="OS">
+				<identity>
+					<name>Post Basic Config</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Runs post config targets"/>
+					<description key="keyInBundle" default="This target aggregates post install operations"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="post-basic-config"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+			<SCU id="postuninstallbasicconfig" targetRef="OS">
+				<identity>
+					<name>Post Uninstall Basic Config</name>
+					<version>1.0.0.0</version>
+					<displayName key="keyInBundle" default="Runs post uninstall config targets"/>
+					<description key="keyInBundle" default="This target aggregates post uninstall operations"/>
+				</identity>
+				<unit>
+					<configArtifact type="ConfigEngine">
+						<parameters>
+							<parameter name="targetName" value="post-uninstall-basic-config"/>
+						</parameters>
+					</configArtifact>
+				</unit>				
+			</SCU>
+		</rootIU>
+	</content>
+
+</iudd:iudd>

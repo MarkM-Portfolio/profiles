@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2009, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<ReverseProxyConfig
+	xmlns="http://www.ibm.com/ventura/kareoke/rpfilter/1.0">
+	<!-- 
+		Please refer to the documentation in the sample rpfilter file contained in the rpfilter project.
+	-->
+
+	<!-- 
+	<matchRule filter="/home.do*"
+		responseSetter="time2Live" invalidator="null">
+		<options hours="6" />
+	</matchRule>
+	
+	<matchRule filter="/html/aboutView.do*"
+		responseSetter="time2Live" invalidator="null">
+		<options hours="6" />
+	</matchRule>
+	
+	<matchRule filter="/app/about*"
+		responseSetter="time2Live" invalidator="null">
+		<options hours="6" />
+	</matchRule>
+
+	<matchRule filter="/html/toolsView.do*"
+		responseSetter="time2Live" invalidator="null">
+		<options hours="6" />
+	</matchRule>
+
+	<matchRule filter="/*/simpleSearch.do?name=*"
+		responseSetter="time2Live" invalidator="time2Live">
+		<rsopts hours="6" />
+		<ivdopts hours="1" />
+	</matchRule>
+	
+	<matchRule filter="/*/simpleSearch.do?*"
+		responseSetter="time2Live" invalidator="null">
+		<rsopts hours="1" />
+		<ivdopts hours="1" />
+	</matchRule>
+	
+	<matchRule filter="/*/advancedSearch.do?*"
+		responseSetter="time2Live" invalidator="time2Live">
+		<rsopts minutes="30" />
+		<ivdopts minutes="30" />
+	</matchRule>
+	
+	<matchRule filter="/atom/search.do?name=*"
+		responseSetter="time2Live" invalidator="time2Live">
+		<rsopts hours="6" />
+		<ivdopts hours="1" />
+	</matchRule>
+	
+	<matchRule filter="/atom/search.do?*"
+		responseSetter="time2Live" invalidator="null">
+		<options minutes="5" />
+	</matchRule>
+	
+	<matchRule filter="/html/profileFullReportToChain.do*" responseSetter="time2Live" invalidator="time2Live">
+		<options hours="1"/>
+	</matchRule>
+	
+	<matchRule filter="/html/profileSameManager.do*" responseSetter="time2Live" invalidator="time2Live">
+		<options hours="1"/>
+	</matchRule>
+	
+	<matchRule filter="/html/profilePeopleManaged.do*" responseSetter="time2Live" invalidator="time2Live">
+		<options hours="1"/>
+	</matchRule>
+	
+	
+	<matchRule filter="/html/nameTypeahead.do*" responseSetter="time2Live" invalidator="time2Live">
+		<options hours="24"/>
+	</matchRule>
+	
+	<matchRule filter="/html/tagTypeahead.do*" responseSetter="time2Live" invalidator="time2Live">
+		<options seconds="10"/>
+	</matchRule>
+	-->
+		
+</ReverseProxyConfig>

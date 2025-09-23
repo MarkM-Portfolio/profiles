@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2016                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- DO NOT EDIT. reserved runtime file. see profiles-policyEXAMPLE.xml for a sample policy file -->
+	
+<config id="profiles-policy" xmlns="http://www.ibm.com/profiles-policy">
+	<!-- 
+	<features orgId="NN">
+	</features>
+	-->
+</config>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  	   xmlns:context="http://www.springframework.org/schema/context"
+  	   xsi:schemaLocation="
+  	   		http://www.springframework.org/schema/beans 
+  	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+  	   		http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	
+	<bean id="com.ibm.lconn.core.appext.spi.SNAXDataSource" 
+		  class="org.apache.commons.dbcp.BasicDataSource"
+		  destroy-method="close">
+		<property name="driverClassName">
+			<bean class="com.ibm.lconn.profiles.api.tdi.util.DBConnectionsHelper" factory-method="getDriverClassName"/>
+		</property>
+		<property name="url">
+			<bean class="com.ibm.lconn.profiles.api.tdi.util.DBConnectionsHelper" factory-method="getDBUrl"/>
+		</property>
+		<property name="username">
+			<bean class="com.ibm.lconn.profiles.api.tdi.util.DBConnectionsHelper" factory-method="getUsername"/>
+		</property>
+		<property name="password">
+			<bean class="com.ibm.lconn.profiles.api.tdi.util.DBConnectionsHelper" factory-method="getPassword"/>
+		</property>
+	</bean>
+	
+	<bean id="com.ibm.lconn.core.appext.spi.SNAXTransactionManager" 
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		  <property name="dataSource" ref="com.ibm.lconn.core.appext.spi.SNAXDataSource"/>
+	</bean>
+</beans>

@@ -1,0 +1,1600 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="fetcher.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>fetcher.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		This file contains the javascript code for an AJAX based
+ widget for Lotus Connections Profiles. This widget, Colleague Fetcher, fetches
+ friends from other networks, i.e. Beehive or Facebook.
+ <BR/><BR/><B>Author:</B> Scott Murphree<BR/>
+	
+</p>
+
+<hr>
+
+
+    <table border="1" cellpadding="3" cellspacing="0" width="100%">
+    <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+    <td colspan=2><font size="+2">
+    
+        <b>Class Summary</b>
+    
+    </font></td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="Fetcher.html">Fetcher</a></b></td>
+    <td>The encapsulation of the Fetcher widget
+ </td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="MessageDialog.html">MessageDialog</a></b></td>
+    <td>The message dialog used for setting the default invitation message as well
+ as individual messages.</td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="Network.html">Network</a></b></td>
+    <td>Represents a network from which you can fetch friends.</td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="NetworkList.html">NetworkList</a></b></td>
+    <td>A list of networks that is convertable to a DOM Select element.</td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="Person.html">Person</a></b></td>
+    <td>Represents a Person, contains useful information.</td>
+    </tr>
+    
+    </table>
+    <hr/> 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+	<a name="method_summary"><!-- --></a>
+	<table border="1" cellpadding="3" cellspacing="0" width="100%">
+		<tr bgcolor="#CCCCFF" class="TableHeadingColor">
+			<td colspan=2>
+				<font size="+2">
+					<b>Method Summary</b>
+				</font>
+			</td>
+		</tr>
+	
+		
+		   <tr bgcolor="white" class="TableRowColor">
+		      <td align="right" valign="top" width="1%">
+			 <font size="-1">
+			    <code>static&nbsp;Object</code>
+			 </font>
+		      </td>
+		      <td>
+			 <code>
+			    <b>
+			       <a href="GLOBALS.html#!s!elem">elem</a></b>(name, attrs, style, text)
+			 </code>
+			 <br>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 Creates a DOM element
+		      </td>
+		   </tr>
+		
+		   <tr bgcolor="white" class="TableRowColor">
+		      <td align="right" valign="top" width="1%">
+			 <font size="-1">
+			    <code>static&nbsp;void</code>
+			 </font>
+		      </td>
+		      <td>
+			 <code>
+			    <b>
+			       <a href="GLOBALS.html#!s!pp">pp</a></b>(ob)
+			 </code>
+			 <br>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 
+		      </td>
+		   </tr>
+		
+	
+	</table>
+    <p>
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * <span class="attrib">@fileoverview</span> This file contains the javascript code for an AJAX based
+ * widget for Lotus Connections Profiles. This widget, Colleague Fetcher, fetches
+ * friends from other networks, i.e. Beehive or Facebook.
+ * <span class="attrib">@author</span> Scott Murphree
+ */</span>
+
+<span class="comment">// debug toggle; enables/disables the logging functions</span>
+var debug = true;
+
+<span class="comment">// Fake console if this is IE so it doesn't crash, or if debug is disabled</span>
+<span class="reserved">if</span> (!window.console || !debug) {
+	window.console = {
+		log: <span class="reserved">function</span>() {},
+		error: <span class="reserved">function</span>() {}
+	};
+}
+
+<span class="comment">/**
+ * Creates a DOM element
+ * <span class="attrib">@param</span> name The type of the DOM Element (div, p, etc)
+ * <span class="attrib">@param</span> attrs An object containing the Element attributes as properties
+ * <span class="attrib">@param</span> style An object containing the inline CSS properties
+ * <span class="attrib">@param</span> text Any innerHTML
+ */</span>
+<span class="reserved">function</span> elem(name, attrs, style, text) {
+    var e = document.createElement(name);
+    <span class="reserved">if</span> (attrs) {
+        <span class="reserved">for</span> (key in attrs) {
+            <span class="reserved">if</span> (key == <span class="literal">'class'</span>) {
+                e.className = attrs[key];
+            } <span class="reserved">else</span> <span class="reserved">if</span> (key == <span class="literal">'id'</span>) {
+                e.id = attrs[key];
+            } <span class="reserved">else</span> {
+                e.setAttribute(key, attrs[key]);
+            }
+        }
+    }
+    <span class="reserved">if</span> (style) {
+        <span class="reserved">for</span> (key in style) {
+            e.style[key] = style[key];
+        }
+    }
+    <span class="reserved">if</span> (text) {
+        e.appendChild(document.createTextNode(text));
+    }
+    <span class="reserved">return</span> e;
+}
+
+<span class="comment">/**
+ * <span class="attrib">@class</span> Static data useful to all Fetcher widgets
+ * Resource strings would be better suited residing in a configuration file somewhere
+ */</span>
+var fetcherData = {
+	beehiveURL: lconn.core.api.getProxifiedURL(<span class="literal">"http://beehive.cambridge.ibm.com/beehive/"</span>),
+	fringeURL: lconn.core.api.getProxifiedURL(<span class="literal">"http://fringe.tap.ibm.com/"</span>),
+	profilesURL: <span class="literal">"/profiles/"</span>,
+	profileLinkHTML: <span class="literal">'&lt;a class="fn url" href="javascript:void(0)" onclick="CALLER.personClick(\'</span>UID\<span class="literal">')"&gt;NAME&lt;/a&gt;&lt;span class="email" style="display: none;"&gt;EMAIL&lt;/span&gt;'</span>
+};
+
+<span class="comment">/**
+ * <span class="attrib">@class</span> A collection of utilities for use by Fetcher
+ */</span>
+var fetcherUtils = {
+
+	<span class="comment">/**
+	 * Comparison function for Person
+	 *
+	 * <span class="attrib">@param</span> a Person 1
+	 * <span class="attrib">@param</span> b Person 2
+	 * <span class="attrib">@return</span> -1 if a &lt; b, 1 if a &gt; b
+	 */</span>
+	comparePersons: <span class="reserved">function</span> (a, b) {
+		<span class="reserved">return</span> a.name&gt;b.name?1:a.name&lt;b.name?-1:0;
+	},
+
+
+  <span class="comment">/**
+   * Returns an img tag pointing the given file in the standard directory.
+   * <span class="attrib">@param</span> file The filename (including extension)
+   * <span class="attrib">@param</span> id The id of the image
+   */</span>
+  imgTag: <span class="reserved">function</span>(file, id) {
+      <span class="reserved">if</span> (id) {
+        id = <span class="literal">'id='</span> + id + <span class="literal">''</span>;
+      } <span class="reserved">else</span> {
+        id = <span class="literal">''</span>;
+      }
+      <span class="reserved">return</span> <span class="literal">'&lt;img '</span> + id + <span class="literal">' src="'</span> + fetcherDir + <span class="literal">'img/'</span> + file + <span class="literal">'" /&gt;'</span>;
+  },
+  
+  <span class="comment">/**
+   * Parses an XML string into a DOM Document object
+   * The string must be valid XML
+   * <span class="attrib">@param</span> text The XML string
+   */</span>
+  parseXML: <span class="reserved">function</span> (text) {
+  	<span class="comment">//Internet Explorer</span>
+  	try {
+  		xmlDoc=new ActiveXObject(<span class="literal">"Microsoft.XMLDOM"</span>);
+  		xmlDoc.async=<span class="literal">"true"</span>;
+  		xmlDoc.loadXML(text);
+  	}
+  	catch(error0) {
+  		<span class="comment">//Firefox, Mozilla, Opera, etc.</span>
+  		try {
+  			parser=new DOMParser();
+  			xmlDoc=parser.parseFromString(text,<span class="literal">"text/xml"</span>);
+  		}
+  		catch(error1) {alert(error1.message);}
+  	}
+  	<span class="reserved">return</span> xmlDoc;
+  },
+
+	<span class="comment">/**
+	 * Uses dojo.xhrGet to send GET request
+	 *
+	 * <span class="attrib">@param</span> url The URL to make the request to
+	 * <span class="attrib">@param</span> params The parameters for the url
+	 * <span class="attrib">@param</span> cont The continuation (callback) function
+	 * <span class="attrib">@param</span> caller The Fetcher object making the request
+	 * <span class="attrib">@param</span> reqHeaders Any headers (content-type, auth, etc) to include in the request
+	 */</span>
+	getXML: <span class="reserved">function</span> (url, params, cont, caller, reqHeaders) {
+    paramString = <span class="literal">'?'</span>;
+    <span class="reserved">if</span> (params.charAt) {
+      paramString += params;
+    } <span class="reserved">else</span> {
+      <span class="reserved">for</span> (p in params) {
+        paramString += p + <span class="literal">'='</span> + params[p] + <span class="literal">'&amp;'</span>;
+      }
+    }
+		dojo.xhrGet({
+			handleAs: <span class="literal">'xml'</span>,
+			url: url + paramString,
+			load: <span class="reserved">function</span>(data, ioArgs) {
+
+        xml = ioArgs.xhr.responseXML;
+        txt = ioArgs.xhr.responseText;
+        <span class="reserved">if</span> (xml.childNodes.length === 0) {
+            console.log(<span class="literal">"parse failure, attempting fix"</span>);
+            txt = txt.replace(/xmlns:xml=/, <span class="literal">"xmlns:ignore="</span>);
+            xml = fetcherUtils.parseXML(txt);
+            console.log(<span class="literal">"Parse completed. Nodes: "</span> + xml.childNodes.length);
+        }
+        <span class="comment">//console.log(ioArgs.xhr.responseText);</span>
+        cont(caller, xml);
+      },
+			error: <span class="reserved">function</span>(data, ioArgs) {
+				errorObj = data;
+				console.error(<span class="literal">"Error in GET Request, status "</span> + ioArgs.xhr.statusText + <span class="literal">":\n"</span>);
+   	    fetcherUtils.printProps(data, <span class="literal">'Error'</span>);
+				caller.error(data, ioArgs.xhr.status);
+			},
+			headers: reqHeaders
+		});
+		reqHeaders = {};
+	},
+
+  <span class="comment">/**
+   * Extracts a parameter from the GET parameters in a URL
+   * <span class="attrib">@param</span> name The paramater name
+   * <span class="attrib">@param</span> url The URL to parse
+   */</span>
+	extractFromUrl: <span class="reserved">function</span> (name, url) {
+		name = name.replace(/[\[]/,<span class="literal">"\\\["</span>).replace(/[\]]/,<span class="literal">"\\\]"</span>);
+		regexS = <span class="literal">"[\\?&amp;]"</span>+name+<span class="literal">"=([^&amp;#]*)"</span>;
+		regex = new RegExp( regexS );
+		results = regex.exec( url );
+		<span class="reserved">if</span>( results === null ) {
+			<span class="reserved">return</span> <span class="literal">""</span>;
+    } <span class="reserved">else</span> {
+			<span class="reserved">return</span> results[1];
+		}
+	},
+
+<span class="comment">/**
+ * Creates a compatible Request object
+ * <span class="attrib">@return</span> The Request object
+ * <span class="attrib">@type</span> XMLHttpRequest, ActiveXObject
+ *
+ */</span>
+  createXHRequest: <span class="reserved">function</span> () {
+  	req = false;
+  	<span class="reserved">if</span>(window.XMLHttpRequest &amp;&amp; !(window.ActiveXObject)) {
+    	try {
+  			req = new XMLHttpRequest();
+  			console.log(<span class="literal">"using XMLHttpRequest"</span>);
+      } catch(error0) {
+			  req = false;
+      }
+    <span class="comment">// branch for IE/Windows ActiveX version</span>
+    } <span class="reserved">else</span> <span class="reserved">if</span>(window.ActiveXObject) {
+       	try {
+        	req = new ActiveXObject(<span class="literal">"Msxml2.XMLHTTP"</span>);
+        	console.log(<span class="literal">"using Msxml2.XMLHTTP"</span>);
+      	} catch(error1) {
+        	try {
+          		req = new ActiveXObject(<span class="literal">"Microsoft.XMLHTTP"</span>);
+          		console.log(<span class="literal">"using Microsoft.XMLHTTP"</span>);
+        	} catch(error2) {
+          		req = false;
+        	}
+		    }
+    }
+    <span class="reserved">return</span> req;
+  },
+
+
+  <span class="comment">/**
+   * Sends a POST message
+   * <span class="attrib">@param</span> args An object with properties describing the message
+   *
+   */</span>
+  xhrPost: <span class="reserved">function</span> (args) {
+    <span class="reserved">if</span> (args.async !== false &amp;&amp; args.async !== true) { args.async = true; }
+    <span class="reserved">if</span> (!args.xhr) {
+  		args.xhr = fetcherUtils.createXHRequest();
+  		args.xhr.onreadystatechange = <span class="reserved">function</span>() {
+  			fetcherUtils.xhrPost(args);
+  		};
+  		args.xhr.open(<span class="literal">'POST'</span>, args.url, args.async);
+  		args.xhr.setRequestHeader(<span class="literal">"Content-type"</span>, args.contentType ? args.contentType : <span class="literal">'text'</span>);
+      args.xhr.setRequestHeader(<span class="literal">"Content-length"</span>, args.content.length);
+      args.xhr.setRequestHeader(<span class="literal">"Connection"</span>, <span class="literal">"close"</span>);
+  		args.xhr.send(args.content);
+  	} <span class="reserved">else</span> {
+  		<span class="reserved">if</span> (args.xhr.readyState === 4) {
+  		  <span class="reserved">if</span> (args.handleAs == <span class="literal">"xml"</span>) {
+  			   <span class="reserved">if</span> (args.xhr.getResponseHeader(<span class="literal">"Content-Type"</span>).match(<span class="literal">"xml"</span>)) {
+  			     args.load(args.xhr.responseXML, args);
+           } <span class="reserved">else</span> {
+              console.log(<span class="literal">"non-xml response: "</span> + args.xhr.responseText);
+             args.load(fetcherUtils.parseXML(args.xhr.responseText), args);
+           }
+  			} <span class="reserved">else</span> {
+           args.load(request.responseText, args);
+        }
+  		}
+  	}
+  },
+
+  <span class="comment">/**
+   * Sets a cookie containing login information for the given network. Uses
+   * secure connections only, data encoded in base64.
+   * <span class="attrib">@param</span> networkName The name of the network
+   * <span class="attrib">@param</span> info An object containing information to save
+   */</span>
+  setUserInfo: <span class="reserved">function</span> (networkName, info) {
+    try {
+      dojo.cookie(<span class="literal">"fetcher."</span> + networkName, btoa(dojo.toJson(info)), {expires: 5, path: <span class="literal">'/'</span>});
+    } catch (e) {
+      console.error(<span class="literal">"Unable to set cookie: "</span> + e);
+    }
+  },
+
+  <span class="comment">/**
+   * Retrieves login information from a cookie based on the network name.
+   * <span class="attrib">@param</span> networkName The name of the network.
+   */</span>
+  getUserInfo: <span class="reserved">function</span> (networkName) {
+    try {
+      cookie = dojo.cookie(<span class="literal">"fetcher."</span> + networkName);
+    } catch (e) {
+      console.log(<span class="literal">"Unable to retrieve cookie: "</span> + e);
+      userinfo = {};
+    }
+    <span class="reserved">if</span> (cookie) {
+      userinfo = dojo.fromJson(atob(cookie));
+    } <span class="reserved">else</span> {
+      userinfo = null;
+    }
+    <span class="reserved">return</span> userinfo;
+  },
+
+  <span class="comment">/**
+   * Prints all the properties of an object for debugging
+   * <span class="attrib">@param</span> ob The object
+   * <span class="attrib">@param</span> name The name of the object
+   */</span>
+	printProps: <span class="reserved">function</span> (ob, name) {
+		<span class="reserved">for</span> (p in ob) {
+			console.log(name + <span class="literal">'.'</span> + p + <span class="literal">" = "</span> + ob[p]);
+		}
+	}
+};
+
+<span class="comment">/**
+ * <span class="attrib">@class</span> Represents a Person, contains useful information.
+ */</span>
+<span class="reserved">function</span> Person (name, email) {
+
+	<span class="comment">/**
+	 * This Person's name
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	<span class="reserved">this</span>.name = name;
+
+	<span class="comment">/**
+	 * The primary email address of this Person
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	<span class="reserved">this</span>.email = email;
+
+	<span class="comment">/**
+	 * The secondary email address of this Person
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	<span class="reserved">this</span>.altEmail = null;
+
+	<span class="comment">/**
+	 * The Connections UID of this Person
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	<span class="reserved">this</span>.uid = null;
+
+	<span class="comment">/**
+	 * Whether this Person is already a Colleague
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	<span class="reserved">this</span>.colleague = false;
+
+	<span class="comment">/**
+	 * Overrides the default invitation message if set.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	<span class="reserved">this</span>.message = null;
+
+	<span class="comment">/**
+	 * Whether this person should be invited
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	<span class="reserved">this</span>.invite = true;
+
+}
+
+<span class="comment">/**
+ * <span class="attrib">@class</span> The message dialog used for setting the default invitation message as well
+ * as individual messages.
+ *
+ * <span class="attrib">@param</span> parent The Fetcher that this MessageDialog is serving
+ */</span>
+<span class="reserved">function</span> MessageDialog (parent) {
+
+	<span class="reserved">this</span>.parent = parent;
+
+	<span class="reserved">this</span>.mainDiv = elem(<span class="literal">"div"</span>,
+	 { id: parent.getId(<span class="literal">"messageDialog"</span>),
+	   <span class="literal">'class'</span>: <span class="literal">"messageDialog"</span> });
+
+	form = elem(<span class="literal">"form"</span>,
+	 { id: parent.getId(<span class="literal">"invitation"</span>),
+	   <span class="literal">'class'</span>: <span class="literal">"lotusForm"</span> },
+   { <span class="literal">'margin'</span>: <span class="literal">'10px'</span> } );
+
+  <span class="comment">// Header</span>
+  <span class="reserved">this</span>.header = elem(<span class="literal">'div'</span>, {}, {<span class="literal">'backgroundColor'</span>: <span class="literal">'#F1F5F9'</span>});
+  <span class="reserved">this</span>.header.innerHTML = fetcherUtils.imgTag(<span class="literal">'mail.png'</span>);
+	<span class="reserved">this</span>.invitationLabel = elem(<span class="literal">'span'</span>,
+    { <span class="literal">'title'</span>: <span class="literal">'Invitation message field'</span> },
+    { <span class="literal">'fontWeight'</span>: <span class="literal">'bold'</span> });
+	<span class="reserved">this</span>.header.appendChild(<span class="reserved">this</span>.invitationLabel);
+  
+  <span class="comment">// Invitation message text area</span>
+	<span class="reserved">this</span>.invitationText = elem(<span class="literal">'textarea'</span>,
+    { id: parent.getId(<span class="literal">"invitation_text"</span>),
+      name: parent.getId(<span class="literal">"invitation_text"</span>),
+	    rows: 5 },
+    { width: <span class="literal">"99%"</span>,
+      fontFamily: <span class="literal">"arial"</span> });
+
+  <span class="comment">// Help section</span>
+  <span class="reserved">this</span>.defaultHelp = <span class="literal">'If you want to edit the invitation for individual colleagues, click on their name'</span>;
+  <span class="reserved">this</span>.indivHelp = <span class="literal">'If you want to edit the invitation for All Colleagues who don\'</span>t have an individual message, click on <span class="literal">' + parent.defaultMessager.innerHTML;
+  this.helpSection = elem('</span>table<span class="literal">', {}, {'</span>marginBottom<span class="literal">': '</span>1em<span class="literal">'});
+  row = this.helpSection.insertRow(0);
+  row.insertCell(0).innerHTML = fetcherUtils.imgTag('</span>info.png<span class="literal">');
+  this.help = row.insertCell(1);
+  this.help.innerHTML = this.indivHelp;
+  
+  // Buttons
+	this.buttons = elem("div",
+	 {'</span>class<span class="literal">': '</span>lotusBtnContainer<span class="literal">'},
+	 {textAlign: '</span>left<span class="literal">'});
+
+	this.mainDiv.appendChild(this.header);
+	this.mainDiv.appendChild(form);
+	
+	form.appendChild(this.invitationText);
+	form.appendChild(this.helpSection);
+	form.appendChild(this.buttons);
+
+	saveBtnHtml = '</span>&lt;input type=button class=<span class="literal">"lotusBtn lotusBtnSpecial"</span> value=<span class="literal">"Save Message"</span> onclick=<span class="literal">' + parent.getId("messageDialog.save()") + '</span> /&gt;<span class="literal">';
+	cancelHtml = '</span>&lt;a href=<span class="literal">"javascript:void(0);"</span> onclick=<span class="literal">' + parent.getId("messageDialog.close()") + '</span> &gt;cancel&lt;/a&gt;<span class="literal">';
+	
+	this.buttons.innerHTML = saveBtnHtml + '</span>&amp;nbsp;&amp;nbsp;<span class="literal">' + cancelHtml;
+
+	/**
+	 * The default message that is used if there is no individual message for a
+	 * an invitee
+	 */
+	this.defaultMessage = "I\'</span>d like to add you to my Connections colleagues list.<span class="literal">";
+
+	/**
+	 * Displays the message dialog
+	 *
+	 * @param person The invitee to set the message for. If null, then the default message is set
+	 */
+	this.show = function( person ) {
+
+		this.person = person;
+		msg = this.defaultMessage;
+		if ( this.person === null ) {
+			this.invitationLabel.innerHTML = 'Set the invitation for &lt;span style="</span>color: #1BA1FA;<span class="literal">"&gt;All My Colleagues&lt;/span&gt;';
+			this.help.innerHTML = this.defaultHelp;
+		} else {
+			this.invitationLabel.innerHTML = 'Set the invitation for &lt;span style="</span>color: #1BA1FA;<span class="literal">"&gt;' + this.person.name + '&lt;/span&gt;';
+			this.help.innerHTML = this.indivHelp;
+			if (this.person.message) {
+				this.invitationLabel.innerHTML += '&lt;span class="</span>exists-notify<span class="literal">"&gt; (has message)&lt;/span&gt;';
+				msg = this.person.message;
+			}
+		}
+
+		this.invitationText.value = msg;
+
+		document.body.appendChild(this.mainDiv);
+
+		// Set the position, centered
+		this.mainDiv.style.left = (document.documentElement.clientWidth / 2 - this.mainDiv.offsetWidth / 2) + "</span>px<span class="literal">";
+		//void (
+    this.mainDiv.style.top = (document.documentElement.clientHeight / 2 - this.mainDiv.offsetHeight / 2) + "</span>px<span class="literal">"; //);
+	};
+
+	/**
+	 * Saves the message for the selected invitee
+	 */
+	this.save = function() {
+		if (this.person === null) {
+			this.defaultMessage = this.invitationText.value;
+			this.invitationLabel.innerHTML = 'Default message saved!';
+		} else {
+			this.person.message = this.invitationText.value;
+			this.invitationLabel.innerHTML = 'Message saved for &lt;span class="</span>name<span class="literal">"&gt;' + this.person.name + '&lt;/span&gt;!';
+		}
+	};
+
+	/**
+	 * Closes the dialog
+	 */
+	this.close = function() {
+		document.body.removeChild(this.mainDiv);
+
+	};
+}
+
+/**
+ * @class Represents a network from which you can fetch friends.
+ *
+ * @param name The name of the network
+ */
+function Network(name) {
+
+	/**
+	 * The name of the network
+	 * @type string
+	 */
+	this.name = name;
+  
+  // Interface functions, implemented by individual modules
+  this.showLogin = null;
+  this.getFriends = function(caller) {};
+  
+	/**
+	 * Yields an Option element for this network.
+	 * @type DOM_Option
+	 */
+	this.toOption = function () {
+		option = document.createElement("</span>option<span class="literal">");
+		option.network = this;
+		option.innerHTML = this.name;
+		return option;
+	};
+
+}
+
+/**
+ * @class A list of networks that is convertable to a DOM Select element.
+ */
+function NetworkList() {
+
+	/**
+	 * The list of networks
+	 * @type Array
+	 */
+	this.nets = [];
+
+	/**
+	 * Yields a Select element for the networks
+	 *
+	 * @param id The id for the select element
+	 * @type DOM_Select
+	 * @return The
+	 */
+	this.toSelect = function(id) {
+		select = document.createElement("</span>select<span class="literal">");
+		select.id = id;
+		select.style.width = "</span>100%<span class="literal">";
+		for (net = 0; net &lt; this.nets.length; ++net) {
+			select.appendChild(this.nets[net].toOption());
+		}
+		return select;
+	};
+
+}
+
+var Fetcher_networks = new NetworkList();
+
+/**
+ * @class The encapsulation of the Fetcher widget
+ * @param title The title of the widget
+ * @param id_prefix The prefix for html component ids
+ */
+function Fetcher (id_prefix) {
+
+	/**
+	 * The identity prefix for html components
+	 * @type string
+	 */
+	this.idp = id_prefix;
+
+  /**
+   * Only true when a colleague list has been retrieved
+   * and is currently displayed, or is being retrieved.
+   */
+  this.loggedIn = false;
+  
+	/**
+	 * Returns the name/prefix for the Fetcher object
+	 * @param rVal The r-value, if any
+	 */
+	this.getId = function (rVal) {
+		if (rVal) {
+			return this.idp + "</span>.<span class="literal">" + rVal;
+		} else {
+			return this.idp;
+		}
+	};
+
+	/**
+	 * The authenticated user
+	 * @type Person
+	 */
+	this.user = new Person();
+
+  // Get the authenticated user ID
+	this.user.uid = lconn.profiles.api.getLoggedInUserUid();
+
+	/**
+	 * The list of friends from another network
+	 * @type string
+	 */
+	this.friends = [];
+
+	/**
+	 * Toggle variable for list checkboxes
+	 */
+	this.allCheck = true;
+
+	/**
+	 * The iterator for the friend list
+	 * @type int
+	 */
+	this.friendIter = 0;
+
+	/**
+	 * Searches the friends array for a Person with the given id
+	 * @param id The UID of the person to search for
+	 * @return the Person with the id if it exists, otherwise null
+	 * @type Person
+	 */
+	this.friendByID = function (id) {
+		for (fiter in this.friends) {
+			if (this.friends[fiter].uid == id) {
+				return this.friends[fiter];
+			}
+		}
+		return null;
+	};
+
+
+  /**
+   * Displays an error message in the UI
+   * @param data The message
+   *
+   */
+	this.error = function (error, status) {
+		this.toggleLoading(false);
+		if (status === 401 || status === 403 || status === 501) {
+      error = "</span>Login failed. Try again.<span class="literal">";
+    }
+		this.loadError.innerHTML = error;
+		this.loadError.style.display = "</span><span class="literal">";
+    // chances are the credentials are wrong
+    if (this.curNetwork().showLogin) {
+      this.curNetwork().showLogin(this);
+    }
+	};
+
+	/**
+	 * Searches Profiles for the friends with the given email.
+	 *
+	 * @param field The field to search on
+	 * @param person The person to search for
+	 * @param index The index of the person to search for
+	 */
+	this.searchProfiles = function (field, index) {
+    if (field) { this.searchBy = field; }
+    // If index is zero then start at 0.
+    if (index === 0) { this.friendIter = 0; }
+    params = new String(this.searchBy + '=' + this.friends[this.friendIter][this.searchBy]);
+    params.isString = true;
+    console.log("</span>Searching Profiles: <span class="literal">" + params);
+		fetcherUtils.getXML(
+			fetcherData.profilesURL + 'atom/search.do',
+			params,
+			this.profileMatch,
+			this);
+	};
+
+	/**
+	 * Parses profile data from a profile search result list
+	 * @param data The XML data containing the search results
+	 * @param person If there is only one expected result, the data is recorded
+	 *     in person.
+	 */
+	this.parseProfiles = function(data, person) {
+    //console.log("</span>parseProfiles nodes: <span class="literal">" + data.childNodes.length);
+    results = [];
+    entries = data.getElementsByTagName("</span>span<span class="literal">");
+    var classAtt;
+    var txt;
+    
+		for (p=0; p&lt;entries.length; ++p) {
+      
+      classAtt = entries[p].getAttribute("</span>class<span class="literal">");
+			if (classAtt == "</span>vcard<span class="literal">") {
+        
+        if (!person) { person = new Person(); }
+
+  			el = entries[p].firstChild;
+  			while (el !== null) {
+          classAtt = null;
+          txt = null;
+
+          if ((el.childNodes.length === 1) &amp;&amp; (el.firstChild.attributes)) {
+            classAtt = el.firstChild.getAttribute("</span>class<span class="literal">");
+            txt = el.firstChild.text ? el.firstChild.text : el.firstChild.textContent;
+            //console.log("</span>class: <span class="literal">" + classAtt + "</span>, <span class="literal">" + txt);
+            if (classAtt === "</span>email<span class="literal">") {
+              person.email = txt;
+            } else
+            if (classAtt === "</span>fn url<span class="literal">") {
+              person.name = txt;
+            } else
+            if (classAtt === "</span>photo<span class="literal">") {
+              person.photo = el.firstChild.src;
+            }
+            if (classAtt === "</span>organization-unit<span class="literal">") {
+              person.dept = txt;
+            }
+          } else {
+            classAtt = el.getAttribute("</span>class<span class="literal">");
+            txt = el.text ? el.text : el.textContent;
+            //console.log("</span>f <span class="literal">" + classAtt + "</span>, <span class="literal">" + txt);
+            if (classAtt === "</span>x-profile-key<span class="literal">") {
+              person.key = txt;
+            } else
+            if (classAtt === "</span>x-profile-uid<span class="literal">") {
+              person.uid = txt;
+            } else
+            if (classAtt === "</span>x-manager-uid<span class="literal">") {
+              person.managerUid = txt;
+            } else
+            if (classAtt === "</span>x-is-manager<span class="literal">") {
+              person.isManager = txt;
+            } else
+            if (classAtt === "</span>x-groupwareMail<span class="literal">") {
+              person.altEmail = txt;
+            } else
+            if (classAtt === "</span>title<span class="literal">") {
+              person.title = txt;
+            } else
+            if (classAtt.match("</span>postal<span class="literal">")) {
+
+              child = el.firstChild;
+              while (child !== null) {
+                if (child.getAttribute("</span>class<span class="literal">") === "</span>locale<span class="literal">") {
+                  person.location = child.text ? child.text : child.textContent;
+                }
+                child = child.nextSibling;
+              }
+            }
+          }
+
+          el = el.nextSibling;
+        }
+        results.push(person);
+        person = null;
+		  }
+		}
+		return results;
+  };
+
+	/**
+	 * Processes Profiles search results for friend matches
+	 * @param caller The Fetcher widget in control
+	 * @param response The result data from the search (xml)
+	 *
+	 */
+	this.profileMatch = function (caller, response) {
+
+		caller.loading(caller.friendIter/caller.friends.length);
+
+    found = caller.parseProfiles(response, caller.friends[caller.friendIter]);
+    
+    if (found.length === 0) {
+      caller.friends[caller.friendIter].invite = false;
+			caller.friends[caller.friendIter].colleague = false;
+			console.log("</span>Fetcher.profileMatch: Couldn<span class="literal">'t find on Profiles: " + caller.friends[caller.friendIter].name);
+    } else {
+      caller.friends[caller.friendIter] = found[0];
+      caller.friends[caller.friendIter].invite = true;
+			caller.friends[caller.friendIter].colleague = false;
+    }
+
+		++caller.friendIter;
+
+		// If we'</span>ve gone through all the fetched friends,
+		<span class="comment">// determine which ones are already colleagues</span>
+		<span class="reserved">if</span> (caller.friendIter == caller.friends.length) {
+			caller.getColleagues(caller.user.uid);
+		} <span class="reserved">else</span> {
+			<span class="comment">// Continue search</span>
+			<span class="reserved">if</span> (caller.friendIter &lt; caller.friends.length) {
+
+				caller.searchProfiles();
+
+      }
+		}
+	};
+
+	<span class="comment">/**
+	 * Called when a Profile link is clicked
+	 */</span>
+	<span class="reserved">this</span>.personClick = <span class="reserved">function</span> (uid) {
+		p = <span class="reserved">this</span>.friendByID(uid);
+		<span class="reserved">if</span> (!p.colleague) {
+			<span class="reserved">this</span>.messageDialog.show(p);
+		}
+
+	};
+
+	<span class="comment">/**
+	 * Displays the profile matches
+	 */</span>
+	<span class="reserved">this</span>.displayProfileMatches = <span class="reserved">function</span> () {
+
+		console.log(<span class="literal">"Fetcher.displayProfileMatches: got "</span> + <span class="reserved">this</span>.friends.length + <span class="literal">" friends."</span>);
+
+    <span class="reserved">this</span>.networkTable.style.borderBottom = <span class="literal">""</span>;
+    
+		<span class="reserved">this</span>.toggleLoading(false);
+    <span class="reserved">this</span>.resultContainer.style.display = <span class="literal">""</span>;
+    
+		<span class="reserved">this</span>.friends.sort(fetcherUtils.comparePersons);
+		<span class="comment">//list = document.getElementById('fetcher.list');</span>
+		<span class="reserved">for</span> (i = 0; i &lt; <span class="reserved">this</span>.friends.length; ++i) {
+
+			<span class="reserved">if</span> (<span class="reserved">this</span>.friends[i].key) {
+				<span class="comment">// Display info</span>
+
+				checkchange = <span class="reserved">this</span>.getId(<span class="literal">'friends['</span> + i + <span class="literal">']'</span>) + <span class="literal">'.invite=this.checked '</span>;
+
+				<span class="reserved">if</span> (<span class="reserved">this</span>.friends[i].colleague) {
+					check = fetcherUtils.imgTag(<span class="literal">'person.png'</span>) + <span class="literal">' '</span>;
+				} <span class="reserved">else</span> {
+  				check =
+  					<span class="literal">'&lt;input type="checkbox" checked '</span> +
+  						<span class="literal">'onchange='</span> + checkchange +
+  						<span class="literal">'name="invite-checkbox" '</span> +
+  						<span class="literal">'title="Un-check if you don\'</span>t want to invite <span class="reserved">this</span> person to be your Colleague<span class="literal">"&gt; ';
+       }
+
+				personSpan = document.createElement("</span>div<span class="literal">");
+				personSpan.className = "</span>fetcherPerson<span class="literal">";
+				vcard = document.createElement("</span>span<span class="literal">");
+				vcard.className = "</span>vcard<span class="literal">";
+				if (!this.friends[i].colleague) {
+					vcard.title = "</span>Click to change the invitation message <span class="reserved">for</span> <span class="literal">" + this.friends[i].name;
+				} else {
+					vcard.title = this.friends[i].name + "</span> is already your colleague.<span class="literal">";
+				}
+				profileLink = fetcherData.profileLinkHTML
+          .replace(/CALLER/, this.getId())
+          .replace(/UID/, this.friends[i].uid)
+          .replace(/NAME/, this.friends[i].name)
+          .replace(/EMAIL/, this.friends[i].email);
+
+				vcard.innerHTML = profileLink;
+				personSpan.id = this.getId("</span>vcard_<span class="literal">" + this.friends[i].uid);
+				personSpan.innerHTML = check;
+				personSpan.appendChild(vcard);
+
+				personSpan.style.marginBottom = "</span>3px<span class="literal">";
+
+				if (this.friends[i].colleague) {
+					this.resultContainer.colleagues.appendChild(personSpan);
+				} else {
+					this.resultContainer.nonColleagues.appendChild(personSpan);
+				}
+
+				// Enable the business card popup
+				setTimeout("</span>SemTagSvc.parseDom(null, <span class="literal">'" + personSpan.id + "'</span>)<span class="literal">", 500 );
+			}
+		}
+
+		document.getElementById(this.getId("</span>numColleagues<span class="literal">")).innerHTML = "</span> (<span class="literal">" + this.friends.numColleagues + "</span>)<span class="literal">";
+	};
+
+	/**
+	 * Alternates between checking all valid colleagues and un-checking them
+	 */
+	this.toggleCheckAllProfiles = function() {
+
+		toggle = document.getElementById(this.getId("</span>toggleCheck<span class="literal">"));
+		toggleIcon = document.getElementById(this.getId("</span>toggleCheckIcon<span class="literal">"));
+		if (this.allCheck) {
+      toggleIcon.src = fetcherDir + 'img/check.png';
+			toggle.innerHTML = "</span>Check All<span class="literal">";
+		} else {
+      toggleIcon.src = fetcherDir + 'img/check2.png';
+			toggle.innerHTML = "</span>Un-Check All<span class="literal">";
+		}
+
+		checks = document.getElementsByName("</span>invite-checkbox<span class="literal">");
+		this.allCheck = !this.allCheck;
+		for (ci = 0; ci &lt; checks.length; ++ci) {
+			if (!checks[ci].disabled &amp;&amp; checks[ci].checked != this.allCheck) {
+				checks[ci].click();
+			}
+		}
+	};
+
+	/**
+	 * Shows/hides the accepted colleagues in the list
+	 */
+	this.toggleShowColleagues = function() {
+
+		toggle = document.getElementById(this.getId("</span>toggleColleagues<span class="literal">"));
+		if (this.resultContainer.showColleagues) {
+			this.resultContainer.colleagues.style.display = "</span>none<span class="literal">";
+			toggle.title = "</span>Show Accepted Colleagues<span class="literal">";
+			toggle.innerHTML = "</span>Show Colleagues<span class="literal">";
+		} else {
+			this.resultContainer.colleagues.style.display = "</span><span class="literal">";
+			toggle.title = "</span>Hide Accepted Colleagues<span class="literal">";
+			toggle.innerHTML = "</span>Hide Colleagues<span class="literal">";
+		}
+		this.resultContainer.showColleagues = !this.resultContainer.showColleagues;
+	};
+
+
+	/**
+	 * Fetches the user's list of colleagues to compare them against fetched friends
+	 * @param uid The user's UID
+	 */
+	this.getColleagues = function (uid) {
+		fetcherUtils.getXML(
+			fetcherData.profilesURL + "</span>atom/colleagues.do<span class="literal">",
+			{'uid': uid, 'status': '', 'output': 'hcard'},
+			this.processColleagues,
+			this
+		);
+	};
+
+	/**
+	 * Processes results from getColleagues
+	 * @param request The XMLHttpRequest
+	 * @param caller The Fetcher widget in control
+	 */
+	this.processColleagues = function (caller, response) {
+    caller.friends.numColleagues = 0;
+		try {
+       ids = [];
+       numIds = 0;
+	     ids = response.getElementsByTagName("</span>div<span class="literal">");
+			 for (i=0;i&lt;ids.length;++i) {
+				if (ids[i].getAttribute("</span>class<span class="literal">") === "</span>x-profile-uid<span class="literal">") {
+
+          ++numIds;
+  				// If any of the existing colleagues are also in the
+  				// fetched friends list, mark them as such
+  				existingUID = ids[i].text ? ids[i].text : ids[i].textContent;
+
+  				colleague = caller.friendByID(existingUID);
+  				if (colleague !== null) {
+            ++caller.friends.numColleagues;
+  					console.log("</span>Fetcher.processColleagues: found <span class="literal">" + existingUID);
+  					colleague.colleague = true;
+  					colleague = null;
+  				}
+
+        }
+			}
+			console.log("</span>Fetcher.processColleagues: got <span class="literal">" + numIds + "</span> colleagues<span class="literal">");
+	    	// Display results
+			caller.displayProfileMatches();
+
+		} catch (e) {console.error('Fetcher.processColleagues: ' + e); }
+
+	};
+
+	/**
+	 * Send all invitations
+	 */
+	this.sendInvitations = function () {
+		inviteeList = [];
+		for (i = 0; i &lt; this.friends.length; ++i) {
+			f = this.friends[i];
+			if (f.invite &amp;&amp; !f.colleague) {
+
+				if (f.message === null) {
+					f.message = this.messageDialog.defaultMessage;
+				}
+				inviteeList.push(f);
+			}
+		}
+
+		// Start the request callback tree with iviteeList[0]
+		// Include a reference to the Fetcher object
+		this.toggleLoading(true);
+		this.sendFriendRequest(inviteeList, 0, this);
+	};
+
+	/**
+	 * Sends the friend request to invitee
+	 * @param invitees The array of invitees
+	 * @param index The index of the current invitee
+	 * @param caller The Fetcher object making the requests
+	 */
+	this.sendFriendRequest = function (invitees, index, caller)
+	{
+		if (index &lt; invitees.length) {
+		  dataUrl = applicationContext + "</span>/xml/friendrequest?targetKey=<span class="literal">" + invitees[index].key;
+			dataUrl += "</span>&amp;lastMod=<span class="literal">" + profilesData.config.profileLastMod;
+			dataUrl += "</span>&amp;msg=<span class="literal">" + invitees[index].message;
+
+			console.log("</span>Fetcher.sendFriendRequest: sending invite <span class="reserved">for</span> <span class="literal">" + invitees[index].name);
+    	dojo.xhrPost({
+    	  url: dataUrl,
+    		handleAs: "</span>xml<span class="literal">",
+    		load: function(response, ioArgs){
+    			if(response.documentElement.nodeName == "</span>error<span class="literal">" &amp;&amp; response.documentElement.getAttribute("</span>code<span class="literal">") == "</span>connection-exist<span class="literal">") {
+    				console.log("</span>Fetcher.sendFriendRequest: already invited <span class="literal">" + invitees[index].name);
+    			}
+
+    			profiles_setProfilesLastMod(response);
+    			caller.loading((index+1)/invitees.length, "</span>Sending...<span class="literal">");
+    			caller.sendFriendRequest(invitees, index + 1, caller);
+    	  }
+    	});
+
+		} else {
+		  caller.loading(1, "</span>Done!<span class="literal">");
+			//alert("</span>Finished sending invitations!<span class="literal">");
+			//caller.toggleLoading(false);
+			caller.resetUI();
+      setTimeout(function() {caller.toggleLoading(false);}, 2000);
+		}
+	};
+
+  /**
+   * Fetches the friend list from the currently selected network.
+   */
+  this.getFriends = function () {
+    this.resetUI();
+    this.loggedIn = true;
+    this.updateLoginPanel();
+    this.curNetwork().getFriends(this);
+  };
+  
+  /**
+   * Returns the currently selected network.
+   */
+  this.curNetwork = function() {
+    return this.networkSelector.options[this.networkSelector.selectedIndex].network;
+  };
+  
+  /**
+   * Displays a link allowing the user to change their login information
+   * for the currently selected network module. If the module does not
+   * implement a showLogin function, no link is displayed.
+   *
+   * @param hide If true, hides the login panel
+   */
+  this.updateLoginPanel = function(hide) {
+    
+    if (this.curNetwork().showLogin &amp;&amp; !hide) {
+      // Update login status
+      if (this.loggedIn) {
+        this.loginPanel.status.innerHTML = 'Logged in to ' + this.curNetwork().name;
+        this.loginPanel.link.innerHTML = 'Logout';
+      } else {
+        this.loginPanel.status.innerHTML = 'Login to ' + this.curNetwork().name;
+        this.loginPanel.link.innerHTML = 'Login';
+      }
+      this.loginPanel.style.display = "</span><span class="literal">";
+    } else {
+      this.loginPanel.style.display = "</span>none<span class="literal">";
+    }
+  };
+  
+	/**
+	 * Show the UI
+	 * Should be converted to straight html and css, then DOM extraction
+	 * @param containerId The container to attach to
+	 */
+	this.loadUI = function (container) {
+
+    
+    caller = this;
+    
+    // Get info about the user
+    fetcherUtils.getXML(
+      "</span>/profiles/atom/profile.do<span class="literal">",
+      {'uid': caller.user.uid},
+      function(caller, data) {
+        caller.parseProfiles(data, caller.user);
+      },
+      caller );
+
+		try {
+
+			this.container = container;
+			this.container.className = "</span>fetcher<span class="literal">";
+			this.container.innerHTML =
+				'&lt;form id=' + this.getId("</span>inviteForm<span class="literal">") + ' class="</span>shell<span class="literal">" &gt;' +
+					'&lt;div id=' + this.getId("</span>networkSelector<span class="literal">") + ' class="</span>netSelect<span class="literal">" &gt;' +
+						'&lt;table class="</span>networkTable<span class="literal">" &gt;' +
+							'&lt;tr&gt;' +
+								'&lt;td style="</span>width: 80%<span class="literal">" id=' + this.getId("</span>netSelectArea<span class="literal">") + '&gt;' +
+                  '&lt;select style="</span>width: 100%<span class="literal">" ' +
+                      'id="</span>fetcher_network<span class="literal">" ' +
+                      'onchange=' + this.getId("</span>killForm()<span class="literal">") + ' &gt;' +
+                  '&lt;/select&gt;' +
+                '&lt;/td&gt;' +
+								'&lt;td style="</span>width: 20%<span class="literal">"&gt;' +
+									'&lt;input style="</span>width: 100%<span class="literal">" ' +
+                      'type="</span>button<span class="literal">" ' +
+                      'class="</span>lotusBtn lotusBtnSpecial<span class="literal">" ' +
+                      'value="</span>Go<span class="literal">" ' +
+                      'onclick=' + this.getId("</span>getFriends();<span class="literal">") + ' &gt;' +
+								'&lt;/td&gt;' +
+							'&lt;/tr&gt;' +
+							'&lt;tr id=' + this.getId('loginPanel') + ' style="</span>width:100%<span class="literal">"&gt;' +
+                '&lt;td id=' + this.getId('loginStatus') + '&gt;&lt;/td&gt;' +
+                '&lt;td id=' + this.getId('loginLink') + '&gt;&lt;/td&gt;' +
+              '&lt;/tr&gt;' +
+						'&lt;/table&gt;' +
+					'&lt;/div&gt;' +
+					'&lt;div id=' + this.getId("</span>loadArea<span class="literal">") + ' class="</span>loadArea<span class="literal">" /&gt;' +
+				'&lt;/form&gt;';
+
+			this.networkSelector = document.getElementById("</span>fetcher_network<span class="literal">");
+			for (n=0; n &lt; Fetcher_networks.nets.length; ++n) {
+				this.op = Fetcher_networks.nets[n].toOption();
+				this.networkSelector.appendChild(this.op);
+			}
+			this.networkSelector.onchange = function() {
+        caller.resetUI();
+      };
+      
+      this.networkTable = document.getElementById(this.getId("</span>networkSelector<span class="literal">")).firstChild;
+      this.networkTable.style.borderBottom = "</span>0px<span class="literal">";
+
+      this.loginPanel = document.getElementById(this.getId('loginPanel'));
+      this.loginPanel.status = document.getElementById(this.getId('loginStatus'));
+      this.loginPanel.link = document.getElementById(this.getId('loginLink'));
+      
+      this.loginPanel.link.style.textAlign = 'right';
+      this.loginPanel.style.fontSize = '80%';
+      this.loginlink = elem('a',
+        { id: this.getId("</span>changeLogin<span class="literal">"), href: "</span>javascript:void(0);<span class="literal">" });
+      this.loginlink.caller = this;
+      this.loginlink.onclick = function() {
+        this.caller.resetUI();
+        this.caller.curNetwork().showLogin(caller);
+      };
+      this.loginPanel.link.appendChild(this.loginlink);
+      this.loginPanel.link = this.loginlink;
+      
+      this.loadProgress = elem('div',
+        { id: this.getId('loadProgress'), 'class': 'progressOuter' });
+      this.loadProgress.bar = elem('div', { 'class': "</span>progressBar<span class="literal">" });
+      this.loadProgress.appendChild(this.loadProgress.bar);
+      this.loadProgress.loadMessage = elem('div',
+        { 'class': 'loadMessage' }, {}, "</span>Loading...<span class="literal">");
+			this.loadProgress.appendChild(this.loadProgress.loadMessage);
+
+			this.loadError = document.createElement("</span>div<span class="literal">");
+      this.loadError.className = "</span>error<span class="literal">";
+      			
+			this.loadArea = document.getElementById(this.getId('loadArea'));
+			this.loadArea.className = "</span>loadArea<span class="literal">";
+			this.loadProgress.style.display = "</span>none<span class="literal">";
+			this.loadArea.appendChild(this.loadProgress);
+
+			this.loadArea.appendChild(this.loadError);
+			this.loadError.style.display = "</span>none<span class="literal">";
+
+      this.formArea = elem('div', {'class': 'form' });
+			this.loadArea.appendChild(this.formArea);
+
+			this.inviteForm = document.getElementById(this.getId("</span>inviteForm<span class="literal">"));
+
+      this.resultContainer = elem('div',
+        { id: this.getId("</span>resultContainer<span class="literal">"), 'class': 'resultContainer' });
+      
+      // checkmarks toggle
+			this.toggleCheckAll = elem('div');
+      this.toggleCheckAll.innerHTML =
+        '&lt;a href="</span>javascript:void(0)<span class="literal">" style="</span>font-size: 80%<span class="literal">" ' +
+          'title="</span>Check/uncheck all invitees<span class="literal">" ' +
+          'onclick=' + this.getId("</span>toggleCheckAllProfiles()<span class="literal">") + '&gt;' +
+          fetcherUtils.imgTag("</span>check2.png<span class="literal">", this.getId("</span>toggleCheckIcon<span class="literal">")) +
+          '&lt;span id=' + this.getId("</span>toggleCheck<span class="literal">") + '&gt;Un-Check All&lt;/span&gt;&lt;/a&gt;';
+      this.toggleCheckAll.style.backgroundColor = '#E5EDF8';
+      this.toggleCheckAll.style.paddingLeft = '4px';
+      
+      // Colleagues toggle
+			this.toggleColleagues = elem('div');
+      this.toggleColleagues.innerHTML =
+        '&lt;a href="</span>javascript:void(0)<span class="literal">" onclick=' + this.getId("</span>toggleShowColleagues()<span class="literal">") +
+        ' title="</span>Show accepted colleagues<span class="literal">"&gt;' + fetcherUtils.imgTag("</span>person.png<span class="literal">") +
+        '&lt;span id=' + this.getId("</span>toggleColleagues<span class="literal">") + '&gt;Show Colleagues&lt;/span&gt;&lt;/a&gt;'+
+        '&lt;span id=' + this.getId("</span>numColleagues<span class="literal">") + ' &gt;&lt;/span&gt;';
+        
+      // Message Editor
+			this.defaultMessager = elem('div');
+      this.defaultMessager.innerHTML =
+        '&lt;a href="</span>javascript:void(0)<span class="literal">" onclick=' + this.getId("</span>messageDialog.show(null)<span class="literal">") +
+        ' title="</span>Change the invitation messages<span class="literal">"&gt;' + fetcherUtils.imgTag("</span>message.png<span class="literal">") + 'Edit Message&lt;/a&gt;';
+
+      // Toolbox
+      this.toolBox = elem('div',
+        { id: this.getId("</span>toolBox<span class="literal">"), 'class': 'toolBox box' });
+			this.toolBox.appendChild(this.defaultMessager);
+			this.toolBox.appendChild(this.toggleColleagues);
+
+			// Insert toggle div
+			this.resultContainer.appendChild(this.toolBox);
+
+      // The list contains the results from the intersection of
+      // the retrieved friend list and user on Profiles
+      this.list = elem('div', { id: this.getId('list'), 'class': 'list' });
+
+      // listContainer contains the the check toggle, the list,
+      // and the invite button
+      this.listContainer = elem('div', {'class': 'box'});
+      
+      // Put the toggle checkmarks button in the list itself
+      this.listContainer.appendChild(this.toggleCheckAll);
+      
+			// Insert list div
+			this.listContainer.appendChild(this.list);
+
+      // buttonDiv contains the Invite Selected button
+			this.buttondiv = elem('div');
+      this.buttondiv.innerHTML =
+			   '&lt;input type="</span>button<span class="literal">" style="</span>width: 100%<span class="literal">" ' +
+            'title="</span>Invite all checked colleagues<span class="literal">" ' +
+            'class="</span>lotusBtn lotusBtnSpecial buttonDiv<span class="literal">" ' +
+            'value="</span>Invite Selected<span class="literal">" ' +
+            'onclick=' + this.getId("</span>sendInvitations()<span class="literal">") + '&gt;';
+
+			// Insert button div
+			this.listContainer.appendChild(this.buttondiv);
+
+      this.resultContainer.appendChild(this.listContainer);
+      
+			this.resultContainer.showColleagues = false;
+
+      // Initially hide all the result-related stuff
+      this.resultContainer.style.display = "</span>none<span class="literal">";
+      this.inviteForm.appendChild(this.resultContainer);
+      
+      // Create elements for the message dialog
+			this.messageDialog = new MessageDialog(this);
+			
+			// Update the login panel
+			this.updateLoginPanel();
+			
+		} catch (e) {
+			//This pretty much only ever happens in IE
+			fetcherUtils.printProps(e, "</span>error<span class="literal">");
+		}
+	};
+
+	/**
+	 * Hides the the list and resets its content
+	 */
+	this.resetUI = function () {
+
+		this.resultContainer.style.display = "</span>none<span class="literal">";
+
+		if (this.resultContainer.colleagues &amp;&amp; this.resultContainer.showColleagues) {
+			this.list.removeChild(this.resultContainer.colleagues);
+    }
+		if (this.resultContainer.nonColleagues) {
+			this.list.removeChild(this.resultContainer.nonColleagues);
+    }
+    
+		this.resultContainer.nonColleagues = elem('div', {id: this.getId("</span>nonColleagues<span class="literal">")});
+		this.resultContainer.colleagues = elem('div', {id: this.getId("</span>colleagues<span class="literal">")});
+
+		if (!this.resultContainer.showColleagues) {
+			this.resultContainer.colleagues.style.display = "</span>none<span class="literal">";
+    }	else {
+			this.resultContainer.colleagues.style.display = "</span><span class="literal">";
+		}
+
+		this.list.appendChild(this.resultContainer.nonColleagues);
+		this.list.appendChild(this.resultContainer.colleagues);
+
+		this.loadError.innerHTML = "</span><span class="literal">";
+		this.loadError.style.display = "</span>none<span class="literal">";
+
+		this.networkTable.style.borderBottom = "</span>0px<span class="literal">";
+		
+		this.killForm();
+		this.loggedIn = false;
+		this.updateLoginPanel();
+	};
+
+
+  
+	/**
+	 * Updates the progress bar
+	 * @param fraction The progress as a fraction
+	 * @param text Any text to display over the bar (default "</span>Loading...<span class="literal">")
+	 */
+	this.loading = function (fraction, text) {
+    this.loadProgress.bar.style.width = Math.round(fraction*100) + "</span>%<span class="literal">";
+    if (!text) { text = "</span>Loading...<span class="literal">"; }
+    this.loadProgress.loadMessage.innerHTML = text;
+  };
+
+  /**
+   * Toggles the progress area visibility
+   * @param on Overrides auto-toggling
+   */
+	this.toggleLoading = function (on) {
+		if (this.loadProgress.style.display == "</span>none<span class="literal">" || on === true) {
+      this.loading(0);
+			this.loadProgress.style.display = "</span><span class="literal">";
+		} else {
+			this.loadProgress.style.display = "</span>none<span class="literal">";
+		}
+	};
+
+	/**
+	 * Shows a login form
+	 * @param fields The fields for the login form. An object containing
+	 *   an object for each field; Each field object must have a title and a type.
+	 * @param title The title of the form
+	 *
+	 */
+	this.showForm = function (fields, title) {
+	
+    // Clear any existing forms
+    this.killForm();
+    // Hide the login panel
+    this.updateLoginPanel(true);
+    
+    // Create the form container
+    form = elem('form');
+    form.style.textAlign = 'center';
+    
+    // Set the form title
+    title = elem('label', {},
+      { 'fontWeight': 'bold',
+        'display': 'block',
+        'margin': '1em' },
+      title);
+    form.appendChild(title);
+    
+    // Construct fields
+    for (f in fields) {
+      div = elem('div', {'class': f}, {'marginBottom': '1em'});
+      title = elem('label', {},
+        { 'display': 'block',
+          'color': '#1AA2F8' },
+        fields[f].title );
+      input = elem('input',
+        { 'type': fields[f].type },
+        { 'width': '100%',
+          'marginTop': '0.2em' });
+      fields[f].field = input;
+      div.appendChild(title);
+      div.appendChild(input);
+      form.appendChild(div);
+    }
+
+    // Add a submit button
+    submit = elem('input',
+      { 'type': 'button',
+        'class': 'lotusBtn lotusBtnSpecial',
+        'value': 'Login',
+        'onclick': this.getId('getFriends()') },
+      { 'width': '100%' });
+    form.appendChild(submit);
+    
+    // Display the form
+    this.formArea.appendChild(form);
+		this.formArea.style.display = "</span><span class="literal">";
+	};
+
+	/**
+	 * Removes the form
+	 */
+	this.killForm = function () {
+    this.formArea.style.display = "</span>none<span class="literal">";
+		this.formArea.innerHTML = "</span>";
+	};
+}
+
+
+
+<span class="reserved">function</span> pp(ob) { fetcherUtils.printProps(ob, ob.name); }
+
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Tue Jul 22 16:49:39 2008</div>
+</body>
+</html>

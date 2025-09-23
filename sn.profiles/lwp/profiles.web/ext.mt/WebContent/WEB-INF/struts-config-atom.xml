@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC 
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+	
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<struts-config>
+
+	<!-- Global Exceptions -->
+	<global-exceptions>
+	</global-exceptions>
+
+	<!-- Global Forwards - TBC -->
+	<global-forwards>
+		<forward name="atomError" path="/atom/error.do" />
+		<forward name="atomErrorHandler" path="/WEB-INF/internal/atom/errorHandler.do" />
+		<forward name="atomAuthenticate" path="/atom/authenticate.do"/>
+	</global-forwards>
+	
+	<!-- Action Mappings -->
+	<action-mappings>
+	
+		<action path="/atom/error" parameter="/WEB-INF/jsps/atom/error.jsp" type="org.apache.struts.actions.ForwardAction" />
+		<action path="/WEB-INF/internal/atom/errorHandler" type="com.ibm.lconn.profiles.api.actions.APIErrorAction"/>
+
+		<action path="/atom/profiles" type="com.ibm.lconn.profiles.api.actions.AdminProfilesActionExt" >
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		<action path="/atom/profileEntry" type="com.ibm.lconn.profiles.api.actions.AdminProfileEntryActionExt" >
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		<action path="/atom/organizations" type="com.ibm.lconn.profiles.api.actions.AdminOrganizationsAction" >
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		<action path="/atom/organizationEntry" type="com.ibm.lconn.profiles.api.actions.AdminOrganizationEntryAction" >
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		
+	</action-mappings>
+	
+	<message-resources factory="com.ibm.lconn.profiles.web.util.ProfilesMessageResourcesFactory" parameter="com.ibm.lconn.profiles.strings.ui"/>
+		
+</struts-config>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd" >
+
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<tiles-definitions>
+
+	<!-- Layout Definitions -->
+	<definition name="layout.base" 	path="/WEB-INF/jsps/html/layouts/tiles/profiles1ColLayout.jsp">
+		<put name="pageTitleKey"		value="label.page.profiles" 	type="string" />
+		<put name="frameworkHeader" 	value="/WEB-INF/jsps/html/common/frameworkHeader.jsp" />
+	    <put name="frameclass"		    value="lotusFrame lotusui30_layout" type="string" />
+	    <put name="mainclass"		    value="lotusMain" type="string" />
+		<put name="bodyclass"		    value="lotusProfiles lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusSpritesOn" type="string" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="scene"				value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="editableClass"		value="" />
+		<put name="sceneFooter"       	value="/WEB-INF/jsps/html/scenes/footer.jsp" />
+		<put name="frameworkFooter" 	value="/WEB-INF/jsps/html/common/frameworkFooter.jsp" />
+        <put name="bootstrap"           value="/WEB-INF/jsps/html/common/frameworkBootstrap.jsp" />
+		<putList name="contextualHelpList">
+			<add value="/WEB-INF/jsps/html/common/empty.jsp" />
+		</putList>
+		<putList name="jsIncludes">
+		</putList>
+	</definition>
+	
+	<definition name="layout.centered.base" path="/WEB-INF/jsps/html/layouts/tiles/profiles1ColCenteredLayout.jsp">
+		<put name="pageTitleKey"		value="label.page.profiles" 	type="string" />
+		<put name="frameworkHeader" 	value="/WEB-INF/jsps/html/common/frameworkHeader.jsp" />
+		<put name="bodyclass"		    value="lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusSpritesOn" type="string" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="scene"				value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="editableClass"		value="" />
+		<put name="sceneFooter"       	value="/WEB-INF/jsps/html/scenes/footer.jsp" />
+		<put name="frameworkFooter" 	value="/WEB-INF/jsps/html/common/frameworkFooter.jsp" />
+        <put name="bootstrap"           value="/WEB-INF/jsps/html/common/frameworkBootstrap.jsp" />
+		<putList name="contextualHelpList">
+			<add value="/WEB-INF/jsps/html/common/empty.jsp" />
+		</putList>
+		<putList name="jsIncludes">
+		</putList>
+	</definition>
+
+	<definition name="layout.blank" path="/WEB-INF/jsps/html/layouts/tiles/blank.jsp">
+		<put name="scene"			 	value="/WEB-INF/jsps/html/common/empty.jsp" />
+	</definition>
+
+	<definition name="layout.profiles2Col" path="/WEB-INF/jsps/html/layouts/tiles/profiles2ColLayout.jsp" extends="layout.base">
+		<put name="leftCol"     		value="/WEB-INF/jsps/html/common/empty.jsp" />
+	</definition>
+	
+	<definition name="layout.profiles3Col" path="/WEB-INF/jsps/html/layouts/tiles/profiles3ColLayout.jsp" extends="layout.profiles2Col">
+		<put name="rightCol"     		value="/WEB-INF/jsps/html/common/empty.jsp" />
+	</definition>
+
+	<definition name="layout.error" path="/WEB-INF/jsps/html/layouts/tiles/error.jsp">
+		<put name="frameworkHeader" 	value="/WEB-INF/jsps/html/common/frameworkHeader.jsp" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="sceneHeader" 		value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="errorMessage"		value="/WEB-INF/jsps/html/common/empty.jsp" />
+		<put name="sceneFooter"       	value="/WEB-INF/jsps/html/scenes/footer.jsp" />
+		<put name="frameworkFooter" 	value="/WEB-INF/jsps/html/common/frameworkFooter.jsp" />
+        <put name="bootstrap"           value="/WEB-INF/jsps/html/common/frameworkBootstrap.jsp" />
+		<putList name="contextualHelpList">
+			<add value="/WEB-INF/jsps/html/common/empty.jsp" />
+		</putList>
+			<putList name="jsIncludes">
+		</putList>
+	</definition>
+
+	<!-- Page Definitions -->
+	<definition name="scene.tools_view" extends="layout.profiles2Col">
+		<put name="pageTitleKey"		value="label.page.profiles.tools" 	type="string" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/scenes/banner.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/scenes/header.jsp" />
+		<put name="leftCol"     		value="/WEB-INF/jsps/html/scenes/tools/toolsNav.jsp" />
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/tools/tools.jsp" />
+	</definition>
+	
+	<definition name="scene.nav_tools_page" extends="layout.base">
+		<put name="pageTitleKey"		value="label.page.profiles.tools" 	type="string" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/scenes/banner.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/scenes/header.jsp" />
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/navtools/navtools.jsp" />
+	</definition>
+	
+	<!-- 
+	<definition name="scene.login_view" extends="layout.centered.base">
+		<put name="bodyclass"		    value="lotusLogin lotusui lotusSpritesOn" type="string" />
+		<put name="pageTitleKey"		value="label.page.profiles.login" 	type="string" />
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/login/login.jsp" />
+		<put name="sceneFooter"       	value="/WEB-INF/jsps/html/common/empty.jsp" />
+	</definition>
+	
+	<definition name="scene.login_error_view" extends="layout.centered.base">
+		<put name="bodyclass"		    value="lotusLogin lotusui lotusSpritesOn" type="string" />
+		<put name="pageTitleKey"		value="label.page.profiles.login" 	type="string" />
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/login/loginError.jsp" />
+		<put name="sceneFooter"       	value="/WEB-INF/jsps/html/common/empty.jsp" />
+	</definition>
+	
+	 -->
+	
+	<definition name="scene.vcard_export_view" extends="layout.centered.base">
+		<put name="bodyclass"		    value="lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusSpritesOn" type="string" />
+		<put name="pageTitleKey"		value="personCardDownloadVCard" 	type="string" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/vcard/vcard_window_header.jsp" />
+		<put name="scene"       		value="/WEB-INF/jsps/vcard/vcard_window.jsp" />
+		<put name="sceneFooter"       	value="/WEB-INF/jsps/vcard/vcard_window_footer.jsp" />
+	</definition>
+
+	<definition name="scene.network_invite_view" extends="layout.centered.base">
+		<put name="bodyclass"		    value="lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusSpritesOn" type="string" />
+		<put name="pageTitleKey"		value="personCardAddAsColleagues" 	type="string" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/network/invite_window_header.jsp" />
+		<put name="scene"       		value="/WEB-INF/jsps/network/invite_window.jsp" />
+		<put name="sceneFooter"       	value="/WEB-INF/jsps/network/invite_window_footer.jsp" />
+	</definition>
+
+	<!-- DEPRECATED-BY-STRIPES TILES -->
+	<definition name="scene.search_profiles_view" extends="layout.profiles3Col">
+		<put name="pageTitleKey"		value="label.page.profiles.home" 	type="string" />
+        <put name="selectedTab"         value="search"  type="string" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/scenes/banner.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/scenes/header.jsp" />
+		<put name="leftCol"     		value="/WEB-INF/jsps/html/scenes/home/profileHomeNav.jsp" />
+		<put name="rightCol"        	value="/WEB-INF/jsps/html/scenes/home/profilesRightNav.jsp" />
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/home/profilesHome.jsp" />
+	</definition>
+
+	<definition name="scene.profile_search_results_view" extends="layout.profiles2Col">
+		<put name="pageTitleKey"		value="label.page.profiles.search" 	type="string" />
+		<put name="bodyclass"		    value="searchResults lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusSpritesOn" type="string" />
+        <put name="selectedTab"			value="search"  type="string" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/scenes/banner.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/scenes/header.jsp" />
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/search/profileSearchResults.jsp" />
+		<put name="leftCol"     		value="/WEB-INF/jsps/html/scenes/home/profileHomeNav.jsp" />
+	</definition>
+	
+	<definition name="scene.server_metrics" extends="layout.base">
+		<put name="pageTitleKey"        value="label.metrics.title" type="string" />
+		<put name="bodyclass"           value="lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusMetrics lotusSpritesOn" type="string" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/scenes/banner.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/scenes/header.jsp" />
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/statistics/servermetrics.jsp" />
+	</definition>
+
+	<definition name="scene.profile_view" extends="layout.profiles3Col">
+		<put name="pageTitleKey"    value="label.page.profiles"   type="string" />
+		<put name="sceneBanner"     value="/WEB-INF/jsps/html/scenes/banner.jsp" />
+		<put name="sceneHeader"     value="/WEB-INF/jsps/html/scenes/header.jsp" />
+		<put name="leftCol"         value="/WEB-INF/jsps/html/scenes/profile/profilePaneLeft.jsp" />
+		<put name="rightCol"        value="/WEB-INF/jsps/html/scenes/profile/profilePaneRight.jsp" />
+		<put name="scene"           value="/WEB-INF/jsps/html/scenes/profile/profileMain.jsp" />
+		<putList name="contextualHelpList">
+			<add value="/WEB-INF/jsps/html/common/empty.jsp" />
+		</putList>
+		<putList name="jsIncludes">
+		</putList>
+	</definition>
+
+	<definition name="scene.my_profile_view" extends="scene.profile_view">
+		<put name="bodyclass"		    value="myProfile lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusSpritesOn" type="string" />
+        <put name="selectedTab"         value="myprofile"                        type="string" />
+		<put name="editableClass"		value="lotusEditable" />
+	</definition>
+
+    <definition name="scene.reporting_structure_view" extends="scene.profile_view">
+      <put name="scene"           value="/WEB-INF/jsps/html/scenes/profile/reportingStructureFull.jsp" />
+    </definition>
+    
+    <definition name="scene.wc" extends="scene.profile_view">
+      <put name="scene"             value="/WEB-INF/jsps/html/scenes/profile/fullPageWidgetContainer.jsp" />
+    </definition>    
+
+	<definition name="scene.edit_my_profile_view" extends="scene.my_profile_view">
+		<put name="bodyclass"		    value="tundra editMyProfile lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusSpritesOn" type="string" />
+        <put name="selectedTab"			value="editprofile"  type="string" />
+        <!-- 
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/scenes/banner.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/scenes/header.jsp" />
+		 -->
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/editProfile/editProfile.jsp" />
+		
+		<put name="editableClass"		value="lotusEditable" />
+		<putList name="contextualHelpList">
+			<add value="/WEB-INF/jsps/html/common/empty.jsp" />
+		</putList>
+			<putList name="jsIncludes">
+		</putList>
+	</definition>
+  
+	<definition name="scene.error_view" extends="layout.base">
+		<put name="pageTitleKey"		value="label.page.profiles.error" 	type="string" />
+		<!-- remove banner as per pmr 15317,045,649 -->
+		<!-- put name="sceneBanner" 		value="/WEB-INF/jsps/html/scenes/banner.jsp" /-->
+		<put name="scene"       		value="/WEB-INF/jsps/html/scenes/error/error.jsp" />
+	</definition>
+
+	
+	<!-- 
+	THE FOLLOWING TILES HAVE BEEN REPLACED WITH STRIPES LAYOUTS IN THEIR RESPECTIVE JSPs
+	NO REFERENCE TO THESE TILE SCENES SHOULD EXIST
+	THESE TILES TO BE REMOVED ONCE STRIPES IS PROVEN
+	-->
+	<!-- BEGIN DEPRECATED-BY-STRIPES TILES -->
+	<definition name="scene.about_view" extends="layout.base">
+		<put name="pageTitleKey"		value="label.page.profiles.about" 	type="string" />
+		<put name="bodyclass"		    value="lotusui lotusui30dojo lotusui30_body lotusui30_fonts lotusui30 lotusAbout lotusSpritesOn" type="string" />
+	    <put name="mainclass"		    value="lotusMain" type="string" />
+		<put name="sceneBanner" 		value="/WEB-INF/jsps/html/scenes/banner.jsp" />
+		<put name="sceneHeader"			value="/WEB-INF/jsps/html/scenes/header.jsp" />
+		<put name="scene"       		value="/WEB-INF/stripes/pages/app/about/aboutProfiles.jsp" />
+		<put name="sceneFooter"       	value="/WEB-INF/stripes/pages/app/about/aboutProfilesFooter.jsp" />
+	</definition>
+	<!-- END DEPRECATED-BY-STRIPES TILES -->
+		
+</tiles-definitions>

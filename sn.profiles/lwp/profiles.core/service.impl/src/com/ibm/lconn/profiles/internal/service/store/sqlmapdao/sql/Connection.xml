@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Connection">
+
+	<typeAlias alias="connection" type="com.ibm.peoplepages.data.Connection" />
+	<typeAlias alias="profile" type="com.ibm.peoplepages.data.Employee" />
+	<typeAlias alias="connectionCount" type="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ConnectionCount" />
+	<typeAlias alias="userState" type="com.ibm.lconn.profiles.internal.data.profile.UserState" />
+	<typeAlias alias="userMode" type="com.ibm.lconn.profiles.internal.data.profile.UserMode" />
+	
+	<typeAlias alias="sourceTargetObj" type="com.ibm.lconn.profiles.internal.service.store.interfaces.ConnectionSourceTarget"/>
+	
+	<resultMap id="ConnectionMap" class="connection">
+		<result property="connectionId" column="PROF_CONNECTION_ID" javaType="java.lang.String"/>
+		<result property="sourceKey" column="PROF_SOURCE_KEY" javaType="java.lang.String"/>
+		<result property="targetKey" column="PROF_TARGET_KEY" javaType="java.lang.String"/>
+		<result property="type" column="PROF_TYPE" javaType="java.lang.String"/>
+		<result property="status" column="PROF_STATUS" javaType="java.lang.Integer"/>
+		<result property="createdByKey" column="PROF_CREATED_BY_KEY" javaType="java.lang.String"/>
+		<result property="created" column="PROF_CREATED" javaType="java.util.Date"/>
+		<result property="lastModByKey" column="PROF_LASTMOD_BY_KEY" javaType="java.lang.String"/>
+		<result property="lastMod" column="PROF_LASTMOD" javaType="java.util.Date"/>
+		<result property="message" column="PROF_MESSAGE" javaType="java.lang.String"/>
+		<result property="tenantKey" column="TENANT_KEY" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<resultMap class="connectionCount" id="ConnectionCountItem">
+		<result property="count" column="PROF_COUNT" javaType="integer"/>
+		<result property="status" column="PROF_STATUS" javaType="integer"/>
+	</resultMap>
+	
+	<resultMap id="ProfileResultLite" class="profile">
+		<result property="guid" column="PROF_GUID" />
+		<result property="uid" column="PROF_UID" />
+		<result property="key" column="PROF_KEY" />
+		<result property="distinguishedName" column="PROF_SOURCE_UID" />
+		<result property="employeeTypeCode" column="PROF_EMPLOYEE_TYPE"/>
+		<result property="orgId" column="PROF_ORGANIZATION_IDENTIFIER" />
+		<result property="countryCode" column="PROF_ISO_COUNTRY_CODE" />
+		<result property="displayName" column="PROF_DISPLAY_NAME" />
+		<result property="email" column="PROF_MAIL" />
+		<result property="jobResp" column="PROF_JOB_RESPONSIBILITIES" />
+		<result property="lastUpdate" column="PROF_LAST_UPDATE" javaType="java.sql.Timestamp"/>
+		<result property="managerUid" column="PROF_MANAGER_UID" />
+		<result property="groupwareEmail" column="PROF_GROUPWARE_EMAIL" />
+		<result property="telephoneNumber" column="PROF_TELEPHONE_NUMBER" />
+		<result property="workLocationCode" column="PROF_WORK_LOCATION" />
+		<result property="bldgId" column="PROF_BUILDING_IDENTIFIER" />
+		<result property="floor" column="PROF_FLOOR" />
+		<result property="isManager" column="PROF_IS_MANAGER" />
+		<result property="officeName" column="PROF_PHYSICAL_DELIVERY_OFFICE" />
+		<result property="blogUrl" column="PROF_BLOG_URL" />
+		<result property="preferredFirstName" column="PROF_PREFERRED_FIRST_NAME" /> 
+		<result property="givenName" column="PROF_GIVEN_NAME" />
+		<result property="surname" column="PROF_SURNAME" />
+		<result property="loginId" column="PROF_LOGIN" />
+		<result property="profileType" column="PROF_TYPE" />
+		<result property="timezone" column="PROF_TIMEZONE" />
+		<result property="sourceUrl" column="PROF_SOURCE_URL" />
+		<result property="connectionId" column="PROF_CONNECTION_ID" />
+		<result property="connectionCreated" column="PROF_CONNECTION_CREATED" javaType="java.util.Date"/>
+		<result property="connectionCreatedBy" column="PROF_CONNECTION_CREATEDBY"/>
+		<result property="connectionLastmod" column="PROF_CONNECTION_LASTMOD" javaType="java.util.Date"/>
+		<result property="connectionLastmodBy" column="PROF_CONNECTION_LASTMODBY"/>
+		<result property="connectionMessage" column="PROF_CONNECTION_MESSAGE"/>
+		<result property="sourceKey" column="PROF_CONNECTION_SOURCE_KEY"/>
+		<result property="state" column="PROF_STATE" javaType="userState"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserStateTypeHandler" />
+		<result property="mode" column="PROF_MODE" javaType="userMode"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserModeHandler" />
+		<result property="tenantKey" column="TENANT_KEY" javaType="java.lang.String"/>
+	</resultMap>
+
+	<resultMap id="ProfileResultFull" class="profile">
+		<result property="guid" column="PROF_GUID" />
+		<result property="uid" column="PROF_UID" />
+		<result property="key" column="PROF_KEY" />
+		<result property="distinguishedName" column="PROF_SOURCE_UID" />
+		<result property="alternateLastname" column="PROF_ALTERNATE_LAST_NAME" />
+		<result property="bldgId" column="PROF_BUILDING_IDENTIFIER" />
+		<result property="orgId" column="PROF_ORGANIZATION_IDENTIFIER" />
+		<result property="countryCode" column="PROF_ISO_COUNTRY_CODE" />
+		<result property="courtesyTitle" column="PROF_COURTESY_TITLE" />
+		<result property="deptNumber" column="PROF_DEPARTMENT_NUMBER" />
+		<result property="description" column="PROF_DESCRIPTION" javaType="java.lang.String" />
+		<result property="displayName" column="PROF_DISPLAY_NAME" />
+		<result property="employeeTypeCode" column="PROF_EMPLOYEE_TYPE" />
+		<result property="email" column="PROF_MAIL" />
+		<result property="experience" column="PROF_EXPERIENCE" javaType="java.lang.String" />
+		<result property="faxNumber" column="PROF_FAX_TELEPHONE_NUMBER" />
+		<result property="floor" column="PROF_FLOOR" />
+		<result property="employeeNumber" column="PROF_EMPLOYEE_NUMBER" />
+		<result property="isManager" column="PROF_IS_MANAGER" />
+		<result property="jobResp" column="PROF_JOB_RESPONSIBILITIES" />
+		<result property="lastUpdate" column="PROF_LAST_UPDATE" javaType="java.sql.Timestamp" />
+		<result property="mobileNumber" column="PROF_MOBILE" />
+		<result property="managerUid" column="PROF_MANAGER_UID" />
+		<result property="groupwareEmail" column="PROF_GROUPWARE_EMAIL" />
+		<result property="pagerType" column="PROF_PAGER_TYPE" />
+		<result property="pagerNumber" column="PROF_PAGER" />
+		<result property="pagerId" column="PROF_PAGER_ID" />
+		<result property="pagerServiceProvider" column="PROF_PAGER_SERVICE_PROVIDER" />
+		<result property="officeName" column="PROF_PHYSICAL_DELIVERY_OFFICE" />
+		<result property="preferredFirstName" column="PROF_PREFERRED_FIRST_NAME" />
+		<result property="preferredLastName" column="PROF_PREFERRED_LAST_NAME" />
+		<result property="preferredLanguage" column="PROF_PREFERRED_LANGUAGE" />
+		<result property="secretaryUid" column="PROF_SECRETARY_UID" />
+		<result property="shift" column="PROF_SHIFT" />
+		<result property="title" column="PROF_TITLE" />
+		<result property="timezone" column="PROF_TIMEZONE" />
+		<result property="telephoneNumber" column="PROF_TELEPHONE_NUMBER" />
+		<result property="workLocationCode" column="PROF_WORK_LOCATION" />
+		<result property="nativeFirstName" column="PROF_NATIVE_FIRST_NAME" />
+		<result property="nativeLastName" column="PROF_NATIVE_LAST_NAME" />
+		<result property="freeBusyUrl" column="PROF_FREEBUSY_URL" />
+		<result property="calendarUrl" column="PROF_CALENDAR_URL" />
+		<result property="blogUrl" column="PROF_BLOG_URL" />
+		<result property="ipTelephoneNumber" column="PROF_IP_TELEPHONE_NUMBER" />
+		<result property="givenName" column="PROF_GIVEN_NAME" />
+		<result property="surname" column="PROF_SURNAME" />
+		<result property="loginId" column="PROF_LOGIN" />
+		<result property="profileType" column="PROF_TYPE" />
+		<result property="sourceUrl" column="PROF_SOURCE_URL" />
+		<result property="tenantKey" column="TENANT_KEY" />
+		<result property="connectionId" column="PROF_CONNECTION_ID" />
+		<result property="connectionCreated" column="PROF_CONNECTION_CREATED" javaType="java.util.Date"/>
+		<result property="connectionCreatedBy" column="PROF_CONNECTION_CREATEDBY"/>
+		<result property="connectionLastmod" column="PROF_CONNECTION_LASTMOD" javaType="java.util.Date"/>
+		<result property="connectionLastmodBy" column="PROF_CONNECTION_LASTMODBY"/>
+		<result property="connectionMessage" column="PROF_CONNECTION_MESSAGE"/>
+		<result property="sourceKey" column="PROF_CONNECTION_SOURCE_KEY"/>
+		<result property="state" column="PROF_STATE" javaType="userState"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserStateTypeHandler" />
+		<result property="mode" column="PROF_MODE" javaType="userMode"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserModeHandler" />
+	</resultMap>
+	
+	<resultMap id="ConnectedKeyMap" class="sourceTargetObj">
+		<result property="sourceKey" column="PROF_SOURCE_KEY"/>
+		<result property="targetKey" column="PROF_TARGET_KEY"/>
+		<result property="tenantKey" column="TENANT_KEY"/>
+	</resultMap>
+	
+ 	<sql id="sql_ConnResultSelect">
+		C.PROF_CONNECTION_ID as PROF_CONNECTION_ID,
+		C.PROF_SOURCE_KEY as PROF_SOURCE_KEY,
+		C.PROF_TARGET_KEY as PROF_TARGET_KEY, 
+		C.PROF_TYPE as PROF_TYPE, 
+		C.PROF_STATUS as PROF_STATUS, 
+		C.PROF_CREATED_BY_KEY as PROF_CREATED_BY_KEY, 
+		C.PROF_CREATED as PROF_CREATED, 
+		C.PROF_LASTMOD_BY_KEY as PROF_LASTMOD_BY_KEY,
+		C.PROF_LASTMOD as PROF_LASTMOD,
+		<isNotEmpty property="inclMessage">
+			C.PROF_MESSAGE as PROF_MESSAGE,
+		</isNotEmpty>
+		<isEmpty property="inclMessage">
+			'' as PROF_MESSAGE,
+		</isEmpty>
+		C.TENANT_KEY as TENANT_KEY
+	</sql>
+	
+	<sql id="sql_LiteResultSelectConn">
+		E.PROF_KEY as PROF_KEY,
+		E.PROF_GUID as PROF_GUID, 
+		E.PROF_UID as PROF_UID, 
+		E.PROF_SOURCE_UID as PROF_SOURCE_UID, 
+		E.PROF_EMPLOYEE_TYPE as PROF_EMPLOYEE_TYPE, 
+		E.PROF_ORGANIZATION_IDENTIFIER as PROF_ORGANIZATION_IDENTIFIER, 
+		E.PROF_ISO_COUNTRY_CODE as PROF_ISO_COUNTRY_CODE, 
+		E.PROF_DISPLAY_NAME as PROF_DISPLAY_NAME, 
+		E.PROF_MAIL as PROF_MAIL, 
+		E.PROF_JOB_RESPONSIBILITIES as PROF_JOB_RESPONSIBILITIES, 
+       	E.PROF_LAST_UPDATE as PROF_LAST_UPDATE, 
+       	E.PROF_MANAGER_UID as PROF_MANAGER_UID, 
+       	E.PROF_GROUPWARE_EMAIL as PROF_GROUPWARE_EMAIL, 
+       	E.PROF_TELEPHONE_NUMBER as PROF_TELEPHONE_NUMBER, 
+       	E.PROF_WORK_LOCATION as PROF_WORK_LOCATION, 
+       	E.PROF_BUILDING_IDENTIFIER as PROF_BUILDING_IDENTIFIER, 
+       	E.PROF_FLOOR as PROF_FLOOR, 
+       	E.PROF_IS_MANAGER as PROF_IS_MANAGER,
+       	E.PROF_PHYSICAL_DELIVERY_OFFICE as PROF_PHYSICAL_DELIVERY_OFFICE, 
+       	E.PROF_BLOG_URL as PROF_BLOG_URL, 
+       	E.PROF_TIMEZONE as PROF_TIMEZONE, 
+       	E.PROF_PREFERRED_FIRST_NAME as PROF_PREFERRED_FIRST_NAME, 
+       	E.PROF_GIVEN_NAME as PROF_GIVEN_NAME, 
+       	E.PROF_SURNAME as PROF_SURNAME, 
+       	E.PROF_LOGIN as PROF_LOGIN, 
+       	E.PROF_TYPE as PROF_TYPE,
+       	E.PROF_SOURCE_URL as PROF_SOURCE_URL,
+       	E.PROF_STATE as PROF_STATE,
+       	E.PROF_MODE as PROF_MODE,
+       	E.TENANT_KEY as TENANT_KEY,
+       	<!-- Indicates a select for connections for user -->
+       	<isNotEmpty property="sourceKey"> 
+       		C.PROF_CONNECTION_ID as PROF_CONNECTION_ID,
+       		C.PROF_CREATED as PROF_CONNECTION_CREATED,
+       		C.PROF_CREATED_BY_KEY as PROF_CONNECTION_CREATEDBY,
+       		C.PROF_LASTMOD as PROF_CONNECTION_LASTMOD,
+       		C.PROF_LASTMOD_BY_KEY as PROF_CONNECTION_LASTMODBY,
+			C.PROF_SOURCE_KEY as PROF_CONNECTION_SOURCE_KEY,
+       		<isNotEmpty property="inclMessage">
+				C.PROF_MESSAGE as PROF_CONNECTION_MESSAGE
+			</isNotEmpty>
+			<isEmpty property="inclMessage">
+				'' as PROF_CONNECTION_MESSAGE
+			</isEmpty>
+       	</isNotEmpty>
+       	<!-- Indicates a select for connections from user -->
+       	<isEmpty property="sourceKey">
+       		<isNotEmpty property="targetKey"> 
+       		C.PROF_CONNECTION_ID as PROF_CONNECTION_ID,
+       		C.PROF_CREATED as PROF_CONNECTION_CREATED,
+       		C.PROF_CREATED_BY_KEY as PROF_CONNECTION_CREATEDBY,
+       		C.PROF_LASTMOD as PROF_CONNECTION_LASTMOD,
+       		C.PROF_LASTMOD_BY_KEY as PROF_CONNECTION_LASTMODBY,
+			C.PROF_SOURCE_KEY as PROF_CONNECTION_SOURCE_KEY,
+       			<isNotEmpty property="inclMessage">
+					C.PROF_MESSAGE as PROF_CONNECTION_MESSAGE
+				</isNotEmpty>
+				<isEmpty property="inclMessage">
+					'' as PROF_CONNECTION_MESSAGE
+				</isEmpty>
+       		</isNotEmpty>       	       	
+       	</isEmpty>
+       	<!-- Indicates a select for connections in common -->
+       	<isNotEmpty property="sourceKeys"> 
+       		'' as PROF_CONNECTION_ID,
+       		E.PROF_LAST_UPDATE as PROF_CONNECTION_CREATED,
+       		'' as PROF_CONNECTION_CREATEDBY,
+       		E.PROF_LAST_UPDATE as PROF_CONNECTION_LASTMOD,
+       		'' as PROF_CONNECTION_LASTMODBY,
+			'' as PROF_CONNECTION_SOURCE_KEY,
+       		'' as PROF_CONNECTION_MESSAGE
+       	</isNotEmpty>
+	</sql>
+
+	<sql id="sql_LiteResultSelectConnWithSourceKey">
+		E.PROF_KEY as PROF_KEY,
+		E.PROF_GUID as PROF_GUID, 
+		E.PROF_UID as PROF_UID, 
+		E.PROF_SOURCE_UID as PROF_SOURCE_UID, 
+		E.PROF_EMPLOYEE_TYPE as PROF_EMPLOYEE_TYPE, 
+		E.PROF_ORGANIZATION_IDENTIFIER as PROF_ORGANIZATION_IDENTIFIER, 
+		E.PROF_ISO_COUNTRY_CODE as PROF_ISO_COUNTRY_CODE, 
+		E.PROF_DISPLAY_NAME as PROF_DISPLAY_NAME, 
+		E.PROF_MAIL as PROF_MAIL, 
+		E.PROF_JOB_RESPONSIBILITIES as PROF_JOB_RESPONSIBILITIES, 
+       	E.PROF_LAST_UPDATE as PROF_LAST_UPDATE, 
+       	E.PROF_MANAGER_UID as PROF_MANAGER_UID, 
+       	E.PROF_GROUPWARE_EMAIL as PROF_GROUPWARE_EMAIL, 
+       	E.PROF_TELEPHONE_NUMBER as PROF_TELEPHONE_NUMBER, 
+       	E.PROF_WORK_LOCATION as PROF_WORK_LOCATION, 
+       	E.PROF_BUILDING_IDENTIFIER as PROF_BUILDING_IDENTIFIER, 
+       	E.PROF_FLOOR as PROF_FLOOR, 
+       	E.PROF_IS_MANAGER as PROF_IS_MANAGER,
+       	E.PROF_PHYSICAL_DELIVERY_OFFICE as PROF_PHYSICAL_DELIVERY_OFFICE, 
+       	E.PROF_BLOG_URL as PROF_BLOG_URL, 
+       	E.PROF_TIMEZONE as PROF_TIMEZONE, 
+       	E.PROF_PREFERRED_FIRST_NAME as PROF_PREFERRED_FIRST_NAME, 
+       	E.PROF_GIVEN_NAME as PROF_GIVEN_NAME, 
+       	E.PROF_SURNAME as PROF_SURNAME, 
+       	E.PROF_LOGIN as PROF_LOGIN, 
+       	E.PROF_TYPE as PROF_TYPE,
+       	E.PROF_SOURCE_URL as PROF_SOURCE_URL,
+       	E.PROF_STATE as PROF_STATE,
+       	E.PROF_MODE as PROF_MODE,
+     	E.TENANT_KEY as TENANT_KEY,
+       	<!-- Indicates a select for connections for user -->
+       	<isNotEmpty property="sourceKey"> 
+       		C.PROF_CONNECTION_ID as PROF_CONNECTION_ID,
+       		C.PROF_CREATED as PROF_CONNECTION_CREATED,
+       		C.PROF_CREATED_BY_KEY as PROF_CONNECTION_CREATEDBY,
+       		C.PROF_LASTMOD as PROF_CONNECTION_LASTMOD,
+       		C.PROF_LASTMOD_BY_KEY as PROF_CONNECTION_LASTMODBY,
+		C.PROF_SOURCE_KEY as PROF_CONNECTION_SOURCE_KEY,
+       		<isNotEmpty property="inclMessage">
+				C.PROF_MESSAGE as PROF_CONNECTION_MESSAGE
+			</isNotEmpty>
+			<isEmpty property="inclMessage">
+				'' as PROF_CONNECTION_MESSAGE
+			</isEmpty>
+       	</isNotEmpty>
+       	<!-- Indicates a select for connections in common -->
+       	<isNotEmpty property="sourceKeys"> 
+       		'' as PROF_CONNECTION_ID,
+       		E.PROF_LAST_UPDATE as PROF_CONNECTION_CREATED,
+       		'' as PROF_CONNECTION_CREATEDBY,
+       		E.PROF_LAST_UPDATE as PROF_CONNECTION_LASTMOD,
+       		'' as PROF_CONNECTION_LASTMODBY,
+		C.PROF_SOURCE_KEY as PROF_CONNECTION_SOURCE_KEY,
+       		'' as PROF_CONNECTION_MESSAGE
+       	</isNotEmpty>
+	</sql>
+
+	<sql id="sql_FullResultSelectConn">
+		E.PROF_KEY as PROF_KEY,
+		E.PROF_GUID as PROF_GUID, 
+		E.PROF_UID as PROF_UID, 
+		E.PROF_SOURCE_UID as PROF_SOURCE_UID, 
+		E.PROF_EMPLOYEE_TYPE as PROF_EMPLOYEE_TYPE, 
+		E.PROF_ORGANIZATION_IDENTIFIER as PROF_ORGANIZATION_IDENTIFIER, 
+		E.PROF_ISO_COUNTRY_CODE as PROF_ISO_COUNTRY_CODE, 
+		E.PROF_DISPLAY_NAME as PROF_DISPLAY_NAME, 
+		E.PROF_MAIL as PROF_MAIL, 
+		E.PROF_JOB_RESPONSIBILITIES as PROF_JOB_RESPONSIBILITIES, 
+       		E.PROF_LAST_UPDATE as PROF_LAST_UPDATE, 
+       		E.PROF_MANAGER_UID as PROF_MANAGER_UID, 
+       		E.PROF_GROUPWARE_EMAIL as PROF_GROUPWARE_EMAIL, 
+       		E.PROF_TELEPHONE_NUMBER as PROF_TELEPHONE_NUMBER, 
+       		E.PROF_WORK_LOCATION as PROF_WORK_LOCATION, 
+       		E.PROF_BUILDING_IDENTIFIER as PROF_BUILDING_IDENTIFIER, 
+       		E.PROF_FLOOR as PROF_FLOOR, 
+       		E.PROF_IS_MANAGER as PROF_IS_MANAGER,
+       		E.PROF_PHYSICAL_DELIVERY_OFFICE as PROF_PHYSICAL_DELIVERY_OFFICE, 
+       		E.PROF_BLOG_URL as PROF_BLOG_URL, 
+       		E.PROF_TIMEZONE as PROF_TIMEZONE, 
+       		E.PROF_PREFERRED_FIRST_NAME as PROF_PREFERRED_FIRST_NAME, 
+       		E.PROF_GIVEN_NAME as PROF_GIVEN_NAME, 
+       		E.PROF_SURNAME as PROF_SURNAME, 
+       		E.PROF_LOGIN as PROF_LOGIN, 
+       		E.PROF_TYPE as PROF_TYPE,
+       		E.PROF_SOURCE_URL as PROF_SOURCE_URL,
+       		E.PROF_STATE as PROF_STATE,
+       		E.PROF_MODE as PROF_MODE,
+       		E.TENANT_KEY as TENANT_KEY,
+		E.PROF_ALTERNATE_LAST_NAME as PROF_ALTERNATE_LAST_NAME,
+		E.PROF_COURTESY_TITLE as PROF_COURTESY_TITLE,
+		E.PROF_DEPARTMENT_NUMBER as PROF_DEPARTMENT_NUMBER,
+		E.PROF_DESCRIPTION as PROF_DESCRIPTION,
+		E.PROF_EXPERIENCE as PROF_EXPERIENCE,
+		E.PROF_FAX_TELEPHONE_NUMBER as PROF_FAX_TELEPHONE_NUMBER,
+		E.PROF_EMPLOYEE_NUMBER as PROF_EMPLOYEE_NUMBER,
+		E.PROF_MOBILE as PROF_MOBILE,
+		E.PROF_PAGER_TYPE as PROF_PAGER_TYPE,
+		E.PROF_PAGER as PROF_PAGER,
+		E.PROF_PAGER_ID as PROF_PAGER_ID,
+		E.PROF_PAGER_SERVICE_PROVIDER as PROF_PAGER_SERVICE_PROVIDER,
+		E.PROF_PREFERRED_LAST_NAME as PROF_PREFERRED_LAST_NAME,
+		E.PROF_PREFERRED_LANGUAGE as PROF_PREFERRED_LANGUAGE,
+		E.PROF_SECRETARY_UID as PROF_SECRETARY_UID,
+		E.PROF_SHIFT as PROF_SHIFT,
+		E.PROF_TITLE as PROF_TITLE,
+		E.PROF_NATIVE_FIRST_NAME as PROF_NATIVE_FIRST_NAME,
+		E.PROF_NATIVE_LAST_NAME as PROF_NATIVE_LAST_NAME,
+		E.PROF_FREEBUSY_URL as PROF_FREEBUSY_URL,
+		E.PROF_CALENDAR_URL as PROF_CALENDAR_URL,
+		E.PROF_IP_TELEPHONE_NUMBER as PROF_IP_TELEPHONE_NUMBER,
+       	<!-- Indicates a select for connections for user -->
+       	<isNotEmpty property="sourceKey"> 
+       		C.PROF_CONNECTION_ID as PROF_CONNECTION_ID,
+       		C.PROF_CREATED as PROF_CONNECTION_CREATED,
+       		C.PROF_CREATED_BY_KEY as PROF_CONNECTION_CREATEDBY,
+       		C.PROF_LASTMOD as PROF_CONNECTION_LASTMOD,
+       		C.PROF_LASTMOD_BY_KEY as PROF_CONNECTION_LASTMODBY,
+			C.PROF_SOURCE_KEY as PROF_CONNECTION_SOURCE_KEY,
+       		<isNotEmpty property="inclMessage">
+				C.PROF_MESSAGE as PROF_CONNECTION_MESSAGE
+			</isNotEmpty>
+			<isEmpty property="inclMessage">
+				'' as PROF_CONNECTION_MESSAGE
+			</isEmpty>
+       	</isNotEmpty>
+       	<!-- Indicates a select for connections from user -->       	
+       	<isNull property="sourceKey">
+       		<isNotEmpty property="targetKey"> 
+       			C.PROF_CONNECTION_ID as PROF_CONNECTION_ID,
+       			C.PROF_CREATED as PROF_CONNECTION_CREATED,
+       			C.PROF_CREATED_BY_KEY as PROF_CONNECTION_CREATEDBY,
+       			C.PROF_LASTMOD as PROF_CONNECTION_LASTMOD,
+       			C.PROF_LASTMOD_BY_KEY as PROF_CONNECTION_LASTMODBY,
+				C.PROF_SOURCE_KEY as PROF_CONNECTION_SOURCE_KEY,
+       			<isNotEmpty property="inclMessage">
+					C.PROF_MESSAGE as PROF_CONNECTION_MESSAGE
+				</isNotEmpty>
+				<isEmpty property="inclMessage">
+					'' as PROF_CONNECTION_MESSAGE
+				</isEmpty>
+       		</isNotEmpty>       		
+       	</isNull>
+       	<!-- Indicates a select for connections in common -->
+       	<isNotEmpty property="sourceKeys"> 
+       		'' as PROF_CONNECTION_ID,
+       		E.PROF_LAST_UPDATE as PROF_CONNECTION_CREATED,
+       		'' as PROF_CONNECTION_CREATEDBY,
+       		E.PROF_LAST_UPDATE as PROF_CONNECTION_LASTMOD,
+       		'' as PROF_CONNECTION_LASTMODBY,
+			'' as PROF_CONNECTION_SOURCE_KEY,
+       		'' as PROF_CONNECTION_MESSAGE
+       	</isNotEmpty>
+	</sql>
+
+	<sql id="sql_ConnSince">
+		<isNotNull property="since">
+			and C.PROF_LASTMOD > #since#
+		</isNotNull>
+	</sql>
+
+	<sql id="sql_ConnInCommon">
+		<iterate property="sourceKeys" open="(" close=")" conjunction="INTERSECT">
+			<!--
+			select
+				C.PROF_TARGET_KEY as PROF_TARGET_KEY
+			from
+				EMPINST.PROF_CONNECTIONS C
+			where
+				C.PROF_SOURCE_KEY = #sourceKeys[]#
+				and
+				C.PROF_STATUS = #status# 
+				and
+				C.PROF_TYPE = #type#
+				<include refid="sql_ConnSince"/>
+			-->
+			select C.PROF_TARGET_KEY as PROF_TARGET_KEY
+			from EMPINST.PROF_CONNECTIONS C
+			<include refid="sql_targetEmployeeStateJoin"/>
+			where C.PROF_SOURCE_KEY = #sourceKeys[]#
+			and C.PROF_STATUS = #status# 
+			and C.PROF_TYPE = #type#
+			<include refid="sql_EmployeeWhereState"/>
+			<include refid="sql_ConnSince"/>
+			<include refid="Tenant.sql_WhereByTenantKeyC" />
+			<include refid="sql_targetEmployeeStateJoinTenantKey"/>
+		</iterate>
+	</sql>
+	
+	<sql id="sql_ConnWhereBy">
+		<isNotNull property="sourceKey">
+		and C.PROF_SOURCE_KEY = #sourceKey#
+		</isNotNull>
+		<isNotNull property="targetKey">
+		and C.PROF_TARGET_KEY = #targetKey#
+		</isNotNull>		
+		and C.PROF_STATUS = #status# 
+		and C.PROF_TYPE = #type#
+		<include refid="sql_ConnSince"/>
+	</sql>
+
+	<sql id="sql_ConnWhereByCounts">
+		<isNotNull property="sourceKey">
+		and C.PROF_SOURCE_KEY = #sourceKey#
+		</isNotNull>
+		<isNotNull property="targetKey">
+		and C.PROF_TARGET_KEY = #targetKey#
+		</isNotNull>
+		and C.PROF_STATUS in 
+		<iterate open="(" close=")" conjunction="," property="status">
+			#status[]#
+		</iterate>
+		and C.PROF_TYPE = #type#
+		<include refid="sql_ConnSince"/>
+	</sql>
+	
+	<sql id="sql_ConnOrderByFrag">
+		<isEqual property="orderBy" compareValue="mostRecent">
+			C.PROF_LASTMOD
+		</isEqual>	
+		<isEqual property="orderBy" compareValue="display_name">
+			E.PROF_DISPLAY_NAME
+		</isEqual>
+		<isEqual property="sortOrder" compareValue="ASC">
+			ASC
+		</isEqual>
+		<isEqual property="sortOrder" compareValue="DESC">
+			DESC
+		</isEqual>	
+	</sql>
+	
+	<sql id="sql_EmployeeWhereState">
+		<isNotNull property="employeeState">
+		and E.PROF_STATE = #employeeState#
+		</isNotNull>
+	</sql>
+
+	<sql id="sql_targetEmployeeStateJoin">
+		<isNotNull property="employeeState">
+	       	join EMPINST.EMPLOYEE E on E.PROF_KEY = C.PROF_TARGET_KEY
+		</isNotNull>
+	</sql>
+	<sql id="sql_targetEmployeeStateJoinTenantKey">
+		<isNotNull property="employeeState">
+			<include refid="Tenant.sql_WhereByTenantKeyE"/>
+		</isNotNull>
+	</sql>
+
+	<sql id="sql_sourceEmployeeJoin">
+		join EMPINST.EMPLOYEE E on E.PROF_KEY = C.PROF_SOURCE_KEY
+	</sql>
+	<sql id="sql_sourceEmployeeJoinTenantKey">
+		<include refid="Tenant.sql_WhereByTenantKeyE"/>
+	</sql>
+	
+	<sql id="sql_targetEmployeeJoin">
+	       	join EMPINST.EMPLOYEE E on E.PROF_KEY = C.PROF_TARGET_KEY
+	</sql>
+	<sql id="sql_targetEmployeeJoinTenantKey">
+		<include refid="Tenant.sql_WhereByTenantKeyE"/>
+	</sql>
+	
+	<insert id="createConnection" parameterClass="com.ibm.peoplepages.data.Connection">
+		insert into EMPINST.PROF_CONNECTIONS
+			(PROF_CONNECTION_ID, 
+			 PROF_SOURCE_KEY, 
+			 PROF_TARGET_KEY, 
+			 PROF_TYPE, 
+			 PROF_STATUS, 
+			 PROF_CREATED_BY_KEY,
+			 PROF_CREATED, 
+			 PROF_LASTMOD_BY_KEY, 
+			 PROF_LASTMOD,
+			 <isNotNull property="message">
+ 				 PROF_MESSAGE,
+			 </isNotNull>
+			 TENANT_KEY)
+		values
+			(#connectionId#, 
+			 #sourceKey#, 
+			 #targetKey#, 
+			 #type#, 
+			 #status#, 
+			 #createdByKey#, 
+			 #created#, 
+			 #lastModByKey#, 
+			 #lastMod#,
+			 <isNotNull property="message">
+	  			#message#,
+			 </isNotNull>
+			 #dbTenantKey#)
+	</insert>
+
+	<select id="getConnectionById" parameterClass="map" resultMap="ConnectionMap">
+		select
+			<include refid="sql_ConnResultSelect"/>
+		from
+			EMPINST.PROF_CONNECTIONS C
+		where
+			C.PROF_CONNECTION_ID = #connectionId#
+			<include refid="Tenant.sql_WhereByTenantKeyC" />
+	</select>
+
+	<select id="getConnectionBySourceTargetType" parameterClass="map" resultMap="ConnectionMap">
+		select
+			<include refid="sql_ConnResultSelect"/>
+		from
+			EMPINST.PROF_CONNECTIONS C
+		where
+			C.PROF_SOURCE_KEY = #sourceKey#
+			and
+			C.PROF_TARGET_KEY = #targetKey#
+			and
+			C.PROF_TYPE = #type#
+			<include refid="Tenant.sql_WhereByTenantKeyC" />
+	</select>
+
+	<update id="updateConnection" parameterClass="map">
+		<!--  do not update tenantId -->
+		update EMPINST.PROF_CONNECTIONS
+			<dynamic prepend="set"> 
+				<isNotNull prepend="," property="connection.type" >
+	  				PROF_TYPE = #connection.type# 
+				</isNotNull>
+				<isNotNull prepend="," property="connection.status" >
+	  				PROF_STATUS = #connection.status# 
+				</isNotNull>
+				<isNotNull prepend="," property="connection.lastModByKey" >
+	  				PROF_LASTMOD_BY_KEY = #connection.lastModByKey# 
+				</isNotNull>
+				<isNotNull prepend="," property="connection.lastMod" >
+	  				PROF_LASTMOD = #connection.lastMod# 
+				</isNotNull>
+				<isNotNull prepend="," property="connection.message" >
+	  				PROF_MESSAGE = #connection.message# 
+				</isNotNull>				
+			</dynamic>
+		WHERE
+			PROF_CONNECTION_ID=#connection.connectionId#
+			<include refid="Tenant.sql_WhereByTenantKey" />
+	</update>
+
+	<delete id="deleteConnections" parameterClass="map">
+		delete from 
+			EMPINST.PROF_CONNECTIONS 
+		where 
+			PROF_CONNECTION_ID in
+			<iterate property="idList" open="(" close=")" conjunction=",">#idList[]#</iterate>
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</delete>
+	
+	<delete id="deleteAllConnections" parameterClass="map">
+		delete from
+			EMPINST.PROF_CONNECTIONS
+		where( PROF_SOURCE_KEY = #key# or PROF_TARGET_KEY = #key# )
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</delete>			
+
+	<select id="countConnectedTo" parameterClass="map" resultClass="integer">
+		select count(C.PROF_CONNECTION_ID)
+		from EMPINST.PROF_CONNECTIONS C
+		<include refid="sql_targetEmployeeStateJoin"/>
+		where 1=1
+		<include refid="sql_ConnWhereBy"/>
+		<include refid="sql_EmployeeWhereState"/>
+		<include refid="Tenant.sql_WhereByTenantKeyC"/>
+		<include refid="sql_targetEmployeeStateJoinTenantKey"/>
+	</select>
+	
+	<select id="countConnections" parameterClass="map" resultMap="ConnectionCountItem">
+		select C.PROF_STATUS as PROF_STATUS, count(*) as PROF_COUNT
+		from EMPINST.PROF_CONNECTIONS C
+		<include refid="sql_targetEmployeeStateJoin"/>
+		where 1=1
+		<include refid="sql_ConnWhereByCounts"/>
+		<include refid="sql_EmployeeWhereState"/>
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_targetEmployeeStateJoinTenantKey"/>
+		group by C.PROF_STATUS
+	</select>
+	
+	<select id="getProfilesConnectedFrom" parameterClass="map" resultMap="ProfileResultLite">
+		select <include refid="sql_LiteResultSelectConn"/>
+		from EMPINST.PROF_CONNECTIONS C
+		<include refid="sql_sourceEmployeeJoin"/>
+		where 1=1
+		<include refid="sql_ConnWhereBy"/>
+		<include refid="sql_EmployeeWhereState"/>
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_sourceEmployeeJoinTenantKey"/>
+		order by
+		<include refid="sql_ConnOrderByFrag"/>	
+	</select>
+	
+	<select id="getProfilesConnectedFull" parameterClass="map" resultMap="ProfileResultFull">
+		select <include refid="sql_FullResultSelectConn"/>
+		from EMPINST.PROF_CONNECTIONS C
+		<include refid="sql_sourceEmployeeJoin"/>
+		where 1=1
+		<include refid="sql_ConnWhereBy"/>
+		<include refid="sql_EmployeeWhereState"/>
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_sourceEmployeeJoinTenantKey"/>
+		order by
+		<include refid="sql_ConnOrderByFrag"/>
+	</select>
+	
+	<select id="getProfilesConnectedTo" parameterClass="map" resultMap="ProfileResultLite">
+		select <include refid="sql_LiteResultSelectConn"/>
+		from EMPINST.PROF_CONNECTIONS C
+		<include refid="sql_targetEmployeeJoin"/>
+		where 1=1
+		<include refid="sql_ConnWhereBy"/>
+		<include refid="sql_EmployeeWhereState"/>
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_targetEmployeeJoinTenantKey"/>
+		order by
+		<include refid="sql_ConnOrderByFrag"/>
+	</select>
+
+	<select id="getProfilesConnectedToFull" parameterClass="map" resultMap="ProfileResultFull">
+		select <include refid="sql_FullResultSelectConn"/>
+		from EMPINST.PROF_CONNECTIONS C
+		<include refid="sql_targetEmployeeJoin"/>
+		where 1=1
+		<include refid="sql_ConnWhereBy"/>
+		<include refid="sql_EmployeeWhereState"/>
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_targetEmployeeJoinTenantKey"/>
+		order by
+		<include refid="sql_ConnOrderByFrag"/>
+	</select>
+	
+	<select id="countConnectedsInCommon" parameterClass="map" resultClass="integer">
+		select 	count(*) from <include refid="sql_ConnInCommon"/> C
+	</select>
+	
+	<select id="getCommonProfilesConnectedTo" parameterClass="map" resultMap="ProfileResultLite">
+		select <include refid="sql_LiteResultSelectConn"/>
+		from (<include refid="sql_ConnInCommon"/>) C
+		<include refid="sql_targetEmployeeJoin"/>
+		<isNotEmpty property="orderBy">
+		order by
+			<include refid="sql_ConnOrderByFrag"/>
+		</isNotEmpty>
+	</select>
+	
+	<select id="getConnectedSourceTargetKeys" parameterClass="map" resultMap="ProfileResultLite">
+		select <include refid="sql_LiteResultSelectConnWithSourceKey"/>
+		from EMPINST.PROF_CONNECTIONS C
+		<include refid="sql_targetEmployeeJoin"/>
+		where 1=1
+		and C.PROF_SOURCE_KEY in
+			<iterate open="(" close=")" conjunction="," property="sourceKeys">
+			#sourceKeys[]#
+			</iterate>
+		and C.PROF_STATUS = #status# 
+		and C.PROF_TYPE = #type#
+		<include refid="sql_EmployeeWhereState"/>
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_targetEmployeeJoinTenantKey"/>
+	</select>
+	
+	<!-- currently only use the tenant key for counts, as other queries are constrained by prof_keys -->
+	<select id="countProfilesWithCollegues" parameterClass="map" resultClass="java.lang.Integer" >
+		SELECT count(DISTINCT C.PROF_TARGET_KEY) FROM EMPINST.PROF_CONNECTIONS C
+		where 1=1
+		and C.PROF_TYPE = 'colleague'
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_EmployeeWhereState"/>
+	</select>
+
+	<sql id="sql_ConnectionByStatus">
+		<isNotNull property="connectionStatus">
+		and C.PROF_STATUS = #connectionStatus#
+		</isNotNull>
+	</sql>
+
+	<!-- currently only use the tenant key for counts, as other queries are constrained by prof_keys -->
+	<select id="countProfilesWithColleguesByStatus" parameterClass="map" resultClass="java.lang.Integer" >
+		SELECT count(*) FROM EMPINST.PROF_CONNECTIONS C
+		where 1=1
+		and C.PROF_TYPE = 'colleague'
+		<include refid="sql_ConnectionByStatus"/>
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_EmployeeWhereState"/>
+	</select>
+
+	<select id="countTotalCollegues" parameterClass="map" resultClass="java.lang.Integer" >
+		SELECT count(*) FROM EMPINST.PROF_CONNECTIONS C
+		where 1=1
+		and C.PROF_TYPE = 'colleague'
+		<include refid="Tenant.sql_WhereByTenantKeyC" />
+		<include refid="sql_EmployeeWhereState"/>
+	</select>
+</sqlMap>

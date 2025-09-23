@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<MetamergeConfig created="Wed Nov 21 16:20:10 SGT 2007" version="7.1.1">
+	<Folder name="Connectors">
+		<Connector name="ProfileConnector">
+			<Configuration>
+				<parameter name="connectorType">com.ibm.lconn.profiles.api.tdi.connectors.ProfileConnector</parameter>
+				<parameter name="parserOption">Useless</parameter>
+				<parameter name="recursive">false</parameter>
+				<parameter name="wantsDirectories">false</parameter>
+				<parameter name="readonlyfiles">false</parameter>
+                <parameter name="hiddenfiles">false</parameter>
+                <parameter name="supportsSkipLookup">true</parameter> 
+			</Configuration>
+			<Schema name="Input">
+				<SchemaItem>
+					<Name>uid</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>distinguishedName</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>sourceUrl</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>key</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>guid</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>email</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+			</Schema>
+			<Schema name="Output">
+					<SchemaItem>
+					<Name>uid</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>distinguishedName</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>sourceUrl</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>key</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>guid</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>email</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+			</Schema>
+		</Connector>
+		<Connector name="PhotoConnector">
+			<Configuration>
+				<parameter name="connectorType">com.ibm.lconn.profiles.api.tdi.connectors.PhotoConnector</parameter>
+				<parameter name="parserOption">Useless</parameter>
+				<parameter name="recursive">false</parameter>
+				<parameter name="wantsDirectories">false</parameter>
+				<parameter name="readonlyfiles">false</parameter>
+                <parameter name="hiddenfiles">false</parameter>
+			</Configuration>
+			<Schema name="Input">
+				<SchemaItem>
+					<Name>uid</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>linkStream</Name>
+					<Syntax>java.io.InputStream</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>image</Name>
+					<Syntax>[byte array]</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>key</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>fileType</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+			</Schema>
+			<Schema name="Output">
+				<SchemaItem>
+					<Name>image</Name>
+					<Syntax>[byte array]</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>key</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>updated</Name>
+					<Syntax>java.util.Date</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>fileType</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+			</Schema>
+		</Connector>
+		<Connector name="PronunciationConnector">
+			<Configuration>
+				<parameter name="connectorType">com.ibm.lconn.profiles.api.tdi.connectors.PronunciationConnector</parameter>
+				<parameter name="parserOption">Useless</parameter>
+				<parameter name="recursive">false</parameter>
+				<parameter name="wantsDirectories">false</parameter>
+				<parameter name="readonlyfiles">false</parameter>
+                <parameter name="hiddenfiles">false</parameter>
+			</Configuration>
+			<Schema name="Input">
+				<SchemaItem>
+					<Name>uid</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>linkStream</Name>
+					<Syntax>java.io.InputStream</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>audioFile</Name>
+					<Syntax>[byte array]</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>key</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>fileType</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+			</Schema>
+			<Schema name="Output">
+				<SchemaItem>
+					<Name>audioFile</Name>
+					<Syntax>[byte array]</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>key</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>updated</Name>
+					<Syntax>java.util.Date</Syntax>
+				</SchemaItem>
+				<SchemaItem>
+					<Name>fileType</Name>
+					<Syntax>java.lang.String</Syntax>
+				</SchemaItem>
+			</Schema>
+		</Connector>
+		<Connector name="CodesConnector">
+			<Configuration>
+				<parameter name="connectorType">com.ibm.lconn.profiles.api.tdi.connectors.CodesConnector</parameter>
+				<parameter name="parserOption">Useless</parameter>
+				<parameter name="recursive">false</parameter>
+				<parameter name="wantsDirectories">false</parameter>
+				<parameter name="readonlyfiles">false</parameter>
+                <parameter name="hiddenfiles">false</parameter>
+				<parameter name="exclusiveLock">false</parameter>
+				<parameter name="fileAppend">false</parameter>
+				<parameter name="skipForwardAfterReconnect">true</parameter>
+			</Configuration>
+		</Connector>
+	</Folder>
+	<Folder name="Forms">
+		<Form name="com.ibm.lconn.profiles.api.tdi.connectors.CodesConnector">
+			<TranslationFile>idi_profile_connectors</TranslationFile>
+			<parameter name="title">codes_connector_title</parameter>
+			<FormSectionNames>
+				<ListItem>General</ListItem>
+			</FormSectionNames>
+			<FormSection name="General">
+				<parameter name="title">General</parameter>
+				<parameter name="initiallyExpanded">true</parameter>
+				<FormSectionNames>
+					<ListItem>tableName</ListItem>
+					<ListItem>$GLOBAL.userComment</ListItem>
+					<ListItem>$GLOBAL.debug</ListItem>
+				</FormSectionNames>
+			</FormSection>
+			<FormItemNames>
+				<ListItem>tableName</ListItem>
+				<ListItem>$GLOBAL.debug</ListItem>
+			</FormItemNames>
+			<FormItem name="tableName">
+				<Values>
+					<!-- these correspond to table names so are not localized -->
+					<ListItem>Country</ListItem>
+					<ListItem>Department</ListItem>
+					<ListItem>EmployeeType</ListItem>
+					<ListItem>Organization</ListItem>
+					<ListItem>WorkLocation</ListItem>
+				</Values>
+				<parameter name="description">tableName_desc</parameter>
+				<parameter name="label">tableName_label</parameter>
+				<parameter name="syntax">DROPLIST</parameter>
+				<parameter name="default">li.country</parameter>
+			</FormItem>
+		</Form>
+		<Form name="com.ibm.lconn.profiles.api.tdi.connectors.PhotoConnector">
+			<TranslationFile>idi_profile_connectors</TranslationFile>
+			<parameter name="title">photo_connector_title</parameter>
+			<FormSectionNames>
+			<ListItem>General</ListItem>
+			</FormSectionNames>
+			<FormSection name="General">
+				<FormSectionNames>
+					<ListItem>$GLOBAL.userComment</ListItem>
+					<ListItem>$GLOBAL.debug</ListItem>
+				</FormSectionNames>
+			</FormSection>
+		</Form>
+		<Form name="com.ibm.lconn.profiles.api.tdi.connectors.PronunciationConnector">
+			<TranslationFile>idi_profile_connectors</TranslationFile>
+			<parameter name="title">pronunciation_connector_title</parameter>
+			<FormSectionNames>
+			<ListItem>General</ListItem>
+			</FormSectionNames>
+			<FormSection name="General">
+				<FormSectionNames>
+					<ListItem>$GLOBAL.userComment</ListItem>
+					<ListItem>$GLOBAL.debug</ListItem>
+				</FormSectionNames>
+			</FormSection>
+		</Form>
+		<Form name="com.ibm.lconn.profiles.api.tdi.connectors.ProfileConnector">
+			<TranslationFile>idi_profile_connectors</TranslationFile>
+			<parameter name="title">profile_connector_title</parameter>
+			<FormSectionNames>
+				<ListItem>General</ListItem>
+			</FormSectionNames>
+			<FormSection name="General">
+				<FormSectionNames>
+					<ListItem>stateName</ListItem>
+					<ListItem>update_mark_manager</ListItem>
+					<ListItem>iterator_return_key_data_only</ListItem>
+					<ListItem>$GLOBAL.userComment</ListItem>
+					<ListItem>$GLOBAL.debug</ListItem>
+				</FormSectionNames>
+			</FormSection>
+			<FormItemNames>
+				<ListItem>stateName</ListItem>
+				<ListItem>update_mark_manager</ListItem>
+				<ListItem>iterator_return_key_data_only</ListItem>
+				<ListItem>$GLOBAL.debug</ListItem>
+			</FormItemNames>
+			<FormItem name="stateName">
+				<Values>
+					<ListItem>li.state_nochange</ListItem>
+					<ListItem>li.state_activate</ListItem>
+					<ListItem>li.state_inactivate</ListItem>
+				</Values>
+				<LocalizedValues>
+					<Item>
+						<Key>li.state_nochange</Key>
+						<Value>state_nochange</Value>
+					</Item>
+					<Item>
+						<Key>li.state_activate</Key>
+						<Value>state_activate</Value>
+					</Item>
+					<Item>
+						<Key>li.state_inactivate</Key>
+						<Value>state_inactivate</Value>
+					</Item>
+				</LocalizedValues>				
+				<parameter name="description">state_desc</parameter>
+				<parameter name="label">state_label</parameter>
+				<parameter name="syntax">DROPLIST</parameter>
+				<parameter name="default">li.state_nochange</parameter>
+				<parameter name="modes">Update,Delete</parameter> 
+			</FormItem>
+			<FormItem name="update_mark_manager">
+				<parameter name="description">mark_manager_desc</parameter>
+				<parameter name="label">mark_manager_label</parameter>
+				<parameter name="syntax">BOOLEAN</parameter>
+				<parameter name="default">false</parameter>
+				<parameter name="modes">Update</parameter> 
+			</FormItem>
+			<FormItem name="iterator_return_key_data_only">
+				<parameter name="description">iterator_return_key_data_only_desc</parameter>
+				<parameter name="label">iterator_return_key_data_only_label</parameter>
+				<parameter name="syntax">BOOLEAN</parameter>
+				<parameter name="default">false</parameter>
+				<parameter name="modes">Iterator</parameter> 
+			</FormItem>
+		</Form>
+	</Folder>
+</MetamergeConfig>

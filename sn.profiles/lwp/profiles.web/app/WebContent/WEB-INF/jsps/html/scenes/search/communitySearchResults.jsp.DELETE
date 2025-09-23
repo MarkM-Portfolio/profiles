@@ -1,0 +1,143 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+
+<%-- ***************************************************************** --%>
+<%--                                                                   --%>
+<%-- IBM Confidential                                                  --%>
+<%--                                                                   --%>
+<%-- OCO Source Materials                                              --%>
+<%--                                                                   --%>
+<%-- Copyright IBM Corp. 2001, 2015                                    --%>
+<%--                                                                   --%>
+<%-- The source code for this program is not published or otherwise    --%>
+<%-- divested of its trade secrets, irrespective of what has been      --%>
+<%-- deposited with the U.S. Copyright Office.                         --%>
+<%--                                                                   --%>
+<%-- ***************************************************************** --%>
+
+<%--
+	@author sberajaw
+--%>
+
+<%@ taglib prefix="c" 			uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" 		uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" 			uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="html" 		uri="http://jakarta.apache.org/struts/tags-html" %>
+<%@ taglib prefix="tiles" 		uri="http://jakarta.apache.org/struts/tags-tiles" %>
+<%@ taglib prefix="profiles"	uri="/WEB-INF/tlds/profiles.tld" %>
+<%@ taglib prefix="tags"		uri="/WEB-INF/tags" %>
+
+<html:xhtml/>
+
+<script type="text/javascript">
+<%@ include file="/WEB-INF/jsps/html/common/profileData.jsp" %>
+	profilesData.config.pageId = "communitySearchResultView";
+</script> 
+
+	
+<!-- content -->	
+<div class="lotusContent">	
+   <a id="mainContent" name="mainContent"></a><!-- skip links for accessibility -->	
+	<div id="searchInfo"> 
+		<fmt:message key="label.searchresults.community.heading">
+		<fmt:param>
+		<c:set var="firstField" value="true" /><%--
+		--%><c:forEach items="${profiles:convertToMap(param)}" var="parameter"><%--
+			--%><c:if test="${parameter.value != ''}"><%--
+				--%><fmt:message key="label.searchresults.searchby.${parameter.key}" var="field" /><%--
+				
+				--%><%-- http://www-1.ibm.com/support/docview.wss?rs=180&uid=swg1PK28094 --%><%--
+				--%><c:choose><%--
+					--%><c:when test="${fn:startsWith(field, '???')}"><%--
+					--%></c:when><%--
+					--%><c:otherwise><%--
+						--%><c:if test="${!firstField}">,&nbsp;</c:if><%--
+						--%>${field}&nbsp;${profiles:filter(parameter.value)}<%--
+						--%><c:set var="firstField" value="false" /><%--
+					--%></c:otherwise><%--
+				--%></c:choose><%--
+			--%></c:if><%--
+		--%></c:forEach><%--
+		--%></fmt:param><%--
+		--%></fmt:message><%--
+		--%><c:if test="${empty searchResultsPage.results}"> <%--
+			--%>.&nbsp;<b>&nbsp;<fmt:message key="label.searchresults.noresults" /></b><%--
+		--%></c:if>
+	</div>
+	
+	<!-- searchResultsTabs -->
+	<div class="lotusTabContainer">			
+		<a id="subNavitation" name="subNavigation"></a><!-- skip links for accessibility -->		
+		<ul class="lotusTabs" id="searchResultsTabs">
+			<li class="lotusFirst" id="profilesTab">
+				<c:set var="parameters" value="${profiles:convertToMap(param)}" />
+				<c:set target="${parameters}" property="showProfilesTab" value="true" />
+				<c:set target="${parameters}" property="page" value="" />
+    			<html:link action="/html/${profiles:filter(searchType)}" name="parameters">
+					<fmt:message key="label.searchresults.people.tablabel" />
+				</html:link>
+			</li>
+			<li class="lotusSelected">
+    			<html:link href="#"> <fmt:message key="label.searchresults.community.tablabel" /> </html:link>
+			</li>
+		</ul>	
+	</div> <!-- end searchResultsTabs -->
+	
+		
+	<div class="lotusTopPaging">
+		<tags:pager searchType="${searchType}" searchResultsPage="${searchResultsPage}" />
+	</div>
+		
+	
+	<!-- searchResults -->
+	<table id="searchResultsTable" class="lotusTable" border="0" cellspacing="0">			
+		<tbody>
+			<c:forEach items="${searchResultsPage.results}" var="community" varStatus="status">
+				<c:choose>
+					<c:when test="${status.count == 1}">
+						<c:set var="rowClass" value="lotusResultRow lotusFirst" />
+					</c:when>
+					<c:when test="${(status.count % 2) == 0}">
+						<c:set var="rowClass" value="lotusResultRow lotusAltRow" />
+					</c:when>
+					<c:otherwise>
+						<c:set var="rowClass" value="lotusResultRow" />
+					</c:otherwise>
+				</c:choose>
+				
+				<tr class="${rowClass}">
+					<td class="lotusFirstCell">
+						<script type="text/javascript">
+							/* 
+							Note: the community object does not contain the service URL nor the image URL, so we need to extract the service
+							      URL from each community URL property and build the img svc url for each community 
+							      Sample:  http://communities.tap.ibm.com/communities/service/html/communityview?communityUuid=3b2fb5ab-0020-4eb9-a09a-d53dee013207 
+							*/
+							var communityUrl = "${community.url}";
+							var communityImgSvcUrl = communityUrl.substring(0,communityUrl.lastIndexOf("communityview?")) + "image" + "?communityUuid=" + "${community.uuid}";
+							var imgHtmlTag = "<img src=\"" + communityImgSvcUrl+ "\" class=\"photo\"  width=\"55\" alt=\"<c:out value='${community.name}'/>\" />";
+							document.write(imgHtmlTag);
+						</script>
+					</td>
+					<td class="lotusLastCell" valign="top">
+						<span class="vcomm">
+		    				<h4><html:link styleClass="name" href="${community.url}"> 
+						<c:out value="${community.name}" />
+						</html:link></h4>
+	    					<p class="uuid" style="display:none"> ${community.uuid} </p>
+    					</span>
+    					<div class="lotusMeta"><p>
+					<c:out value="${community.description}" />
+					</p></div>
+					</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table> <!-- end searchResults -->
+	
+	<div class="lotusBottomPaging">
+		<tags:pager searchType="${searchType}" searchResultsPage="${searchResultsPage}" />
+	</div>
+	
+	<span id="widget-container-col1" class="widgetContainer"></span>
+	
+</div> <!-- end content -->

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2007, 2015
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="profiles.test/bvt" default="development" basedir=".">
+
+	<import file="${env.WPLC_IMPORT}/std_props.xml" />
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml" />
+
+	<patternset id="build.test.files">
+		<include name="build-test.xml" />
+		<include name="build-test.properties" />
+		<include name="buildFileTemplate.properties" />
+		<include name="test.properties" />
+	</patternset>
+
+	<property name="output.jar" value="${dir.lib}/profiles.test.bvt.jar" />
+	<property name="testconf.dir" value="${basedir}/testconf/" />
+	<property name="tdi.testconf.dir" value="${basedir}/testconftdi/" />
+	<property name="dir.logs" value="${dir.lib}/../logs" />
+	<property name="prereq.jdbcdriver.dir" value="${env.ALT_FE_CONTAINERS}/sn.prereqs/lwp/prereqs.sn/db2/" />
+	<property name="base.reports.dir" value="${dir.build}/reports" />
+	
+	<locateComponent component="profiles.config.files" locateBuildDir="false" property="profiles.config.files" />
+	<locateComponent component="lc.config.svc" locateBuildDir="true" property="lc.config.svc" />
+	<locateComponent component="directory.services" locateBuildDir="true" property="directory.svc" />
+	<locateComponent component="lc.appext/msgvector/api" locateBuildDir="false" property="lc.appext.msgvector.api" />
+
+	<copy todir="${dir.classes}" verbose="true" overwrite="true">
+		<fileset dir="${basedir}/.." casesensitive="yes">
+			<patternset refid="build.test.files" />
+		</fileset>
+	</copy>
+
+	<target name="junit-report" description="Create the unit test report">
+		<!-- Properties used to configure how we call the junit task -->
+		<property name="junit.plain.formatter.usefile" value="true" />
+		<property name="junit.report.dir" value="${base.reports.dir}/jreport" />
+		<property name="junit.html.report.dir" value="${junit.report.dir}/html" />
+		<property name="junit.jvm" value="java" />
+		<property name="junit.fork" value="no" />
+		<mkdir dir="${junit.html.report.dir}" />
+		<junitreport todir="${junit.report.dir}">
+			<fileset dir="${dir.build}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${junit.html.report.dir}" />
+		</junitreport>
+	</target>
+
+	<target name="bvt.init">
+		<!-- build the classpath -->
+		<prereqclasspath componentXML="${basedir}/component.xml" />
+
+		<path id="test.classpath">
+			<pathelement location="${output.jar}" />
+			<pathelement location="${user.home}" />
+			<pathelement location="${basedir}" />
+			<pathelement path="${prereq.classpath}" />
+			<pathelement location="${prereq.jdbcdriver.dir}/db2jcc.jar" />
+			<pathelement location="${prereq.jdbcdriver.dir}/db2jcc_license_cu.jar" />
+			<pathelement location="${prereq.jdbcdriver.dir}/db2java.jar" />
+			<pathelement location="${prereq.jdbcdriver.dir}/mssqlserver.jar" />
+			<pathelement location="${prereq.jdbcdriver.dir}/msbase.jar" />
+			<pathelement location="${prereq.jdbcdriver.dir}/msutil.jar" />
+			<pathelement location="${prereq.jdbcdriver.dir}/ojdbc14.jar" />
+		</path>
+	</target>
+
+	<target name="bvt" depends="bvt.init">
+		<antcall target="bvt-db" />
+	</target>
+
+	<target name="bvt-db" depends="bvt.setup">
+		<antcall target="bvt.junit.nodebug.db" />
+	</target>
+
+	<target name="bvt.setup" depends="bvt.init">
+		<echo>Creating directory for reports.</echo>
+		<mkdir dir="${dir.logs}" />
+
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${dir.logs}" includes="**/*.html" />
+		</delete>
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${dir.logs}" includes="**/*.css" />
+		</delete>
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${dir.logs}" includes="**/*.txt" />
+		</delete>
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${dir.logs}" includes="**/*.xml" />
+		</delete>
+
+		<echo>Running testcases now.</echo>
+	</target>
+
+	<target name="bvt.junit.debug" depends="bvt.init">
+		<echo>Creating directory for reports.</echo>
+		<mkdir dir="${dir.logs}" />
+
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${dir.logs}" includes="**/*.html" />
+		</delete>
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${dir.logs}" includes="**/*.css" />
+		</delete>
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${dir.logs}" includes="**/*.txt" />
+		</delete>
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${dir.logs}" includes="**/*.xml" />
+		</delete>
+
+		<echo>Running testcases now.</echo>
+
+		<echo>Running testclass in debug mode.</echo>
+		<echo>Connect your debugger to port 7778, please</echo>
+
+		<junit fork="yes" dir="${basedir}" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<formatter type="plain" />
+			<formatter type="xml" />
+			<jvmarg value="-Dwaltz.config.file.path=${testconf.dir}/directory.services.xml" />
+			<jvmarg value="-Dtest.config.files=${testconf.dir}/" />
+
+			<!-- debug info begins -->
+			<jvmarg value="-Xj9" />
+			<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xnoagent" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=7778" />
+			<!-- debug info ends -->
+
+		</junit>
+
+		<antcall target="bvt.build.report" />
+	</target>
+
+	<target name="bvt.junit.nodebug.db" depends="bvt.init">
+        <!-- echo message="${toString:test.classpath}"/ -->
+		<junit fork="yes" dir="${basedir}" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<formatter type="plain" />
+			<formatter type="xml" />
+			<jvmarg value="-Dwaltz.config.file.path=${testconf.dir}/directory.services.xml" />
+			<jvmarg value="-Dtest.config.files=${testconf.dir}/" />
+
+			<test name="com.ibm.lconn.profiles.test.TestSuiteBVT" todir="${dir.logs}">
+				<formatter type="xml" usefile="true" />
+			</test>
+		</junit>
+
+		<antcall target="bvt.build.report" />
+	</target>
+
+	<target name="bvt.build.report">
+		<echo>Building reports from XML to HTML now.</echo>
+
+		<junitreport todir="${dir.logs}">
+			<fileset dir="${dir.logs}">
+				<include name="TEST-*.xml" />
+			</fileset>
+
+			<report format="frames" todir="${dir.logs}" />
+		</junitreport>
+	</target>
+
+	<import file="${env.WPLC_IMPORT}/check.xml" />
+	<import file="${env.WPLC_IMPORT}/compile.xml" />
+	<import file="${env.WPLC_IMPORT}/rmic.xml" />
+	<import file="${env.WPLC_IMPORT}/package_extra.xml" />
+	<import file="${env.WPLC_IMPORT}/javadoc.xml" />
+	<import file="${env.WPLC_IMPORT}/jdepend.xml" />
+	<import file="${env.WPLC_IMPORT}/clean.xml" />
+	<import file="${env.WPLC_IMPORT}/comp_zip.xml" />
+	<import file="${env.WPLC_IMPORT}/std_targets.xml" />
+	<import file="${env.WPLC_IMPORT}/process_nls.xml" />
+	<import file="${env.WPLC_IMPORT}/performance.xml" />
+
+	<target name="copy-tdi-config-files">
+		<copy todir="${tdi.testconf.dir}" overwrite="true">
+			<fileset dir="${profiles.config.files}/config.files" includes="**/tdi-profiles-configEXAMPLE.xml,**/profiles-types.xml,**/*.xsd" />
+			<fileset dir="${lc.config.svc}/config.files" includes="**/TDI-*.xml,**/profiles-types.xml,**/service-location.xsd,**/LotusConnections-config.xsd" />
+			<fileset dir="${directory.svc}/XML" includes="directory.services.xml,directory.services.xsd" />
+			<fileset dir="${lc.appext.msgvector.api}/config.files" includes="message-vector-config.xsd,profiles-theboard-config.xml" />
+		</copy>
+		<copy todir="${tdi.testconf.dir}/internal" overwrite="true">
+			<fileset dir="${profiles.config.files}/internal" includes="**/*.xml,**/*.xsd" />
+		</copy>
+		<move file="${tdi.testconf.dir}/tdi-profiles-configEXAMPLE.xml" tofile="${tdi.testconf.dir}/tdi-profiles-config.xml" overwrite="true" />
+	</target>
+
+	<target name="copy-main-config-files">
+		<copy todir="${testconf.dir}" overwrite="true">
+			<!-- note we skip profiles-policy.xml and pick it up from configadd -->
+			<fileset dir="${profiles.config.files}/config.files" includes="**/*.xml,**/*.xsd, **/*.ftl, **/*.properties" excludes="**/tdi-*,**/build*,**/*EXAMPLE*,**/*Example*,**/profiles-policy.xml,**/*-cloud*" />
+			<fileset dir="${lc.config.svc}/config.files" includes="**/*.xml,**/*.xsd" excludes="**/acf-*">
+				<exclude name="**/widgets-*" />
+				<exclude name="**/TDI-LotusConnections-config.xml" />
+			</fileset>
+			<fileset dir="${directory.svc}/XML" includes="directory.services.xml,directory.services.xsd" />
+			<fileset dir="${lc.appext.msgvector.api}/config.files" includes="message-vector-config.xsd,profiles-theboard-config.xml" />
+			<fileset dir="${basedir}/configadd" includes="**/*.xml" />
+		</copy>
+		<copy todir="${testconf.dir}/internal" overwrite="true">
+			<fileset dir="${profiles.config.files}/internal" includes="**/*.xml,**/*.xsd" />
+		</copy>
+		<!-- replace admin_replace with some form of url so config intialization is content -->
+		<replace file="${testconf.dir}/LotusConnections-config.xml" token="admin_replace" value="http://www.admin_replace.com" />
+		<!-- enable the mock directory service provider required by the unit tests -->
+		<replace file="${testconf.dir}/directory.services.xml" token="com.ibm.connections.directory.services.provider.WaltzServiceProvider" value="com.ibm.lconn.profiles.test.util.directory.MockProfileProvider" />
+		<!-- inject extenstion attributes into profile-config.xml. unit tests will look for these -->
+		<antcall target="inject-extensions-testconf" />
+		
+		<!--
+		<locateComponent component="lc.util/test" locateBuildDir="false" property="lc.util.test.dir" />
+		<ant antfile="${lc.util.test.dir}/copyExtResExample.xml" inheritAll="false">
+			<property name="testconf.dir" value="${testconf.dir}" />
+		</ant>
+		-->
+	</target>
+
+	<target name="copy-config-files">
+		<antcall target="copy-tdi-config-files" />
+		<antcall target="copy-main-config-files" />
+	</target>
+
+	<property name="local.clean" value="local-clean-config-files" />
+	<target name="local-clean-config-files">
+		<delete failonerror="false" dir="${testconf.dir}" />
+		<delete failonerror="false" dir="${tdi.testconf.dir}" />
+	</target>
+	
+	<target name="inject-extensions-testconf">
+		<copy todir="${testconf.dir}" overwrite="true">
+			<fileset dir="${basedir}/configadd" includes="**/*.properties" />
+		</copy>
+		<loadproperties srcFile="${testconf.dir}/profiles-config-bvt.properties"/>
+		<loadproperties srcFile="${testconf.dir}/profiles-types-attrs-bvt.properties"/>
+		<loadproperties srcFile="${testconf.dir}/profiles-types-types-bvt.properties"/>
+		<!--echo>${profiles.config.ext.attrs}</echo-->
+		<replace file="${testconf.dir}/profiles-config.xml" token="&lt;profileExtensionAttributes&gt;" value="${profiles.config.ext.attrs}" />
+		<!--echo>${default.type.ext.attrs}</echo-->
+		<replace file="${testconf.dir}/profiles-types.xml" token="&lt;id&gt;default&lt;/id&gt;" value="${default.type.ext.attrs}" />
+		<!--echo>${default.type.types}</echo-->
+		<replace file="${testconf.dir}/profiles-types.xml" token="&lt;/config&gt;" value="${add.profile.types}" />
+		
+	</target>
+
+</project>

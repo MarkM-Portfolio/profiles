@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+<plugin>
+    <extension point="net.jazz.ajax.webBundles">
+    	<alias value="lconn.profiles" />
+    </extension>
+	
+    <extension point="net.jazz.ajax.dojoResourceModules">
+    	<dojoResourceModule package="lconn.profiles" name="ui" file="/com/ibm/lconn/profiles/strings/ui.properties" />
+    	<dojoResourceModule package="lconn.profiles" name="attributes" file="/com/ibm/lconn/profiles/strings/uilabels.properties" />
+    </extension>
+</plugin>

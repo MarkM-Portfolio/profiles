@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2012, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="MVRelated">
+
+	<sql id="sql_SelectRelatedResIds">
+		select 
+			PROF_KEY as ASSOC_RESOURCE_ID 
+		from 
+			EMPINST.EMPLOYEE
+		where 
+			PROF_KEY = #relatedObj.sourceKey#
+			<!-- include refid="Tenant.sql_WhereByTenantKey"/-->
+		union all
+		<include refid="MVRelated.sql_SelectConnectionIds"/>	 	
+	</sql>
+	
+	<sql id="sql_SelectConnectionIds">
+		select
+			PROF_TARGET_KEY as ASSOC_RESOURCE_ID
+		from 
+			EMPINST.PROF_CONNECTIONS
+		where
+			PROF_SOURCE_KEY = #relatedObj.sourceKey#
+			<!-- include refid="Tenant.sql_WhereByTenantKey"/-->
+			and	PROF_STATUS = #relatedObj.status# 
+			and PROF_TYPE = #relatedObj.type#		 	
+	</sql>
+	
+</sqlMap>

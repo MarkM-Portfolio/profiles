@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Schema">
+
+	<resultMap id="versionResult" class="java.util.HashMap">
+		<result property="dbSchemaVer" column="DBSCHEMAVER" javaType="java.lang.Integer"/>
+		<result property="postSchemaVer" column="POSTSCHEMAVER" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<select id="readSchemaVersion" resultMap="versionResult" parameterClass="string">
+		SELECT DBSCHEMAVER, POSTSCHEMAVER from EMPINST.SNPROF_SCHEMA where COMPKEY = #appName#
+	</select>
+	
+	<select id="SelectSchemaVersion" resultClass="int" parameterClass="string">
+		SELECT DBSCHEMAVER from EMPINST.SNPROF_SCHEMA where COMPKEY = #appName#
+	</select>
+	
+	
+
+</sqlMap>

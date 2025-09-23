@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Profiler" topic="frame.html">
+   <topic label="Översikter, instruktioner och vanliga frågor för profiler"
+          href="frame.html">
+      <topic label="Vanliga frågor" href="c_pers_faq.html"/>
+      <topic label="Välkommen till profiler" href="c_persona_welcome.html"/>
+      <topic label="Nyheter i den här versionen" href="c_whats_new.html"/>
+      <topic label="Visa profiler" href="c_pers_profiles.html"/>
+      <topic label="Hjälpmedelsfunktioner" href="pDojo_accessibility.html"/>
+      <topic label="Söka efter profiler" href="c_pers_search_options.html"/>
+      <topic label="Göra en snabbsökning" href="t_pers_find_people.html"/>
+      <topic label="Göra en avancerad sökning" href="t_pers_search_profiles.html"/>
+      <topic label="Visa sökresultatet" href="t_pers_search_results.html"/>
+      <topic label="Använda profilvisitkortet" href="t_pers_use_biz_card.html"/>
+      <topic label="Exportera kontaktdetaljer" href="t_pers_export_details.html"/>
+      <topic label="Ta bort arbetskamrater" href="t_pers_delete_colleague.html"/>
+      <topic label="Redigera din profil" href="t_pers_edit_profiles.html"/>
+      <topic label="Uppdatera kontaktinformation" href="t_pers_update_contact_info.html"/>
+      <topic label="Ändra bakgrundsinformation" href="t_pers_change_bgd_info.html"/>
+      <topic label="Ändra profilbild" href="t_pers_edit_photo.html"/>
+      <topic label="Överföra en ljudfil" href="t_pers_audiofile_upload.html"/>
+      <topic label="Använda etiketter" href="c_pers_tags.html"/>
+      <topic label="Lägga till etiketter till din profil"
+             href="t_pers_tag_your_profile.html"/>
+      <topic label="Lägga till externa länkar till din profil"
+             href="t_add_external_links.html"/>
+      <topic label="Lägga till arbetskamrater" href="t_pers_add_colleagues.html"/>
+      <topic label="Visa arbetskamrater" href="t_pers_view_colleagues.html"/>
+      <topic label="Acceptera kallelse från arbetskamrater"
+             href="t_pers_accept_invitations.html"/>
+      <topic label="Tilldela etiketter till personer" href="t_pers_tag_people.html"/>
+   </topic>
+   <topic label="Skapa en ljudfil" href="t_pers_audiofile_create.html"/>
+</toc>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.nicknames/create" description="Peoplepages Nickname Processing" spec-version="3.0" type="java">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/encryptnames.jar" preferredInstallLocation="tmp" />
+	</output-group>
+
+	<dependency name="prereqs.sn/was7.0" type="jar" version="7.0" />
+	<dependency name="prereqs.sn/ant170" type="jar" version="1.7"/>
+
+</component>

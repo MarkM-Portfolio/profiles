@@ -1,0 +1,22 @@
+Caching Overview
+
+Caching in a runtime Profiles application uses Websphere dynacache. Profiles must also provide a solution in case a cache is used in a stand alone environment, such as stand alone BVT. Profiles accordingly has two basic cache implementation classes, one for dynacache and the other a simple (non-dynacache) implementation. These two cache implementations must have a common interface. Clients using caching capabilities do not interact directly with either of these two implementations. These internally used caches are instead wrapped by publically used cache objects, which delegate to an internal cache object. Since these implementations are delegated to, we call them 'cache delegate' classes, and we have the following interface and objects.
+
+CacheDelegate: the interface for all internal (delegated to) cache objects.
+DynaCacheImpl: dynacache implementation of CacheDelegate
+SimpleCacheImpl: a Map based implementation of CacheDelegate.
+
+The class CacheDelegateFactory instantiates either a DynaCacheImpl or SimpleCacheImpl based on whether the run time environment is stand alone or as a Websphere application.
+
+
+End users will use cache objects specifically dedicated to caching a particular object. These are named to reflect the object that is cached. E.g. we have ProfilesTagCloudCache, ProfilesTypesCache, ProfilesCache. All such concrete cache objects extend the abstract class AbstractProfilesCache. These objects hold a CacheDelegate object and use that internal object as its cache implementation. The following object model illustrates relationships for the ProfilesTagCloudCache.
+
+   AbstractProfilesCache
+            ^
+            |                    holds                             creates
+   ProfilesTagCloudCache  -------------------->  CacheDelegate <------------- CacheDelegateFactory        
+                                                      ^
+                                                      |
+                                             ------------------
+                                             |                |
+                                        DynaCacheImpl    SimpleCache

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="EmployeeType">
+
+	<typeAlias alias="employeetype"
+		type="com.ibm.lconn.profiles.data.codes.EmployeeType" />
+
+	<resultMap id="EmployeeTypeResult" class="java.util.HashMap">
+		<result property="codeId" column="PROF_EMPLOYEE_TYPE" />
+		<result property="employeeDescription" column="PROF_EMPLOYEE_DESC" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+
+	<select id="get" resultMap="EmployeeTypeResult" parameterClass="map">
+		select PROF_EMPLOYEE_TYPE, PROF_EMPLOYEE_DESC, TENANT_KEY from EMPINST.EMP_TYPE
+		where PROF_EMPLOYEE_TYPE=#codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+
+	<select id="getAll" resultMap="EmployeeTypeResult" parameterClass="map">
+		select PROF_EMPLOYEE_TYPE, PROF_EMPLOYEE_DESC, TENANT_KEY from EMPINST.EMP_TYPE
+		where 1=1
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<insert id="create" parameterClass="employeetype">
+		insert into EMPINST.EMP_TYPE (PROF_EMPLOYEE_TYPE, PROF_EMPLOYEE_DESC, TENANT_KEY)
+		values (#codeId#, #employeeDescription#, #dbTenantKey#)
+	</insert>
+
+	<update id="update" parameterClass="map">
+		update EMPINST.EMP_TYPE 
+		set PROF_EMPLOYEE_DESC=#code.employeeDescription#
+		where PROF_EMPLOYEE_TYPE = #code.codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<delete id="delete" parameterClass="map">
+		delete from EMPINST.EMP_TYPE
+		where PROF_EMPLOYEE_TYPE=#codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+
+</sqlMap>

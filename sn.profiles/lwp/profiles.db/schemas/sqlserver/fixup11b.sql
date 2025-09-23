@@ -1,0 +1,255 @@
+-- ***************************************************************** 
+--                                                                   
+-- IBM Confidential                                                  
+--                                                                   
+-- OCO Source Materials                                              
+--                                                                   
+-- Copyright IBM Corp. 2001, 2010                                    
+--                                                                   
+-- The source code for this program is not published or otherwise    
+-- divested of its trade secrets, irrespective of what has been      
+-- deposited with the U.S. Copyright Office.                         
+--                                                                   
+-- ***************************************************************** 
+
+-- 5724-S68                                                          
+USE PEOPLEDB
+GO
+
+
+-- FIXUP11A.SQL AND MigrateEmployeeTable JAVA PROGRAM MUST BE RUN BEFORE THIS SCRIPT
+
+--- step 4b: add constraints on new table
+
+{include.msgVector-integOn.sql}
+	
+	
+-- DDL Statements for triggers on Table EMPINST.EMPLOYEE
+
+
+CREATE TRIGGER EMPINST.T_EMPLOYEE_INSRT
+ON EMPINST.EMPLOYEE 
+FOR INSERT 
+AS
+    IF @@ROWCOUNT = 0
+       BEGIN
+       SET NOCOUNT ON;
+       RETURN
+       END
+    ELSE IF @@ROWCOUNT = 1
+        BEGIN
+        SET NOCOUNT ON;
+        DECLARE @n_key NVARCHAR(36),@n_uid NVARCHAR(256), @n_mail NVARCHAR(128), @n_gw_email NVARCHAR(128), @n_login NVARCHAR (256), @n_mgr_uid NVARCHAR(256)
+        SELECT @n_key = PROF_KEY, @n_uid = PROF_UID, @n_mail = PROF_MAIL, @n_gw_email = PROF_GROUPWARE_EMAIL,
+			@n_login = PROF_LOGIN,  @n_mgr_uid = PROF_MANAGER_UID FROM inserted
+        UPDATE EMPINST.EMPLOYEE 
+			SET PROF_LAST_UPDATE = CURRENT_TIMESTAMP,
+				PROF_MAIL_LOWER =  CASE @n_mail WHEN NULL THEN NULL ELSE LOWER(@n_mail) END ,
+				PROF_UID_LOWER =  CASE @n_uid WHEN NULL THEN NULL ELSE LOWER(@n_uid) END,
+				PROF_GW_EMAIL_LOWER =  CASE @n_gw_email WHEN NULL THEN NULL ELSE LOWER(@n_gw_email) END,
+			    PROF_LOGIN_LOWER =  CASE @n_login WHEN NULL THEN NULL ELSE LOWER(@n_login) END,
+			    PROF_MANAGER_UID_LOWER =  CASE @n_mgr_uid WHEN NULL THEN NULL ELSE LOWER(@n_mgr_uid) END
+		WHERE PROF_KEY = @n_key
+        END
+    ELSE
+        BEGIN
+        SET NOCOUNT ON;
+        UPDATE EMPINST.EMPLOYEE 
+			SET PROF_LAST_UPDATE = CURRENT_TIMESTAMP,
+				PROF_MAIL_LOWER =  CASE inserted.PROF_MAIL WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_MAIL) END,
+		        PROF_UID_LOWER =  CASE inserted.PROF_UID WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_UID) END,
+                PROF_GW_EMAIL_LOWER =  CASE inserted.PROF_GROUPWARE_EMAIL WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_GROUPWARE_EMAIL) END,
+                PROF_LOGIN_LOWER =  CASE inserted.PROF_LOGIN WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_LOGIN) END,
+		        PROF_MANAGER_UID_LOWER =  CASE inserted.PROF_MANAGER_UID WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_MANAGER_UID) END
+            FROM EMPINST.EMPLOYEE INNER JOIN inserted ON inserted.PROF_KEY = EMPINST.EMPLOYEE.PROF_KEY;
+        END
+--END
+GO
+
+
+CREATE TRIGGER EMPINST.T_EMPLOYEE_UPD
+ON EMPINST.EMPLOYEE 
+FOR UPDATE 
+AS
+    IF @@ROWCOUNT = 0
+       BEGIN
+       SET NOCOUNT ON;
+       RETURN
+       END
+    ELSE IF @@ROWCOUNT = 1
+        BEGIN
+        SET NOCOUNT ON;
+        DECLARE @n_key NVARCHAR(36),@n_uid NVARCHAR(256), @n_mail NVARCHAR(128), @n_gw_email NVARCHAR(128), @n_login NVARCHAR (36), @n_mgr_uid NVARCHAR(256)
+        SELECT @n_key = PROF_KEY, @n_uid = PROF_UID, @n_mail = PROF_MAIL, @n_gw_email = PROF_GROUPWARE_EMAIL,
+			@n_login = PROF_LOGIN , @n_mgr_uid = PROF_MANAGER_UID FROM inserted
+        UPDATE EMPINST.EMPLOYEE 
+			SET PROF_LAST_UPDATE = CURRENT_TIMESTAMP,
+				PROF_MAIL_LOWER =  CASE @n_mail WHEN NULL THEN NULL ELSE LOWER(@n_mail) END ,
+				PROF_UID_LOWER =  CASE @n_uid WHEN NULL THEN NULL ELSE LOWER(@n_uid) END,
+				PROF_GW_EMAIL_LOWER =  CASE @n_gw_email WHEN NULL THEN NULL ELSE LOWER(@n_gw_email) END,
+			PROF_LOGIN_LOWER =  CASE @n_login WHEN NULL THEN NULL ELSE LOWER(@n_login) END,
+			    PROF_MANAGER_UID_LOWER =  CASE @n_mgr_uid WHEN NULL THEN NULL ELSE LOWER(@n_mgr_uid) END
+		WHERE  PROF_KEY = @n_key
+        END
+    ELSE
+        BEGIN
+        SET NOCOUNT ON;
+        UPDATE EMPINST.EMPLOYEE 
+			SET PROF_LAST_UPDATE = CURRENT_TIMESTAMP,
+				PROF_MAIL_LOWER =  CASE inserted.PROF_MAIL WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_MAIL) END,
+		        PROF_UID_LOWER =  CASE inserted.PROF_UID WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_UID) END,
+                PROF_GW_EMAIL_LOWER =  CASE inserted.PROF_GROUPWARE_EMAIL WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_GROUPWARE_EMAIL) END,
+                PROF_LOGIN_LOWER =  CASE inserted.PROF_LOGIN WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_LOGIN) END,
+		        PROF_MANAGER_UID_LOWER =  CASE inserted.PROF_MANAGER_UID WHEN NULL THEN NULL ELSE LOWER(inserted.PROF_MANAGER_UID) END
+            FROM EMPINST.EMPLOYEE INNER JOIN inserted ON inserted.PROF_KEY = EMPINST.EMPLOYEE.PROF_KEY;
+        END
+GO
+
+
+--- step 5: drop temp table
+
+DROP TABLE EMPINST.EMPLOYEE_T;
+GO
+
+--- step 6: create triggers/indices new table
+--- keep the following stmts in sync with createdb.sql
+
+CREATE INDEX EMP_GUID_IDX ON EMPINST.EMPLOYEE 
+		(PROF_GUID ASC);
+GO
+
+CREATE INDEX MAIL_IDX ON EMPINST.EMPLOYEE 
+		(PROF_MAIL ASC);	
+GO
+
+CREATE INDEX MAIL_LOWER_IDX ON EMPINST.EMPLOYEE 
+		(PROF_MAIL_LOWER ASC);
+GO
+
+CREATE INDEX UID_LOWER_IDX ON EMPINST.EMPLOYEE 
+		(PROF_UID_LOWER ASC);
+GO
+
+CREATE INDEX GW_EMAIL_LOWER_IDX ON EMPINST.EMPLOYEE 
+		(PROF_GW_EMAIL_LOWER ASC);
+GO
+CREATE INDEX PREF_FNX ON EMPINST.EMPLOYEE 
+		(PROF_PREFERRED_FIRST_NAME ASC);
+GO
+
+CREATE INDEX PREF_LNX ON EMPINST.EMPLOYEE 
+		(PROF_PREFERRED_LAST_NAME ASC);
+GO
+
+CREATE INDEX DISPNMX ON EMPINST.EMPLOYEE 
+		(PROF_DISPLAY_NAME ASC);
+GO
+
+CREATE INDEX MGRIDX ON EMPINST.EMPLOYEE 
+		(PROF_MANAGER_UID ASC);
+GO
+
+CREATE INDEX GRPEMAIL_IDX ON EMPINST.EMPLOYEE 
+		(PROF_GROUPWARE_EMAIL ASC);
+GO
+
+CREATE INDEX JOB_RESP_UID_IDX ON EMPINST.EMPLOYEE 
+		(PROF_JOB_RESPONSIBILITIES, PROF_KEY);
+GO
+
+CREATE INDEX ORG_UID_IDX ON EMPINST.EMPLOYEE 
+		(PROF_ORGANIZATION_IDENTIFIER, PROF_KEY);
+GO
+
+CREATE INDEX COUNTRY_UID_IDX ON EMPINST.EMPLOYEE 
+		(PROF_ISO_COUNTRY_CODE, PROF_KEY);
+GO
+		
+CREATE INDEX FAX_IDX ON EMPINST.EMPLOYEE
+                (PROF_FAX_TELEPHONE_NUMBER ASC);
+GO
+
+CREATE INDEX IPPHONE_IDX ON EMPINST.EMPLOYEE
+                (PROF_IP_TELEPHONE_NUMBER ASC);
+GO
+
+CREATE INDEX MOBILE_IDX ON EMPINST.EMPLOYEE
+                (PROF_MOBILE ASC);
+GO
+
+CREATE INDEX PAGER_IDX ON EMPINST.EMPLOYEE
+                (PROF_PAGER ASC);
+GO
+
+CREATE INDEX PHONE_IDX ON EMPINST.EMPLOYEE
+                (PROF_TELEPHONE_NUMBER ASC);
+GO
+                
+CREATE INDEX WORKLOC_IDX ON EMPINST.EMPLOYEE
+                (PROF_WORK_LOCATION ASC);
+GO
+                           
+CREATE INDEX LOGIN_LOWER_IDX ON EMPINST.EMPLOYEE
+                (PROF_LOGIN_LOWER ASC);
+GO
+
+CREATE INDEX MANAGER_UID_LOWER_IDX ON EMPINST.EMPLOYEE
+                (PROF_MANAGER_UID_LOWER ASC);
+GO
+
+
+------------------------------------------------
+-- DDL Statements for table EMPINST.GIVEN_NAME
+------------------------------------------------
+
+ALTER TABLE EMPINST.SURNAME ADD PROF_NAME_SOURCE NUMERIC(19,0) DEFAULT 0;
+GO
+
+------------------------------------------------
+-- DDL Statements for table EMPINST.SURNAME
+------------------------------------------------
+
+ALTER TABLE EMPINST.GIVEN_NAME ADD PROF_NAME_SOURCE NUMERIC(19,0) DEFAULT 0;
+GO
+
+------------------------------------------------
+-- DDL Statements for Table EMPINST .PROF_CONNECTIONS
+------------------------------------------------
+
+CREATE INDEX CONN_TARGET_IDX ON EMPINST.PROF_CONNECTIONS
+	(PROF_TARGET_KEY,PROF_STATUS, PROF_TYPE); 
+GO
+
+
+
+------------------------------------------------
+-- DDL Statements for view "EMPINST"."EVENTLOG"
+------------------------------------------------
+
+CREATE TABLE EMPINST.EVENTLOG (
+	EVENT_KEY			NVARCHAR(36) NOT NULL, 
+	EVENT_SOURCE 			NVARCHAR(36) NOT NULL, 
+	OBJECT_KEY			NVARCHAR(36) NOT NULL,
+	EVENT_NAME			NVARCHAR(128) NOT NULL, 
+	EVENT_TYPE			NUMERIC(19,0) NOT NULL DEFAULT -1, 
+	CREATED 			DATETIME NOT NULL,
+	CREATED_BY_KEY			NVARCHAR(36) NOT NULL,
+	CREATED_BY_GUID			NVARCHAR(256) NOT NULL, 
+	CREATED_BY_UID			NVARCHAR(256) NOT NULL, 
+	CREATED_BY_NAME			NVARCHAR(128),
+	ISPRIVATE			NUMERIC(19,0) DEFAULT 0,
+	ISSYSEVENT			NUMERIC(19,0) DEFAULT 0,
+	EVENT_METADATA			VARBINARY(max)
+  CONSTRAINT EVLOG_PK PRIMARY KEY (EVENT_KEY) 
+) ;
+GO
+
+CREATE INDEX EVLOG_TYPE_IDX ON EMPINST.EVENTLOG (CREATED, EVENT_TYPE);
+GO
+
+GRANT DELETE,INSERT,SELECT,UPDATE ON EMPINST.EVENTLOG TO PROFUSER
+GO 
+
+-- Update schema version
+UPDATE EMPINST.SNPROF_SCHEMA SET DBSCHEMAVER= 11 WHERE COMPKEY='Profiles';
+GO

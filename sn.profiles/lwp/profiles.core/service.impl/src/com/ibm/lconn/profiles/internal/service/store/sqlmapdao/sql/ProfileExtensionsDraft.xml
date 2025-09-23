@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2007, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="ProfileExtensionDraft">
+
+	<typeAlias alias="profileExtension"
+		type="com.ibm.lconn.profiles.data.ProfileExtension" />
+
+	<resultMap id="ProfileExtensionDraftResult" class="profileExtension">
+		<result property="key" column="PROF_KEY" />
+		<result property="extKey" column="PROF_EXT_KEY" />
+		<result property="name" column="PROF_NAME" />
+		<result property="value" column="PROF_VALUE" />	
+		<result property="propertyId" column="PROF_PROPERTY_ID" />
+		<result property="updateSequence" column="PROF_UPDATE_SEQUENCE" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+
+	<sql id="sql_SelectProfileExtensionDraft">
+		PE.PROF_KEY as PROF_KEY, 
+		PE.PROF_EXT_KEY as PROF_EXT_KEY, 
+		PE.PROF_NAME as PROF_NAME, 
+		PE.PROF_DATA_TYPE as PROF_DATA_TYPE, 
+		PE.PROF_PROPERTY_ID as PROF_PROPERTY_ID,
+		PE.PROF_VALUE as PROF_VALUE,
+		PE.PROF_UPDATE_SEQUENCE as PROF_UPDATE_SEQUENCE,
+		PE.TENANT_KEY as TENANT_KEY
+	</sql>
+
+	<select id="SelectProfileExtensionDraftByKeyIdValueDraft" resultMap="ProfileExtensionDraftResult" parameterClass="java.util.Map">
+		select
+			<include refid="ProfileExtensionDraft.sql_SelectProfileExtensionDraft"/>			
+		from
+			EMPINST.PROFILE_EXT_DRAFT PE
+		where
+			PE.PROF_KEY = #key# AND PE.PROF_PROPERTY_ID = #propertyId# AND PE.PROF_VALUE = #value#	AND PE.PROF_UPDATE_SEQUENCE = ( select max(PE.PROF_UPDATE_SEQUENCE) from     EMPINST.PROFILE_EXT_DRAFT PE where     PE.PROF_KEY = #key# AND PE.PROF_PROPERTY_ID = #propertyId# AND PE.PROF_VALUE = #value#)     			
+			<include refid="Tenant.sql_WhereByTenantKeyPE" />
+	</select>
+
+	<!-- jtw:ext_attr -->
+	<select id="SelectProfileExtensionDraftByKeyId" resultMap="ProfileExtensionDraftResult" parameterClass="java.util.Map">
+		select
+			<include refid="ProfileExtensionDraft.sql_SelectProfileExtensionDraft"/>			
+		from
+			EMPINST.PROFILE_EXT_DRAFT PE
+		where
+			PE.PROF_KEY = #key# AND PE.PROF_PROPERTY_ID = #propertyId# AND PE.PROF_UPDATE_SEQUENCE = ( select max(PE.PROF_UPDATE_SEQUENCE) from EMPINST.PROFILE_EXT_DRAFT PE where PE.PROF_KEY = #key# AND PE.PROF_PROPERTY_ID = #propertyId#)     			
+			<include refid="Tenant.sql_WhereByTenantKeyPE" />
+	</select>
+
+	<insert id="insertProfileExtensionDraft"
+		parameterClass="profileExtension">
+		insert into EMPINST.PROFILE_EXT_DRAFT
+		<dynamic prepend="(">
+			PROF_KEY,
+			<isNotNull property="extKey">PROF_EXT_KEY,</isNotNull>
+			<isNotNull property="name">PROF_NAME,</isNotNull>
+			PROF_PROPERTY_ID,
+			<isNotNull property="dataType">PROF_DATA_TYPE,</isNotNull>
+			<isNotNull property="value">PROF_VALUE,</isNotNull>
+			TENANT_KEY
+			)
+		</dynamic>
+		VALUES
+		<dynamic prepend="(">
+			#key#,
+			<isNotNull property="extKey">#extKey#,</isNotNull>
+			<isNotNull property="name">#name#,</isNotNull>
+			#propertyId#,
+			<isNotNull property="dataType">#dataType#,</isNotNull>
+			<isNotNull property="value">#value#,</isNotNull>
+			#dbTenantKey#
+			)
+		</dynamic>
+	</insert>
+
+</sqlMap>

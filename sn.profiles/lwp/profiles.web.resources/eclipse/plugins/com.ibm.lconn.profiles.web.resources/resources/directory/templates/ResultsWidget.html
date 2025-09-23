@@ -1,0 +1,34 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2015                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<div class="lconnSearchResults">
+	<div id="directory_resultCountA11y" class="lotusOffScreen" dojoAttachPoint="resultCountA11y" aria-live="assertive"></div>
+	<div dojoAttachPoint="noResultsMessage" class="lconn_noResultsMessage lotusHidden">
+		<div class="lconn_message">${NO_RESULTS_MSG}</div>
+		<div class="lconn_tips">
+			<div class="lconn_tipMessage">${NO_RESULTS_TIP_MSG}</div>
+			<ul>
+				<li>${NO_RESULTS_TIP1}</li>
+				<li>${NO_RESULTS_TIP2}</li>
+				<li>${!NO_RESULTS_TIP3}</li>
+			</ul>
+		</div>
+	</div>
+	<div dojoAttachPoint="resultContainer" class="lconn_resultContainer lconnSearchHighlight">
+		<div dojoAttachPoint="loadingFrame" class="lconnApplicationLoading">
+			<img class="lotusLoading" src="${blankGif}" role="presentation" alt="">
+			<div tabindex="0" dojoAttachPoint="loadingFrameFocusable">${LOADING}</div>
+		</div>
+	</div>
+</div>

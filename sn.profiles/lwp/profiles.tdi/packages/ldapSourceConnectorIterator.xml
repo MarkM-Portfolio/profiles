@@ -1,0 +1,1065 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<MetamergeConfig IDIversion="Created by TDI7.1.1 - 2010-06-16" created="Mon Jul 05 14:28:06 CST 2010" createdBy="tangyawei" modified="Mon Jul 05 14:28:15 CST 2010" modifiedBy="tangyawei" version="7.1.1">
+    <Folder name="AssemblyLines">
+        <AssemblyLine name="ldapSourceConnectorIterator">
+            <Settings/>
+            <Hooks>
+                <Hook name="prolog0">
+                    <Name>prolog0</Name>
+                    <Script><![CDATA[var count = 0;
+var source_ldap_search_base = null;
+var aProp = system.getTDIProperty("profiles", "source_ldap_search_base");
+if((aProp != null) && (aProp != "")) {
+	source_ldap_search_base = aProp;
+}
+var source_ldap_search_filter = null;
+aProp = system.getTDIProperty("profiles", "source_ldap_search_filter");
+if((aProp != null) && (aProp != "")) {
+	source_ldap_search_filter = aProp;
+}
+
+//--------------------------------------------------------------
+// Load the message bundle if not done already.  Will set
+// variable messageBundle.
+//--------------------------------------------------------------
+load_message_bundle();
+
+//--------------------------------------------------------------
+// Get the regex expression which is used to filter DNs from
+// property file, if any
+//--------------------------------------------------------------
+source_ldap_required_dn_regex_pattern = null;
+var aProp = system.getTDIProperty("profiles", "source_ldap_required_dn_regex");
+if((aProp != null) && (aProp != "")) {
+	var evalexp = "source_ldap_required_dn_regex_pattern = " + aProp;
+	eval(evalexp);	
+}
+else {
+	source_ldap_required_dn_regex_pattern = null;
+}
+if(source_ldap_required_dn_regex_pattern != null) {
+	log1("INFO", "info_dn_regex", source_ldap_required_dn_regex_pattern.toString());
+}
+
+//-----------------------------------------------
+// Variables needed in case we do our own sorted
+// page search
+//-----------------------------------------------
+var sortedPageSize = 0;
+var sortedTotalIterations = 0;
+var sortedSkipFirstEntry = false;
+var sortedSearchAttribute = null;
+aProp = system.getTDIProperty("profiles", "source_ldap_sort_attribute");
+if((aProp != null) && (aProp != "")) {
+	sortedSearchAttribute = "" + aProp;
+}
+if(sortedSearchAttribute != null) {
+	aProp = system.getTDIProperty("profiles", "source_ldap_sort_page_size");
+	if((aProp != null) && (aProp != "")) {
+		try
+		{
+			sortedPageSize = java.lang.Integer.parseInt(aProp);
+			if(sortedPageSize < 0) {
+				var msgTxt = log1("ERROR", "err_sort_page_size_not_valid", aProp);
+				system.abortAssemblyLine(msgTxt);
+			}
+		}
+		catch(e)
+		{
+			var msgTxt = log1("ERROR", "err_sort_page_size_not_valid", aProp);
+			system.abortAssemblyLine(msgTxt);
+		}
+	}
+}
+
+var itCounter = 0;
+var lastSuccessfulDN = null;
+var retCode = 0;
+var itDone = false;]]></Script>
+                    <Enabled>true</Enabled>
+                </Hook>
+            </Hooks>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <SimulationConfig>
+                <SimulationStates>
+                    <Component name="ldap_iterate" state="Enabled"/>
+                </SimulationStates>
+                <ProxySettings/>
+            </SimulationConfig>
+            <LogConfig/>
+            <ContainerEF name="EntryFeedContainer">
+                <Connector name="ldap_iterate">
+                    <InheritFrom>system:/Connectors/ibmdi.LDAP</InheritFrom>
+                    <ConnectorMode>Iterator</ConnectorMode>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Configuration>
+                        <UserComment/>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="automapADPassword">false</parameter>
+                        <parameter name="debug">false</parameter>
+                        <parameter name="ldapAddAttr">false</parameter>
+                        <parameter name="ldapAuthenticationMethod">@SUBSTITUTE{property.profiles:source_ldap_authentication_method}</parameter>
+                        <parameter name="ldapBinaryAttributes"><![CDATA[GUID
+objectGUID
+objectSid]]></parameter>
+                        <parameter name="ldapPageSize">@SUBSTITUTE{property.profiles:source_ldap_page_size}</parameter>
+                        <parameter name="ldapPassword">@SUBSTITUTE{property.profiles:source_ldap_user_password}</parameter>
+                        <parameter name="ldapReferrals">follow</parameter>
+                        <parameter name="ldapReturnAttributes"><![CDATA[ibm-entryUuid
+entryUUID
+objectGUID
+nsuniqueid
+dominounid
+GUID
+*]]></parameter>
+                        <parameter name="ldapSearchBase">@SUBSTITUTE{property.profiles:source_ldap_search_base}</parameter>
+                        <parameter name="ldapSearchFilter">@SUBSTITUTE{property.profiles:source_ldap_search_filter}</parameter>
+                        <parameter name="ldapSearchScope">subtree</parameter>
+                        <parameter name="ldapSizeLimit">0</parameter>
+                        <parameter name="ldapSortAttribute">@SUBSTITUTE{property.profiles:source_ldap_sort_attribute}</parameter>
+                        <parameter name="ldapTimeLimit">0</parameter>
+                        <parameter name="ldapUrl">@SUBSTITUTE{property.profiles:source_ldap_url}</parameter>
+                        <parameter name="ldapUseSSL">@SUBSTITUTE{property.profiles:source_ldap_use_ssl}</parameter>
+                        <parameter name="ldapUsername">@SUBSTITUTE{property.profiles:source_ldap_user_login}</parameter>
+                        <parameter name="ldapVLVPageSize">0</parameter>
+                        <parameter name="simulateRename">false</parameter>
+                        <parameter name="userComment"/>
+                    </Configuration>
+                    <ComputeChanges>true</ComputeChanges>
+                    <DeltaBehavior>0</DeltaBehavior>
+                    <DeltaStrict>true</DeltaStrict>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Enabled>true</Enabled>
+                            <Add>true</Add>
+                            <Modify>true</Modify>
+                            <Simple>*</Simple>
+                            <SubstitutionTemplate>null</SubstitutionTemplate>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings>
+                        <UniqueAttribute/>
+                        <WhenToCommit>After every database operation</WhenToCommit>
+                        <Driver>CloudScape</Driver>
+                    </DeltaSettings>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>*</Name>
+                            <Presence>null</Presence>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Hook name="after_close">
+                            <Name>after_close</Name>
+                            <Script><![CDATA[if(itDone) {
+var outFileName = eval_tdi_expression("{property.Java-Properties:java.io.tmpdir}/_tdi.rc");
+write_return_code(retCode, outFileName);
+if(work != null) {
+	var retAttr = work.getAttribute("retCode");
+	if(retAttr == null) {
+		retAttr = work.newAttribute("retCode");
+	}
+	retAttr.setValue("" + retCode);
+	}
+	console2("out", "disp_iteration_count_total", "" + new Date(), "" + itCounter);
+}]]></Script>
+                            <Enabled>true</Enabled>
+                            <DebugBreak>false</DebugBreak>
+                        </Hook>
+                        <Hook name="after_getnext">
+                            <Name>after_getnext</Name>
+                            <Script><![CDATA[if(sortedPageSize > 0) {
+	++sortedIterationCount;
+	if(sortedSkipFirstEntry) {
+		sortedSkipFirstEntry = false;
+		system.skipEntry();
+	}
+	else {
+		++sortedTotalIterations;		
+		sortedLastGuid = conn.getString(sortedSearchAttribute);
+		if(sortedLastGuid == null) {
+			log1("WARN", "warn_sort_page_attr_not_found", conn.getString("$dn"));
+			system.skipEntry();
+		}	
+	}
+}
+
+var sdn = conn.getString("$dn");
+if(sdn != null) {
+	if(sdn.length() > 0) {
+		/*-----------------------------------------------------------
+         * We may be told to ignore any entries that don't contain
+         * a particular regular expression pattern. If this was 
+		 * configured test the pattern and skip if false
+         *-----------------------------------------------------------*/ 		
+		if(source_ldap_required_dn_regex_pattern != null) {
+			if(!source_ldap_required_dn_regex_pattern.test(sdn)) {
+				/*
+				task.logmsg("+++skipping $dn=" + sdn + 
+								" because does not match required pattern:" + 
+								source_ldap_required_dn_regex_pattern);
+				*/
+				system.skipEntry();				
+			}
+		}
+		lastSuccessfulDN = sdn;
+	}
+	else{
+		system.skipEntry();
+	}
+}
+else {
+	system.skipEntry();
+}
+
+itCounter = itCounter + 1;
+if((itCounter % 10000) == 0) {
+	console2("out", "disp_iteration_count", "" + new Date(), "" + itCounter);
+}]]></Script>
+                            <Enabled>true</Enabled>
+                            <DebugBreak>false</DebugBreak>
+                        </Hook>
+                        <Hook name="after_initialize">
+                            <Name>after_initialize</Name>
+                            <Script><![CDATA[//----------------------------------------
+// If sorted page technique is desired,
+// make sure LDAP support sorting. Also
+// make sure sortedSearchAttribute in
+// search filter
+//----------------------------------------
+if(sortedPageSize > 0) {
+	if(!ldap_iterate.connector.supportsSorting()) {
+		var msgText = log0("ERROR", "err_sorting_not_supported");
+		system.abortAssemblyLine(msgText);
+	}
+
+	var oldFilter = ldap_iterate.connector.getParam("ldapSearchFilter");
+	var posStart = oldFilter.indexOf("(" + sortedSearchAttribute);
+	if(posStart <= 0) {
+		var msgText = log1("ERROR", "err_sort_attr_not_found", oldFilter);
+		system.abortAssemblyLine(oldFilter);
+	}
+}]]></Script>
+                            <Enabled>true</Enabled>
+                            <DebugBreak>false</DebugBreak>
+                        </Hook>
+                        <Hook name="before_getnext">
+                            <Name>before_getnext</Name>
+                            <Script><![CDATA[//----------------------------------------------------
+// If we are using sorted page technique, we need
+// to check if we have reached our page size, and if
+// so we need to set our filter for the next iteration
+// and terminate the connector
+//----------------------------------------------------
+if(sortedPageSize > 0) {
+	if(sortedIterationCount == sortedPageSize) {	
+		if(sortedLastGuid != null) {
+			var filter = null;
+			var oldFilter = ldap_iterate.connector.getParam("ldapSearchFilter");
+			var posStart = oldFilter.indexOf("(" + sortedSearchAttribute);
+			if(posStart >= 0) {
+				var posEnd = oldFilter.indexOf(")", posStart + 1);
+				if(posEnd > 0) {
+					filter = oldFilter.substring(0, posStart + 1) + 
+						     sortedSearchAttribute + ">=" + sortedLastGuid +
+							 oldFilter.substring(posEnd);
+				}
+			}
+			if(filter != null) {
+				log1("INFO", "info_search_filter", filter);
+				ldap_iterate.connector.setParam("ldapSearchFilter", filter);
+			}
+			else {
+				var msgText = log1("ERROR", "err_sort_attr_not_found", oldFilter);
+				system.abortAssemblyLine(oldFilter);
+			}		
+		}
+		sortedIterationCount = 0;
+
+		//--------------------------------------------
+		// indicate to skip the first entry next time 
+		// because it will be duplicate of this one
+		//--------------------------------------------
+		sortedSkipFirstEntry = true;
+
+		ldap_iterate.connector.terminate();
+		//--------------------------------------------
+		// Note that reinitialization should occur 
+		// because we terminated and we changed 
+		// configuration. IMPORTANT: The LDAP
+		// connector must be configured to intialize
+		// when configuration has changed (and is
+		// used)
+		//-------------------------------------------- 
+		system.skipEntry();
+	}
+}]]></Script>
+                            <Enabled>true</Enabled>
+                            <DebugBreak>false</DebugBreak>
+                        </Hook>
+                        <Hook name="before_initialize">
+                            <Name>before_initialize</Name>
+                            <Script><![CDATA[//--------------------------------------------------------
+// In case we are doing sorted page search, we initialize
+// variables here
+//--------------------------------------------------------
+var sortedIterationCount = 0;
+var sortedLastGuid = null;]]></Script>
+                            <Enabled>true</Enabled>
+                            <DebugBreak>false</DebugBreak>
+                        </Hook>
+                        <Hook name="end_of_data">
+                            <Name>end_of_data</Name>
+                            <Script>itDone = true;</Script>
+                            <Enabled>true</Enabled>
+                            <DebugBreak>false</DebugBreak>
+                        </Hook>
+                        <Hook name="get_fail">
+                            <Name>get_fail</Name>
+                            <Script><![CDATA[//------------------------------------------- 
+// If we got a search base error and we were
+// passed one, we will just ignore the error
+// on the first iteration.  Otherwise, 
+// display the message and terminate
+//-------------------------------------------
+//task.logmsg("<<<<<Iterator Error");
+if((itCounter == 0) && (_source_base != null) && (error.getString("message").indexOf(" 32") > 0)) {
+	task.logmsg(error.getString("message"));
+	task.shutdown();
+}
+else {
+	msgText = log2("ERROR", "err_iteration_failure", lastSuccessfulDN, error.getString("message"));
+	retCode = 1;	
+	system.abortAssemblyLine(error.getString("message"));
+}
+itDone = true;]]></Script>
+                            <Enabled>true</Enabled>
+                            <DebugBreak>false</DebugBreak>
+                        </Hook>
+                        <Hook name="on_connection_failure">
+                            <Name>on_connection_failure</Name>
+                            <Script>itDone = true;</Script>
+                            <Enabled>true</Enabled>
+                            <DebugBreak>false</DebugBreak>
+                        </Hook>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="autoreconnect">true</parameter>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">10</parameter>
+                        <parameter name="retryDelay">60</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <OperationCarrierIsProperty>false</OperationCarrierIsProperty>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance>
+                        <Enabled>false</Enabled>
+                        <ExhaustedPoolBehavior>Wait</ExhaustedPoolBehavior>
+                    </PoolInstance>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+            </ContainerEF>
+            <ContainerDF name="DataFlowContainer"/>
+            <ThreadOptions/>
+            <Operations/>
+            <InitParams>
+                <Schema name="AssemblyLineInitParams"/>
+            </InitParams>
+        </AssemblyLine>
+    </Folder>
+    <Folder name="Connectors"/>
+    <Folder name="Parsers"/>
+    <Folder name="Scripts">
+        <Script name="log_functions">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//----------------------------------------------------------
+// Load the main message bundle if not done already
+//
+// Loads messages into variable messageLookup
+//----------------------------------------------------------
+function load_message_bundle() {
+	if(!this.messageBundle) {
+		var messageBundle = java.util.PropertyResourceBundle.getBundle("profiles_messages");
+		messageLookup = new com.ibm.peoplepages.tdi.util.MessageLookup(messageBundle);
+	}
+}
+
+//----------------------------------------------------------
+// Log an untranslated message
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param text the text
+//----------------------------------------------------------
+function logmsg(level, text) {
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 0 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+//----------------------------------------------------------
+function log0(level, res) {
+	var text = messageLookup.getString(res);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log the exception stack trace
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param the exception
+//----------------------------------------------------------
+function logStackTrace(level, throwable){
+	var stringwriter = java.io.StringWriter();
+	var printWriter = java.io.PrintWriter(stringwriter);
+	throwable.printStackTrace(printWriter);
+	task.logmsg(level, stringwriter.toString());
+    return stringwriter.toString();
+}
+
+//----------------------------------------------------------
+// Log a translated message with 1 parameter
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter
+//----------------------------------------------------------
+function log1(level, res, param1) {
+	var text = messageLookup.getString1(res);
+	text = task.getLog().getString(text, param1);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 2 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+//----------------------------------------------------------
+function log2(level, res, param1, param2) {
+	var text = messageLookup.getString2(res);
+	text = task.getLog().getString(text, param1, param2);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 3 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+//----------------------------------------------------------
+function log3(level, res, param1, param2, param3) {
+	var text = messageLookup.getStringN(res, 3);
+	text = task.getLog().getString(text, [param1, param2, param3]);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 4 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+// @param param1 parameter 4
+//----------------------------------------------------------
+function log4(level, res, param1, param2, param3, param4) {
+	var text = messageLookup.getStringN(res, 4);
+	text = task.getLog().getString(text, [param1, param2, param3, param4]);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Write an untranslated message to the console
+//
+// @param type console type ("out" or "err")
+// @param text the text
+//----------------------------------------------------------
+function consoleMsg(type, text) {
+	if(type == "out") {
+		java.lang.System.out.println(text);
+	}
+	else {
+		java.lang.System.err.println(text);
+	}
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 0 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+//----------------------------------------------------------
+function console0(type, res) {
+	var text = messageLookup.getString(res);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 1 parameter
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter
+//----------------------------------------------------------
+function console1(type, res, param1) {
+	var text = messageLookup.getString1(res);
+	text = task.getLog().getString(text, param1);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 2 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+//----------------------------------------------------------
+function console2(type, res, param1, param2) {
+	var text = messageLookup.getString2(res);
+	text = task.getLog().getString(text, param1, param2);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 3 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+//----------------------------------------------------------
+function console3(type, res, param1, param2, param3) {
+	var text = messageLookup.getStringN(res, 3);
+	text = task.getLog().getString(text, [param1, param2, param3]);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 4 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+// @param param1 parameter 4
+//----------------------------------------------------------
+function console4(type, res, param1, param2, param3, param4) {
+	var text = messageLookup.getStringN(res, 4);
+	text = task.getLog().getString(text, [param1, param2, param3, param4]);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write the given return code to the given file
+//
+// @param returnCode the return code
+// @param file the name of the file to write to
+//----------------------------------------------------------
+function write_return_code(returnCode, file) {
+	try
+	{
+		var out = new java.io.FileWriter(file);
+		out.write("" + returnCode + "\n");
+		out.close();
+	}
+	catch(e)
+	{
+		task.logmsg("" + e);
+	}
+}
+
+
+]]></parameter>
+        </Script>
+        <Script name="expression_utils">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//----------------------------------------
+// Try the given attribute and return if
+// not null. Otherwise, evaluate
+// the expression. 
+//----------------------------------------
+function attr_or_expression(attrName, otherwiseExpression) {
+	var result = work.getString(attrName);
+	if(result == null) {
+		result = eval_tdi_expression(otherwiseExpression)
+	}
+
+	return result;
+}
+
+//-----------------------------------------
+// Evaluate the given tdi expression, and
+// return the value. The assumption is that
+// work is the entry used for any entry
+// sourced information
+//-----------------------------------------
+function eval_tdi_expression(expression) {
+	var result = null;
+
+	var ps = new com.ibm.di.util.ParameterSubstitution(expression);
+	var map = new java.util.HashMap();
+	map.put("mc", main.getMetamergeConfig());
+	map.put("work", work);
+	result = ps.substitute(map);
+
+	return result;
+}
+
+//-----------------------------------------
+// Return the opEntry operation, if any
+//-----------------------------------------
+function getOperation() {
+	var result = null;
+
+	var opEntry = task.getOpEntry();
+	if(opEntry != null) {
+		result = opEntry.getString("$operation");
+		opEntry = null;
+	}
+
+	return result;
+}]]></parameter>
+        </Script>
+        <Script name="utilities">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//-------------------------------------------
+// Get the java class of the given object
+// or return javascript otherwise
+//-------------------------------------------
+function getClass(o) {
+	var result = null;
+
+	try
+	{
+		result = o.getClass().getName();
+	}
+	catch(e)
+	{
+		result = "javascript";
+	}
+
+	return result;
+}
+
+function fileExists(path) {
+	var f = java.io.File(path);
+	return f.exists();
+}
+
+//-------------------------------------------
+// Convert a modify operation into a replace.
+// NOTE: This only really makes sense for a
+// single-valued attribute (or multi-valued)
+// where all values being deleted and added
+//-------------------------------------------
+function convert_modify_attr_to_replace(anAttr) {
+	var op = anAttr.getOperation();
+	if((op != null) && (op == "modify")) {
+		var list = new java.util.ArrayList();
+		var newAttr = system.newAttribute(anAttr.getName());
+		for(i=0; i < anAttr.size(); ++i) {
+			var anAttrVal = anAttr.getValueAV(i);
+			var valOp = anAttrVal.getOperation();
+			if((valOp != null) && (valOp == "add")) {
+				list.add(anAttrVal.getValue());
+			}
+		}
+		anAttr.clear();
+		for(i=0; i < list.size(); ++i) {
+			anAttr.addValue(list.get(i));
+		}
+	}
+	
+}
+
+//---------------------------------------
+// Look up the path for the given
+// property store for display purposes
+//---------------------------------------
+function get_properties_file_path_for(storeName) {
+	var path = null;
+	
+	var propertiesConfig = main.getConfiguration("Properties");
+	if(propertiesConfig != null) {
+		var storeConfig = propertiesConfig.getPropertyStore(storeName);
+		if(storeConfig != null) {
+			var connConfig = storeConfig.getConnectionConfig();
+			if(connConfig != null) {
+				path = connConfig.getParameter("collection");
+			}
+		}
+	}
+
+	return path;
+}
+
+//---------------------------------------
+// Look up the path for the profiles
+// property store for display purposes
+//---------------------------------------
+function get_properties_file_path() {
+	return get_properties_file_path_for("profiles");
+}
+
+//---------------------------------------
+// Validate a given property is set and
+// not empty in given property store.
+// Abort if not set
+//---------------------------------------
+function abort_if_required_property_not_set_in(propertyName, storeName) {
+	var propVal = system.getTDIProperty(storeName, propertyName);
+	if((propVal == null) || (propVal == "")) {
+		var path = get_properties_file_path_for(storeName);
+		var msgText = null;
+		if(path != null) {
+			msgText = log2("ERROR", "err_required_property_not_set_in", propertyName, path);
+		}
+		else {
+			msgText = log1("ERROR", "err_required_property_not_set", propertyName);
+		}
+		system.abortAssemblyLine(msgText);
+	}
+}
+
+function abbreviate_notes_email(email) {
+	var result = email;
+	if(result != null) {
+		if(result.startsWith("CN=")) {
+			result = result.substring(3);
+			var pos = result.indexOf("/OU=");
+			while(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 3);
+				pos = result.indexOf("/OU=");
+			}
+			pos = result.indexOf("/O=");
+			if(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 2);
+			}
+			pos = result.indexOf("/C=");
+			if(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 2);
+			}
+		}
+	}
+
+	return result;
+}
+
+//---------------------------------------
+// Validate a given property is set and
+// not empty in profiles property store
+//---------------------------------------
+function abort_if_required_property_not_set(propertyName) {
+	return abort_if_required_property_not_set_in(propertyName, "profiles");
+}
+
+//---------------------------------------
+// Compare two entries for equivalence.
+// Return true if they have the same
+// attribute names and values, and 
+// false otherwise
+//
+// @param entry1 first entry
+// @param entry2 second entry
+//
+// @return true if equivalent
+//---------------------------------------
+function entriesEquiv(entry1, entry2) {
+	var result = true;
+	if(entry1.size() == entry2.size()) {
+		var names = entry1.getAttributeNames();
+ 		for (i = 0; result && (i < names.length); i++) {
+    		var attr1 = entry1.getAttribute(names[i]);
+			var attr2 = entry2.getAttribute(names[i]);
+			if((attr2 != null) && (attr1.size() == attr2.size())) {
+    			for (j = 0;result && (j < attr1.size()); j++) {
+      				if(!attr1.getValue(j).equals(attr2.getValue(j))) {
+						result = false;
+					}
+    			}
+			}
+			else {
+				result = false;
+			}
+ 		}
+	}
+	else {
+		result = false;
+	}
+
+	return result;
+}
+
+function parsePageNumber(pns) {
+	var indexOf = pns.indexOf('.');
+	return pns.substrint(0,indexOf-1);
+}
+
+function removeSpaces(s) {
+	var js = "" + s;//make sure js string
+	return js.replace(/ /g,"");
+}
+
+function escape_dn(dnVal) {
+	if(dnVal != null) {
+		var startPos = 0;
+		var pos = 0;
+		pos = dnVal.indexOf('\\', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('\\', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('+', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('+', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('<', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('<', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('>', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('>', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('#', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('#', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf(';', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf(';', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('"', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('"', startPos);
+		}
+	}
+	return dnVal;
+}]]></parameter>
+        </Script>
+    </Folder>
+    <JavaLibraries/>
+    <JavaProperties/>
+    <Folder name="Includes"/>
+    <Folder name="Config">
+        <LogConfig name="Logging"/>
+        <InstanceProperties name="AutoStart">
+            <AutoStart/>
+        </InstanceProperties>
+        <TombstonesConfig name="Tombstones"/>
+        <SolutionInterface name="SolutionInterface"/>
+    </Folder>
+    <Folder name="Functions"/>
+    <Folder name="AttributeMaps"/>
+    <Properties name="Properties">
+        <Stores>
+            <PropertyStore name="Solution-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">Solution-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="Global-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">Global-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="Java-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">Java-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="System-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">System-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+			<PropertyStore name="profiles">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <UserComment/>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">profiles_tdi.properties</parameter>
+                    <parameter name="collectionType">Default</parameter>
+                    <parameter name="debug">false</parameter>
+                    <parameter name="userComment"/>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+  </PropertyStore>
+        </Stores>
+    </Properties>
+    <Container name="Package">
+        <Container name="Resources">
+            <ParameterList name="Resource">
+                <parameter name="class">com.ibm.di.connector.LDAPConnector</parameter>
+                <parameter name="name">system:/Connectors/ibmdi.LDAP</parameter>
+                <parameter name="type">Resource</parameter>
+                <parameter name="version">2.3-di7.1.1 %I%, 20%E%</parameter>
+            </ParameterList>
+        </Container>
+        <Container name="Operations"/>
+        <ParameterList name="Info">
+            <parameter name="date">2010-07-05</parameter>
+            <parameter name="packageid">ldapSourceConnectorIterator</parameter>
+        </ParameterList>
+    </Container>
+</MetamergeConfig>

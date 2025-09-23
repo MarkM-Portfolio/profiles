@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC 
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+	
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<struts-config>
+
+	<!-- Global Exceptions -->
+	<global-exceptions>
+	</global-exceptions>
+
+	<!-- Global Forwards -->
+	<global-forwards>
+		<forward name="api-help" path="/atom/apihelp.do" />
+		<forward name="atomError" path="/atom/error.do" />
+		<forward name="atomErrorHandler" path="/WEB-INF/internal/atom/errorHandler.do" />
+		<forward name="atomAuthenticate" path="/atom/authenticate.do"/>
+		<forward name="loginAtomForm" path="/atom/atomFormLoginRedirect.do"/>
+	</global-forwards>
+	
+	<!-- Action Mappings -->
+	<action-mappings>
+		<action path="/atom/forms/**"  forward="/atom/{1}.do"  />
+		<action path="/atom2/forms/**"  forward="/atom2/{1}.do"  />	
+		<action path="/oauth/atom/**"  forward="/atom/{1}.do"  />	
+			
+		<action path="/atom/atomFormLoginRedirect" type="com.ibm.lconn.profiles.api.actions.AtomFormLoginRedirectAction">
+			<forward name="redirect" path="/auth/loginRedirect.do" redirect="true" />
+			<forward name="failure" path="/WEB-INF/jsps/html/common/error.jsp"/>
+		</action>
+		        
+		<action path="/auth/loginRedirect" type="com.ibm.peoplepages.webui.actions.LoginRedirectAction">
+           <forward name="success" 	path="/html/myProfileView.do" redirect="true"/>
+        </action>
+		
+		<action path="/atom/error" parameter="/WEB-INF/jsps/atom/error.jsp" type="org.apache.struts.actions.ForwardAction" />
+		<action path="/WEB-INF/internal/atom/errorHandler" type="com.ibm.lconn.profiles.api.actions.APIErrorAction"/>
+		<action path="/atom/authenticate" type="com.ibm.lconn.profiles.api.actions.AtomAuthenticate"/>
+		
+		<action path="/atom/code" type="com.ibm.lconn.profiles.api.actions.CodesAction"/>
+		<action path="/atom/peopleManaged" type="com.ibm.lconn.profiles.api.actions.ProfilePeopleManagedAction"/>
+		<action path="/atom/reportingChain" type="com.ibm.lconn.profiles.api.actions.ProfileFullReportToChainAction"/>
+		<action path="/atom/orgRelation" type="com.ibm.lconn.profiles.api.actions.ProfileFullOrgRelationshipAction"/>
+
+		<action path="/atom/profile" type="com.ibm.lconn.profiles.api.actions.ProfilesAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		
+		<action path="/atom/profileEntry" type="com.ibm.lconn.profiles.api.actions.ProfileEntryAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		
+		<action path="/atom/profileType" type="com.ibm.lconn.profiles.api.actions.ProfileTypeAction"/>
+
+		<action path="/admin/atom/profiles" type="com.ibm.lconn.profiles.api.actions.AdminProfilesAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		<action path="/admin/atom/profileEntry" type="com.ibm.lconn.profiles.api.actions.AdminProfileEntryAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		
+		<!--  this should have been typeConfig -->
+		<action path="/admin/atom/config/tenantConfig" type="com.ibm.lconn.profiles.api.actions.AdminTenantConfigAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		<action path="/admin/atom/config/policyConfig" type="com.ibm.lconn.profiles.api.actions.AdminTenantPolicyAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+
+		<action path="/admin/atom/codes/*" type="com.ibm.lconn.profiles.api.actions.{1}Action">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+ 
+		<action path="/admin/atom/codes/*/*" type="com.ibm.lconn.profiles.api.actions.{1}Action">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+ 
+		<action path="/admin/atom/profileRoles" type="com.ibm.lconn.profiles.api.actions.AdminProfileRolesAction"/>
+
+		<action path="/atom/profileTags" type="com.ibm.lconn.profiles.api.actions.ProfileTagsAction"/>
+		<action path="/admin/atom/profileTags" type="com.ibm.lconn.profiles.api.actions.AdminProfileTagsAction"/>
+		<action path="/atom/tagCloud" type="com.ibm.lconn.profiles.api.actions.ProfileSearchTagCloudAction"/>
+		<action path="/atom/profileExtension" type="com.ibm.lconn.profiles.api.actions.ProfileExtensionAction"/>
+		<action path="/atom/profileService" type="com.ibm.lconn.profiles.api.actions.ProfilesServiceAction"/>
+		<action path="/admin/atom/profileService" type="com.ibm.lconn.profiles.api.actions.AdminProfilesServiceAction"/>
+		<action path="/admin/atom/connection" type="com.ibm.lconn.profiles.api.actions.AdminConnectionsAction"/>
+		<action path="/atom/connections" type="com.ibm.lconn.profiles.api.actions.ConnectionsAction"/>
+		<action path="/admin/atom/connections" type="com.ibm.lconn.profiles.api.actions.AdminConnectionEntryAction"/>
+		<action path="/atom/connection" type="com.ibm.lconn.profiles.api.actions.ConnectionEntryAction"/>
+		<action path="/atom/connectionsInCommon" type="com.ibm.lconn.profiles.api.actions.ConnectionsInCommonAction"/>
+		<action path="/atom/profilesConnectedTo" type="com.ibm.lconn.profiles.api.actions.ConnectionsAction" parameter="connectedTo"/>
+		<action path="/admin/atom/following" type="com.ibm.lconn.profiles.api.actions.AdminFollowingAction"/>
+
+		<action path="/atom/search" type="com.ibm.lconn.profiles.api.actions.ProfileSearchAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+
+		<action path="/atom/search2" type="com.ibm.lconn.profiles.api.actions.ProfileSearchAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		
+		<action path="/atom/mv/**" type="com.ibm.lconn.profiles.api.actions.ProfilesMessageVectorAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+		</action>
+		
+		
+		<action path="/atom/apihelp" parameter="/WEB-INF/jsps/atom/apihelp.jsp" type="org.apache.struts.actions.ForwardAction" />
+		
+		<action path="/atom/connectionTypeConfig" type="com.ibm.lconn.profiles.api.actions.ConnectionTypeConfigAction"/>
+		<action path="/atom/tagsConfig" type="com.ibm.lconn.profiles.api.actions.TagsConfigAction"/>
+		<action path="/atom/tagTypeahead" type="com.ibm.lconn.profiles.api.actions.TagTypeAheadAction"/>
+
+		<action path="/atom/about" type="com.ibm.lconn.profiles.api.actions.VersionInfoAction"/>
+	</action-mappings>
+</struts-config>

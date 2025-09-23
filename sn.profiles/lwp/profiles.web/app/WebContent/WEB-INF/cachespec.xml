@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE cache SYSTEM "cachespec.dtd">
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2011, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<cache>
+	<cache-entry>
+		<class>servlet</class>
+		<name>/nav/internal/script.jsp</name>
+		<cache-id>
+         <component id="javax.servlet.include.query_string" type="attribute"><required>true</required></component>
+			<timeout>20</timeout>
+		</cache-id>
+	</cache-entry>
+	<cache-entry>
+		<class>servlet</class>
+		<name>/nav/internal/scriptRemote.jsp</name>
+		<cache-id>
+			<component id="com.ibm.lconn.core.web.util.taglib.ScriptResourceTag.isDebug" type="attribute"><not-value>true</not-value></component>
+			<component id="com.ibm.lconn.core.web.util.taglib.ScriptResourceTag.query" type="attribute"><required>true</required></component>
+			<timeout>20</timeout>
+		</cache-id>
+	</cache-entry>
+   <cache-entry>
+      <class>servlet</class>
+      <name>/nav/internal/stylelinks.jsp</name>
+      <cache-id>
+         <component id="stylesheetTheme" type="attribute">
+            <required>true</required>
+         </component>
+         <component id="stylesheetRTL" type="attribute">
+            <required>true</required>
+         </component>
+         <component id="stylesheetAppName" type="attribute">
+            <required>false</required>
+         </component>
+         <timeout>60</timeout>
+      </cache-id>
+   </cache-entry>
+</cache>

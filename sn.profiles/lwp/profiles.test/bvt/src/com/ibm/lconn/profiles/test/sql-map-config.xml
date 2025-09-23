@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMapConfig>
+
+	<!-- <properties resource="properties/database.properties" />-->
+	<settings cacheModelsEnabled="true"/>
+
+	<transactionManager type="JDBC">
+		<dataSource type="SIMPLE">
+			<property value="${jdbc_driver}" name="JDBC.Driver" />
+			<property value="${jdbc_url}" name="JDBC.ConnectionURL" />
+			<property value="${jdbc_username}" name="JDBC.Username" />
+			<property value="${jdbc_password}" name="JDBC.Password" />
+		</dataSource>
+ 	</transactionManager>
+
+	<!-- NOTE: Employee.xml must be included first -->
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/Employee.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Connection.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/Country.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/EmployeeDraft.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/EmployeeType.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/GivenName.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/Department.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/Organization.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Photo.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/ProfileTag.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/ProfileExtensions.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/ProfileExtensionsDraft.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/Pronunciation.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/Surname.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/WorkLocation.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/ProfileStructTag.xml" />
+	<sqlMap resource="com/ibm/peoplepages/internal/service/store/sqlmapdao/sql/SchemaVersion.xml" />
+	<sqlMap resource="com/ibm/lconn/core/structtag/store/sqlmapdao/sql/StructTagCatalog.xml" />
+	<sqlMap resource="com/ibm/lconn/core/structtag/store/sqlmapdao/sql/Role.xml" />
+</sqlMapConfig>

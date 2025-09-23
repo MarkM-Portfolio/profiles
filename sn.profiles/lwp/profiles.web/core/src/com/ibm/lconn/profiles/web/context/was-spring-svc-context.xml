@@ -1,0 +1,57 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="
+  	   		http://www.springframework.org/schema/beans 
+  	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+  	   		http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd
+            http://www.springframework.org/schema/jee 
+            http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+
+	<!-- 
+		Lookup of data source
+	  -->
+	<jee:jndi-lookup
+		id="com.ibm.lconn.core.appext.spi.SNAXDataSource"
+		jndi-name="jdbc/profiles" cache="true" resource-ref="true"
+		lookup-on-startup="true" proxy-interface="javax.sql.DataSource" />
+
+	<!--
+		JTA transaction manager for WAS; using JDBC version instead
+	-->
+	
+	<bean
+		id="com.ibm.lconn.core.appext.spi.SNAXTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<constructor-arg ref="com.ibm.lconn.core.appext.spi.SNAXDataSource" />
+		
+		<!-- 
+			AhernM: super critical line of configuration.. resulted in odd behavior otherwise
+		  -->
+		<property name="transactionSynchronizationName" value="SYNCHRONIZATION_ALWAYS"/>
+	</bean>
+	
+	<!-- 
+	<bean
+		id="com.ibm.lconn.core.appext.spi.SNAXTransactionManager"
+		class="org.springframework.transaction.jta.WebSphereUowTransactionManager">
+		
+		<property name="transactionSynchronizationName" value="SYNCHRONIZATION_ALWAYS"/>
+	</bean>	-->
+	
+</beans>

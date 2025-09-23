@@ -1,0 +1,3 @@
+# Colleague Fetcher
+fetcher=Import Colleagues
+fetcherHelpBody=Import your friends from other networks and invite them to be your Colleagues. Choose a network you use and click Go. Enter any login information if necessary. To change login information, click the 'Login' or 'Logout' link under the Go button. Click on your colleagues' names to set invitation messages, or just set a default message by clicking "Edit Message." Un-check anyone you don't want to invite. When you're all set, click "Invite Selected."

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+<head>
+	<script type="text/javascript" src="/profiles/html/businessCard"></script>
+	<script type="text/javascript">
+		function getProfileInfo(email) {
+			var person = BusinessCard.getProfileInfo(true, "renderCardCallBack", email);
+		}
+		function renderCardCallBack(person) {
+			var cardHtml = new BusinessCard.out();
+			BusinessCard.getMenuData(person, null, null, null, cardHtml);
+			document.getElementById("businessCard").innerHTML = cardHtml.buffer;
+		}
+	</script>
+</head>
+<body>
+	<script type="text/javascript">
+	// usage:  businessCardTest.html[?<email>]
+	//         if ?<email> is not supplied, then use ict@us.ibm.com as default
+	var search = (location.search.indexOf('?') == -1) ? 'ajones45@janet.iris.com' : location.search.substring(1);
+	document.write('<a href="javascript:getProfileInfo(\'' + search + '\')">load biz card for ' + search + '</a>');
+	</script>
+	<div class="popupPersonCard" id="businessCard" style="height: 200px; vertical-align: top; "></div>
+</body>
+</html>

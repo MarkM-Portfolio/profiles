@@ -1,0 +1,65 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2002, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<project name="profiles.migrate" default="development" basedir=".">
+
+	<import file="${env.WPLC_IMPORT}/std_props.xml"/>
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml"/>
+
+	<property name="output.jar" value="${dir.lib}${file.separator}profiles.migrate.jar"/>
+	<property name="rmic.class.list" value=""/>
+
+	<import file="${env.WPLC_IMPORT}/check.xml"/>
+	<import file="${env.WPLC_IMPORT}/compile.xml"/>
+	<import file="${env.WPLC_IMPORT}/rmic.xml"/>
+	<import file="${env.WPLC_IMPORT}/package_extra.xml"/>
+	<import file="${env.WPLC_IMPORT}/javadoc.xml"/>
+	<import file="${env.WPLC_IMPORT}/jdepend.xml"/>
+	<import file="${env.WPLC_IMPORT}/clean.xml"/>
+	<import file="${env.WPLC_IMPORT}/comp_zip.xml"/>
+	<import file="${env.WPLC_IMPORT}/std_targets.xml"/>
+	<import file="${env.WPLC_IMPORT}/process_nls.xml"/>
+	<import file="${env.WPLC_IMPORT}/performance.xml"/>
+
+	<locateComponent component="prereqs.sn/jakarta.commons" property="prereqs.sn.loc" />
+	<locateComponent component="lc.util/web" locateBuildDir="true" property="lc.util.web.loc" />
+
+
+	<property name="postpackage.override" value="jar_copy_process"/>
+
+	<target name="jar_copy_process">
+		<antcall target="echo_variables"/>
+		<antcall target="dependent_jar_copy"/>
+	</target>
+
+	<target name="dependent_jar_copy" >
+		<copy todir="${dir.lib}" verbose="true" overwrite="true">
+			<fileset dir="${prereqs.sn.loc}" casesensitive="yes">
+				<include name="commons-logging-1.0.4.jar" />
+				<include name="commons-lang-2.4.jar" />
+				<include name="commons-codec-1.3-minus-mp.jar" />
+			</fileset>
+			<fileset dir="${lc.util.web.loc}/lib" casesensitive="yes">
+				<include name="lc.util.web-3.0.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="echo_variables">
+		<echo>Executing pre_jar_copy</echo>
+		<echo> base dir=${basedir}</echo>
+		<echo> dir.lib=${dir.lib}</echo>
+	</target>
+
+</project>

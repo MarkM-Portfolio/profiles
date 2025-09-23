@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="TDIProfile">
+
+	<typeAlias alias="tdiProfileOptions" type="com.ibm.lconn.profiles.data.TDIProfileSearchOptions"/>
+
+	<typeAlias alias="TenantTDIProfileOptions" type="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ro.TenantTDIProfileSO"/>
+
+	<sql id="sql_CriteriaAttribute">
+		<isEqual compareValue="KEY" property="options.searchCriteria[].attributeStr">
+			PROF_KEY
+		</isEqual>
+		<isEqual compareValue="UID" property="options.searchCriteria[].attributeStr">
+			PROF_UID_LOWER
+		</isEqual>
+		<isEqual compareValue="GUID" property="options.searchCriteria[].attributeStr">
+			PROF_GUID
+		</isEqual>
+		<isEqual compareValue="EMAIL" property="options.searchCriteria[].attributeStr">
+			PROF_MAIL_LOWER
+		</isEqual>
+		<isEqual compareValue="SOURCE_UID" property="options.searchCriteria[].attributeStr">
+			PROF_SOURCE_UID
+		</isEqual>
+		<isEqual compareValue="SOURCE_URL" property="options.searchCriteria[].attributeStr">
+			PROF_SOURCE_URL
+		</isEqual>
+		<isEqual compareValue="MANAGER_UID" property="options.searchCriteria[].attributeStr">
+			PROF_MANAGER_UID_LOWER
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_CriteriaOperValue">
+		<isEqual compareValue="EQUALS" property="options.searchCriteria[].operatorStr">
+			<isNotNull property="options.searchCriteria[].valueStr">
+				= #options.searchCriteria[].valueStr#
+			</isNotNull>
+			<isNull property="options.searchCriteria[].valueStr">
+				IS NULL
+			</isNull>			
+		</isEqual>
+		<isEqual compareValue="NOTEQUALS" property="options.searchCriteria[].operatorStr">
+			&lt;&gt; #options.searchCriteria[].valueStr#
+		</isEqual>
+		<isEqual compareValue="STARTS_WITH" property="options.searchCriteria[].operatorStr">
+			LIKE #options.searchCriteria[].valueStr#
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_getWhereBy">
+		<isEqual property="options.hasCriteria" compareValue="true">
+			<isNotEmpty property="options.lastKey">
+				AND PROF_KEY &gt; #options.lastKey#
+			</isNotEmpty>
+			<isEqual property="options.hasSearchCriteria" compareValue="true">
+					AND
+				<iterate property="options.searchCriteria" conjunction="AND">
+					(
+						<isEqual compareValue="NOTEQUALS" property="options.searchCriteria[].operatorStr">
+							<isNotNull property="options.searchCriteria[].valueStr">
+								<include refid="TDIProfile.sql_CriteriaAttribute"/> IS NULL
+								OR
+							</isNotNull>
+						</isEqual>					
+						<include refid="TDIProfile.sql_CriteriaAttribute"/>
+						<include refid="TDIProfile.sql_CriteriaOperValue"/>
+					)
+				</iterate>
+			</isEqual>
+		</isEqual>
+	</sql>
+
+	<select id="get" resultMap="Profile.ProfileResult" parameterClass="map">
+		<include refid="snaxUtil.sql_limitStart_select"/>
+			<include refid="Profile.sql_ResultSelect"/>
+		from
+			EMPINST.EMPLOYEE
+		where 1=1
+		<include refid="TDIProfile.sql_getWhereBy"/>
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+		order by
+			PROF_KEY ASC
+		 <include refid="snaxUtil.sql_limitEnd"/>
+	</select>
+	
+	<select id="count" resultClass="int" parameterClass="map">
+		select 
+			count(*)
+		from
+			EMPINST.EMPLOYEE
+		where 1=1
+		<include refid="TDIProfile.sql_getWhereBy"/>
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+</sqlMap>

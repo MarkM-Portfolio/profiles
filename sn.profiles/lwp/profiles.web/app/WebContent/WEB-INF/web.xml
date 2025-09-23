@@ -1,0 +1,1483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2017                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!--
+/* 5724_S68                                                          */
+-->
+<web-app id="ProfilesWebApp"
+	xmlns="http://java.sun.com/xml/ns/j2ee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+	
+	<display-name>Profiles</display-name>
+	
+	<mime-mapping>
+		<extension>xsl</extension>
+		<mime-type>text/xsl</mime-type>
+	</mime-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+		<param-value>com.ibm.lconn.profiles.strings.ui</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
+		<param-value>en</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.ibm.lconn.widgets.resourceType</param-name>
+		<param-value>profile</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.ibm.lconn.tempfile.svc.name</param-name>
+		<param-value>profiles</param-value>
+	</context-param>
+	<context-param>
+		<param-name>service.name</param-name>
+		<param-value>profiles</param-value>
+	</context-param>
+	
+	<!-- Initializes a number of static classes -->
+	<listener>
+		<listener-class>
+			com.ibm.lconn.profiles.web.servlet.StartupConfigurator</listener-class>
+	</listener>
+	<listener>
+		<listener-class>
+			com.ibm.peoplepages.webui.servlet.WebUIContextInitializer</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.ibm.lconn.core.web.auth.LCRestSecurityHelper</listener-class>
+	</listener>
+	<listener>
+		<listener-class>
+			com.ibm.peoplepages.internal.service.cache.CacheController</listener-class>
+	</listener>
+	<listener>
+		<listener-class>
+			com.ibm.peoplepages.internal.service.admin.ProfilesAdminService</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.ibm.peoplepages.util.FileSubmissionHelper</listener-class>
+	</listener>
+	<listener>
+		<listener-class>
+			com.ibm.lconn.widgets.service.WidgetInfoServiceInitializer</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.ibm.lconn.core.web.tempfile.LCTempFileTask</listener-class>
+	</listener>
+
+	<listener>
+            <listener-class>com.ibm.lconn.events.internal.enable.EventInitContextListener</listener-class>
+        </listener>
+
+	<listener>
+            <listener-class>com.ibm.lconn.profiles.web.servlet.ProfileFollowingRegistration</listener-class>
+        </listener>
+
+	<listener>
+		<listener-class>com.ibm.lconn.core.web.customization.CustomizationInitializer</listener-class>
+	</listener> 
+	<listener>
+		<listener-class>com.ibm.lconn.oauth.web.servlet.ProviderInitializer</listener-class>
+	</listener>   
+	<context-param>
+		<param-name>customization.directory.name</param-name>
+		<param-value>profiles</param-value>
+	</context-param>
+
+	<!-- **************** Filter Declarations **************** -->
+	<filter>
+		<display-name>CustomizationFilter</display-name>
+		<filter-name>CustomizationFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.customization.CustomizationFilter</filter-class>
+	</filter>
+
+	<!-- Enforce SSL Communications App wide -->
+	<filter>
+		<filter-name>HttpRequestFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.request.HttpRequestFilter</filter-class>
+	</filter>
+	
+	<filter>
+		<display-name>Struts1ParamFilter</display-name>
+		<filter-name>Struts1ParamFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.util.Struts1ParamFilter</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>UserDataConstraintFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCUserDataConstraintFilter</filter-class>
+		<init-param>
+			<param-name>service.name</param-name>
+			<param-value>profiles</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>ReverseProxyFilter</filter-name>
+		<filter-class>com.ibm.peoplepages.web.rpfilter.RPFilter</filter-class>
+		<init-param>
+			<description>
+			Filter config properties.</description>
+			<param-name>rpfilter.config.file</param-name>
+			<param-value>/com/ibm/peoplepages/cache/rpfilterconf.xml</param-value>
+		</init-param>
+	</filter>
+	
+	<!--
+		We want to set a PrivateCacheFilter on the BizCard request so that even if the server
+		returns a 304 Not Modified, it still gets cached for 4 hours.  Otherwise every request by
+		a client after 4 hours will never be cached and will result in a round-trip to the server.
+	-->
+	<filter>
+		<description>Set headers BizCard servlet</description>
+		<display-name>BizCard Content</display-name>
+		<filter-name>BizCardContent</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.PrivateCacheFilter</filter-class>
+		<init-param>
+			<param-name>time2live</param-name>
+			<param-value>14400</param-value>
+		</init-param>
+	</filter>
+	
+	<filter>
+		<description>Set headers for static xml/xsl files</description>
+		<display-name>Static XML Content</display-name>
+		<filter-name>StaticXMLContent</filter-name>
+		<filter-class>com.ibm.peoplepages.web.rpfilter.StaticContentFilter</filter-class>
+		<init-param>
+			<param-name>fakeLastModified</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>fakeNotModSince</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>time2live</param-name>
+			<param-value>2592000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>expires</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<filter>
+		<description></description>
+		<display-name>I18NFilter</display-name>
+		<filter-name>I18NFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.util.lang.I18NFilter</filter-class>
+	</filter>
+	
+	<filter>
+		<description></description>
+		<display-name>Utf8CharactersetFilter</display-name>
+		<filter-name>Utf8CharactersetFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.util.Utf8CharsetFilter</filter-class>
+	</filter>
+	
+	<filter>
+		<description></description>
+		<display-name>HtmlResponseUtf8CharactersetFilter</display-name>
+		<filter-name>HtmlResponseUtf8CharactersetFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.util.HtmlResponseUtf8CharsetFilter</filter-class>
+		<init-param>
+			<param-name>pattern</param-name>
+			<param-value>^/help/doc/[a-zA-Z_\-]+/[^\./]+.html$</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<description></description>
+		<display-name>XmlResponseUtf8CharactersetFilter</display-name>
+		<filter-name>XmlResponseUtf8CharactersetFilter</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.XmlResponseUtf8CharsetFilter</filter-class>
+		<init-param>
+			<param-name>pattern</param-name>
+			<param-value>(^/widget-catalog/.*)</param-value>
+		</init-param>
+	</filter>
+	
+	<!-- CSRF filtering, see: https://swgjazz.ibm.com:8001/jazz/resource/itemName/com.ibm.team.workitem.WorkItem/77791 -->
+	<filter>
+		<display-name>CSRFFilter</display-name>
+		<filter-name>CSRFFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.atom.CSRFFilter</filter-class>
+	</filter>
+	
+	<filter>
+		<description></description>
+		<display-name>XslResponseUtf8CharactersetFilter</display-name>
+		<filter-name>XslResponseUtf8CharactersetFilter</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.XslResponseUtf8CharsetFilter</filter-class>
+		<init-param>
+			<param-name>pattern</param-name>
+			<param-value>(^/xslt/.*)</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<description></description>
+		<display-name>BasicAuthFilter</display-name>
+		<filter-name>BasicAuthFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCBasicAuthFilter</filter-class>
+	</filter>
+	
+	<filter>
+		<description>Required filter to set thread variables for application use.</description>
+		<display-name>AppContextFilter</display-name>
+		<filter-name>AppContextFilter</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.AppContextFilter</filter-class>
+	</filter>
+
+	<!-- Enforce ATOM read APIs -->
+	<filter>
+		<filter-name>AtomSecurityFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCRestSecurityFilter</filter-class>
+		<init-param>
+			<param-name>enforce.read.role</param-name>
+			<param-value>reader</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.write.role</param-name>
+			<param-value>person</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.admin.role</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>authentication.chooser.forward</param-name>
+			<param-value>/basic/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>unauthorized.user.forward</param-name>
+			<param-value>/unauthorized</param-value>
+		</init-param>
+	</filter>
+	
+	<filter>
+		<filter-name>DegradingRestSecurityFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCRestSecurityFilter</filter-class>
+		<init-param>
+			<param-name>enforce.read.role</param-name>
+			<param-value>everyone</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.write.role</param-name>
+			<param-value>person</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.admin.role</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>authentication.chooser.forward</param-name>
+			<param-value>/basic/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>unauthorized.user.forward</param-name>
+			<param-value>/unauthorized</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>AtomFormSecurityFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCRestSecurityFilter</filter-class>
+		<init-param>
+			<param-name>enforce.read.role</param-name>
+			<param-value>reader</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.write.role</param-name>
+			<param-value>person</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.admin.role</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>authentication.chooser.forward</param-name>
+			<param-value>/atom/forms/atomFormLoginRedirect.do</param-value>
+		</init-param>
+		<init-param>
+			<param-name>unauthorized.user.forward</param-name>
+			<param-value>/atom/forms/error.do</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>AtomFollowSecurityFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCRestSecurityFilter</filter-class>
+		<init-param>
+			<param-name>enforce.read.role</param-name>
+			<param-value>person</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.write.role</param-name>
+			<param-value>person</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.admin.role</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>authentication.chooser.forward</param-name>
+			<param-value>/basic/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>unauthorized.user.forward</param-name>
+			<param-value>/unauthorized</param-value>
+		</init-param>
+	</filter>
+
+	<!-- 
+		According to Clayton:
+			auth.js will set a header "Pragma: WWW-Authenticate=XHR"
+			If LCRestSecurityFilter sees that header and the user is unauthenticted, it will send 401 but with XHR instead of "Basic"
+			auth.js will then transparently detect this as a logout
+			
+			Also the /unauthenticated is a keyword to the filter handle the case for you automatically.
+	  -->
+	<filter>
+		<filter-name>AdminAtomSecurityFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCRestSecurityMultiAdminRoleFilter</filter-class>
+		<init-param>
+			<param-name>enforce.read.role</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.write.role</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.admin.role</param-name>
+			<param-value>org-admin,admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>authentication.chooser.forward</param-name>
+			<param-value>/basic/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>unauthorized.user.forward</param-name>
+			<param-value>/unauthorized</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<description>Prevents the creation of HttpSessions for DSX</description>
+		<filter-name>DSXPreventHttpSessionFilter</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.DisableHttpSessionFilter</filter-class>
+	</filter>
+
+	<filter>
+		<description>Used to disable caching of JS file for develpment</description>
+		<filter-name>DisableCachingFilter</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.DisableCachingFilter</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>LoginWeb</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.LoginWebUIFilter</filter-class>
+	</filter>
+
+	<filter>
+		<description>When the authenticated user changes (or the user reverts to unauthenticated), the session object should be invalidated to ensure that no private data is available on the session object. This filter should protect all URLs that may access session data.</description>
+		<display-name>SessionUserProtectionFilter</display-name>
+		<filter-name>SessionUserProtectionFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.SessionUserProtectionFilter</filter-class>
+	</filter>
+
+	<!-- LCC THEMES AND STYLES / CSS -->
+	<filter>
+		<display-name>ConnectionsThemeFilter</display-name>
+		<filter-name>ConnectionsThemeFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.css.ConnectionsThemeFilter</filter-class>
+	</filter>
+	
+    <filter>
+        <filter-name>BSSProvisioningSecurityFilter</filter-name>
+        <filter-class>com.ibm.lconn.core.web.auth.LCRestSecurityFilter</filter-class>
+        <init-param>
+            <param-name>enforce.read.role</param-name>
+            <param-value>bss-provisioning-admin</param-value>
+        </init-param>
+        <init-param>
+            <param-name>enforce.write.role</param-name>
+            <param-value>bss-provisioning-admin</param-value>
+        </init-param>
+        <init-param>
+            <param-name>authentication.chooser.forward</param-name>
+            <param-value>/basic/login</param-value>
+        </init-param>
+    </filter>
+
+    <filter>
+      <filter-name>BookmarkletRedirectFor301Filter</filter-name>
+      <filter-class>com.ibm.lconn.core.web.util.BookmarkletRedirectFor301Filter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>ResponseCommittedFilter</filter-name>
+        <filter-class>com.ibm.lconn.core.web.filters.ResponseCommittedFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>ExtensibleFilter</filter-name>
+        <filter-class>com.ibm.lconn.core.web.extension.ExtensibleFilter</filter-class>
+    </filter>
+    
+   	<!-- **************** Filter Chain Mappings **************** -->
+	
+	<filter-mapping>
+        <filter-name>ExtensibleFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <filter-mapping>
+        <filter-name>ResponseCommittedFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+	<filter-mapping>
+		<filter-name>Struts1ParamFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	    	
+	<filter-mapping>
+		<filter-name>CustomizationFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>Utf8CharactersetFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>SessionUserProtectionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>ConnectionsThemeFilter</filter-name>
+		<url-pattern>/nav/common/styles/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>	
+	
+	<filter-mapping>
+		<filter-name>XmlResponseUtf8CharactersetFilter</filter-name>
+		<url-pattern>/widget-catalog/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>XslResponseUtf8CharactersetFilter</filter-name>
+		<url-pattern>/xslt/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>HtmlResponseUtf8CharactersetFilter</filter-name>
+		<url-pattern>/help/doc/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>I18NFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>HttpRequestFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>UserDataConstraintFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- BEGIN CSRF filtering -->
+	<!-- HttpRequestFilter must be placed prior to any end-point protected by CSRFFilter -  HttpRequestFilter then TenantLookupFilter then DarkLaunchFilter -->
+	<!-- Calls to API URLs need to be filtered by CSRFFilter. Add mappings for any new API URL patterns that are not included here. -->
+	<!-- As per rtc item , this filter must precede auth filters. -->
+
+	<filter-mapping>
+	  <filter-name>CSRFFilter</filter-name>
+	  <url-pattern>/json/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CSRFFilter</filter-name>
+		<url-pattern>/admin/atom/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- includes /atom/forms/* -->
+	<filter-mapping>
+		<filter-name>CSRFFilter</filter-name>
+		<url-pattern>/atom/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CSRFFilter</filter-name>
+		<url-pattern>/oauth/atom/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CSRFFilter</filter-name>
+		<url-pattern>/oauth/follow/atom/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CSRFFilter</filter-name>
+		<url-pattern>/atom2/forms/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<!-- the common following api -->
+		<filter-name>CSRFFilter</filter-name>
+		<url-pattern>/follow/atom/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CSRFFilter</filter-name>
+		<url-pattern>/html/following.do/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CSRFFilter</filter-name>
+		<url-pattern>/photo.do/*</url-pattern>
+	</filter-mapping>
+	<!-- END CSRF filtering -->
+	
+	<filter-mapping>
+		<filter-name>BasicAuthFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!--
+		NOTE: Need to put this before AppContextFilter in order to prevent http session creation
+	-->
+	<filter-mapping>
+		<filter-name>DSXPreventHttpSessionFilter</filter-name>
+		<url-pattern>/dsx/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping> <!-- Added for VCard do to IE6 bug.  Hopefully we will move this to Stripes and stop creating extranious 'session' objects -->
+		<filter-name>DSXPreventHttpSessionFilter</filter-name>
+		<url-pattern>/vcard/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>LoginWeb</filter-name>
+		<url-pattern>/html/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>LoginWeb</filter-name>
+		<url-pattern>/home.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomFormSecurityFilter</filter-name>
+		<url-pattern>/atom/forms/*</url-pattern>
+	</filter-mapping>
+ 	<filter-mapping>
+		<filter-name>AtomFormSecurityFilter</filter-name>
+		<url-pattern>/userinfo.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomSecurityFilter</filter-name>
+		<url-pattern>/atom/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomFormSecurityFilter</filter-name>
+		<url-pattern>/atom2/forms/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomSecurityFilter</filter-name>
+		<url-pattern>/atom2/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping><!-- SPR#TESA8QGMTB -->
+		<filter-name>AtomSecurityFilter</filter-name>
+		<url-pattern>/json/profile.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomSecurityFilter</filter-name>
+		<url-pattern>/json/profileKey.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping><!-- INTERNAL - Used for Sematic Tag Service -->
+		<filter-name>AtomFormSecurityFilter</filter-name>
+		<url-pattern>/json/semanticTagProfileView.do</url-pattern>
+	</filter-mapping>	
+	<filter-mapping>
+		<filter-name>DegradingRestSecurityFilter</filter-name>
+		<url-pattern>/json/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomFormSecurityFilter</filter-name>
+		<url-pattern>/vcard/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomFormSecurityFilter</filter-name>
+		<url-pattern>/ajax/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomFormSecurityFilter</filter-name>
+		<url-pattern>/xml/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AdminAtomSecurityFilter</filter-name>
+		<url-pattern>/admin/atom/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>DegradingRestSecurityFilter</filter-name>
+		<url-pattern>/photo.do</url-pattern>
+	</filter-mapping>
+		<filter-mapping>
+		<filter-name>DegradingRestSecurityFilter</filter-name>
+		<url-pattern>/ext/photo.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomSecurityFilter</filter-name>
+		<url-pattern>/audio.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AtomFormsSecurityFilter</filter-name>
+		<servlet-name>ProxyServlet</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>LanguageFilter</filter-name>
+		<servlet-name>action</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>LanguageFilter</filter-name>
+		<servlet-name>css-base</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ReverseProxyFilter</filter-name>
+		<servlet-name>action</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>DisableCachingFilter</filter-name>
+		<url-pattern>/nav/toolbox*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/xslt/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/config/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/demo-movie/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/help/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/nav/blankIE.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/widget-catalog/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<servlet-name>StaticContentForwardServlet</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/nav/common/images/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/images/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StaticXMLContent</filter-name>
+		<url-pattern>/nav/common/styles/images/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- MULTI-TENANCY FILTER TO DETERMINE THE TENANT ON THE INCOMING REQUEST (NEEDS TO BE AFTER AUTH FILTER IN THE CHAIN) -->
+	<filter>
+		<display-name>TenantLookupFilter</display-name> 
+		<filter-name>TenantLookupFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.mt.TenantLookupFilter</filter-class> 
+		<init-param>
+			<param-name>application</param-name> 
+			<param-value>profiles</param-value> 
+		</init-param>
+		<init-param>
+  			<param-name>exclude.redirect.roles</param-name> 
+  			<param-value>search-admin,dsx-admin</param-value> 
+  		</init-param>
+  	</filter>	
+	<filter-mapping>
+		<filter-name>TenantLookupFilter</filter-name>
+		<url-pattern>/*</url-pattern>	
+	</filter-mapping>
+	
+	<!-- rtc 156116 says to maintain this order: HttpRequestFilter then TenantLookupFilter then DarkLaunchFilter -->
+	<filter>
+		<display-name>DarkLaunchFilter</display-name> 
+		<filter-name>DarkLaunchFilter</filter-name>
+		<filter-class> com.ibm.lconn.core.web.request.DarkLaunchFilter</filter-class> 
+  	</filter>	
+	<filter-mapping>
+		<filter-name>DarkLaunchFilter</filter-name>
+		<url-pattern>/*</url-pattern>	
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>BizCardContent</filter-name>
+		<url-pattern>/ibm_semanticTagServlet/javascript/*</url-pattern>
+	</filter-mapping>	
+	
+	<!-- NOTE: AppContextFilter MUST be defined after BasicAuthFilter, and after TenantLookupFilter for org-admin filtering -->
+	<filter-mapping>
+		<filter-name>AppContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+	  <filter-name>BookmarkletRedirectFor301Filter</filter-name>
+	  <url-pattern>/bookmarklet/*</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>com.ibm.peoplepages.webui.servlet.ProfileStrutsServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>
+				/WEB-INF/struts-config-json.xml,
+				/WEB-INF/struts-config-vcard.xml,
+				/WEB-INF/struts-config-html.xml,
+				/WEB-INF/struts-config-ajax.xml,
+				/WEB-INF/struts-config-atom.xml,
+				/WEB-INF/struts-config-dsx.xml,
+				/WEB-INF/struts-config-oidc.xml
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>validating</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet>
+		<display-name>RestServlet</display-name>
+		<servlet-name>RestServlet</servlet-name>
+		<servlet-class>com.ibm.peoplepages.webui.servlet.RestServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<display-name>ServiceConfigServlet</display-name>
+		<servlet-name>ServiceConfigServlet</servlet-name>
+		<servlet-class>com.ibm.peoplepages.webui.servlet.ServiceConfigServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>UnauthorizedForward</servlet-name>
+		<jsp-file>/WEB-INF/jsps/atom/unauthorizedForward.jsp</jsp-file>
+	</servlet>
+	<!--  deprecated; not used since 2.0.1; to be completely removed after verification of non usage through 4.0
+	<servlet>
+		<servlet-name>BusinessCard</servlet-name>
+		<jsp-file>/WEB-INF/jsps/html/scenes/personTag/businessCard.jsp</jsp-file>
+	</servlet>
+	-->
+
+	<servlet>
+		<servlet-name>ProxyServlet</servlet-name>
+		<servlet-class>com.ibm.lconn.core.proxy.LCProxyServlet</servlet-class>
+		<init-param>
+			<description>Add component name to config file name: proxy-profiles-config.xml</description>
+			<param-name>componentname</param-name>
+			<param-value>profiles</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet>
+		<servlet-name>app-login-basic</servlet-name>
+		<jsp-file>/nav/templates/loginBasic.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>app-login-basic</servlet-name>
+		<url-pattern>/basic/login</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>app-about-redirect</servlet-name>
+		<jsp-file>/WEB-INF/jsps/html/common/redirect.jsp</jsp-file>
+		<init-param>
+			<param-name>redirectTo</param-name>
+			<param-value>/html/aboutView.do</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>app-about-redirect</servlet-name>
+		<url-pattern>/app/about</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>CommonLoginForwardServlet</servlet-name>
+		<jsp-file>/WEB-INF/jsps/html/scenes/login/login.jsp</jsp-file>
+		<init-param>
+			<param-name>loginPostUriParameter</param-name>
+			<param-value>/j_security_check</param-value>
+		</init-param>
+		<init-param>
+			<param-name>loginUriParameter</param-name>
+			<param-value>/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>errorParameter</param-name>
+			<param-value>error</param-value>
+		</init-param>
+	</servlet>
+	 
+	<servlet-mapping>
+		<servlet-name>CommonLoginForwardServlet</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+
+	<!--
+		Static content caching servlet. This filter helps ensure content that
+		should not be cached is not cached.
+	-->
+	<servlet>
+		<servlet-name>StaticContentForwardServlet</servlet-name>
+		<servlet-class>
+			com.ibm.lconn.core.web.cache.StaticContentForwardServlet</servlet-class>
+		<init-param>
+			<param-name>servletPathPrefix</param-name>
+			<param-value>/static</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StaticContentForwardServlet</servlet-name>
+		<url-pattern>/static/css/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>StaticContentForwardServlet</servlet-name>
+		<url-pattern>/static/xslt/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>StaticContentForwardServlet</servlet-name>
+		<url-pattern>/static/widget-catalog/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>StaticContentForwardServlet</servlet-name>
+		<url-pattern>/static/images/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ConnectionsStaticContentForwardServlet</servlet-name>
+		<servlet-class>com.ibm.lconn.core.web.cache.ConnectionsStaticContentForwardServlet</servlet-class>
+		<init-param><param-name>allowedPrefixes</param-name><param-value>/widget-catalog/,/xslt/,/css/</param-value></init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ConnectionsStaticContentForwardServlet</servlet-name>
+		<url-pattern>/static/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet> 
+		<servlet-name>DebugResouceServlet</servlet-name>
+		<servlet-class>com.ibm.lconn.core.web.cache.DebugResourceServlet</servlet-class> 
+		<init-param>
+			<param-name>servletPathPrefix</param-name>
+			<param-value>/debugRes/</param-value> 
+		</init-param>
+		
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	        
+	<servlet-mapping>
+	    <servlet-name>DebugResouceServlet</servlet-name>
+	    <url-pattern>/debugRes/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 
+		Servlets for Javelin 	
+	 -->
+	<servlet>
+		<display-name>JavlinRestServlet</display-name>
+		<servlet-name>JavlinRestServlet</servlet-name>
+		<servlet-class>
+			com.ibm.connections.semtagframework.servlet.RestServlet</servlet-class>
+	</servlet>
+
+	<!-- 
+		Servlet for tools
+	 -->
+	<servlet>
+		<display-name>Tools Servlet</display-name>
+		<servlet-name>ToolsServlet</servlet-name>
+		<servlet-class>com.ibm.lconn.profiles.web.servlet.ToolsServlet</servlet-class>
+	</servlet>
+
+	<!-- 
+		Servlets/Mappings for MUM
+	 -->
+	<servlet>
+		<servlet-name>semanticTagService</servlet-name>
+		<jsp-file>/mashupmaker/js/semtag/semanticTagService.js</jsp-file>
+	</servlet>
+
+	<servlet>
+		<servlet-name>serviceEntries</servlet-name>
+		<jsp-file>/mashupmaker/js/semtag/service.entries.js</jsp-file>
+	</servlet>
+
+	<servlet>
+		<servlet-name>semanticTagMenu</servlet-name>
+		<jsp-file>/mashupmaker/js/semtag/semanticTagMenu.js</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>semanticTagMenu</servlet-name>
+		<url-pattern>/mashupmaker/js/semtag/semanticTagMenu.js</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>semanticTagService</servlet-name>
+		<url-pattern>/mashupmaker/js/semtag/semanticTagService.js</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>serviceEntries</servlet-name>
+		<url-pattern>/mashupmaker/js/semtag/service.entries.js</url-pattern>
+	</servlet-mapping>
+
+	<!-- 
+		Javelin card servlet mappings
+	 -->
+	<servlet-mapping>
+		<servlet-name>JavlinRestServlet</servlet-name>
+		<url-pattern>/ibm_semanticTagServlet/rest/unsecure/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- 
+		Biz card 
+	 -->
+	<servlet>
+		<servlet-name>BizCardServlet</servlet-name>
+		<servlet-class>com.ibm.lconn.profiles.web.servlet.ExtSemanticJSServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>BizCardServlet</servlet-name>
+		<url-pattern>/ibm_semanticTagServlet/javascript/semanticTagService.js</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>BizCardServlet</servlet-name>
+		<url-pattern>/portalJS/*</url-pattern>
+	</servlet-mapping>
+
+	
+	<!-- 
+		Nav servlet mappings
+	 -->
+	<servlet-mapping>
+		<servlet-name>ToolsServlet</servlet-name>
+		<url-pattern>/nav/toolbox</url-pattern>
+	</servlet-mapping>
+
+	<!-- 
+		Profiles's Mappings
+	 -->
+	<servlet-mapping>
+		<servlet-name>ProxyServlet</servlet-name>
+		<url-pattern>/ajaxProxy/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ServiceConfigServlet</servlet-name>
+		<url-pattern>/serviceconfigs/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>UnauthorizedForward</servlet-name>
+		<url-pattern>/unauthorized</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>/oidc/session</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RestServlet</servlet-name>
+		<url-pattern>/xml/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RestServlet</servlet-name>
+		<url-pattern>/atom2/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RestServlet</servlet-name>
+		<url-pattern>/xsl/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RestServlet</servlet-name>
+		<url-pattern>/resources/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RestServlet</servlet-name>
+		<url-pattern>/config/*</url-pattern>
+	</servlet-mapping>
+	<!--  deprecated; not used since 2.0.1; to be completely removed after verification of non usage through 4.0
+	<servlet-mapping>
+		<servlet-name>BusinessCard</servlet-name>
+		<url-pattern>/html/businessCard</url-pattern>
+	</servlet-mapping>	
+	-->
+
+    <!--  MT BSS Provisioning -->
+    <servlet>
+        <servlet-name>ProfilesMTProvisioningServlet</servlet-name>
+        <servlet-class>com.ibm.connections.multitenant.bss.provisioning.servlet.BSSProvisioningServlet</servlet-class>
+        <init-param>
+            <param-name>component</param-name>
+            <param-value>Profiles</param-value>
+        </init-param>
+        <init-param>
+            <param-name>platformcommandrunner</param-name>
+            <param-value>com.ibm.lconn.profiles.internal.bss.BSSCommandConsumer</param-value>
+        </init-param>
+        <init-param>
+            <param-name>mtbssprovisioningendpoint</param-name>
+            <param-value>com.ibm.connections.multitenant.bss.provisioning.endpoint.BSSProvisioningEndpoint</param-value>
+        </init-param>
+        <init-param>
+            <param-name>mtbssprovisioningauthenticator</param-name>
+            <param-value>com.ibm.connections.multitenant.bss.provisioning.security.BSSProvisioningAuthenticator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>supportedbssapiversion</param-name>
+            <param-value>3</param-value>
+        </init-param>
+    </servlet>
+
+	<servlet-mapping>
+        <servlet-name>ProfilesMTProvisioningServlet</servlet-name>
+        <url-pattern>/wdp/provisioning/profilesendpointmtprovisioning</url-pattern>
+    </servlet-mapping>
+
+    <!--  LLIS Data Sync Servlet via MT BSS Provisioning Servlet using PassThrough Endpoint -->
+    <servlet>
+        <servlet-name>ProfilesLLISDataSyncServlet</servlet-name>
+        <servlet-class>com.ibm.connections.multitenant.bss.provisioning.servlet.BSSProvisioningServlet</servlet-class>
+        <init-param>
+            <param-name>component</param-name>
+            <param-value>Profiles</param-value>
+        </init-param>
+        <init-param>
+            <param-name>platformcommandrunner</param-name>
+            <param-value>com.ibm.lconn.profiles.internal.bss.LLISCommandConsumer</param-value>
+        </init-param>
+        <init-param>
+            <param-name>mtbssprovisioningendpoint</param-name>
+            <param-value>com.ibm.connections.multitenant.bss.provisioning.endpoint.LLISProvisioningEndpoint</param-value>
+        </init-param>
+        <init-param>
+            <param-name>mtbssprovisioningauthenticator</param-name>
+            <param-value>com.ibm.connections.multitenant.bss.provisioning.security.BSSProvisioningAuthenticator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>supportedbssapiversion</param-name>
+            <param-value>3</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ProfilesLLISDataSyncServlet</servlet-name>
+        <url-pattern>/wdp/provisioning/profilesendpointllisupdate</url-pattern>
+    </servlet-mapping>
+
+
+	<error-page><error-code>403</error-code><location>/nav/templates/error.jsp</location></error-page>
+	<error-page><error-code>404</error-code><location>/nav/templates/error.jsp</location></error-page>
+	<error-page><error-code>500</error-code><location>/nav/templates/error.jsp</location></error-page>
+	<error-page><error-code>503</error-code><location>/nav/templates/error.jsp</location></error-page>
+
+	<!-- Secure Login pages -->
+	<security-constraint>
+		<display-name>loginPages</display-name>
+		<web-resource-collection>
+			<web-resource-name>loginPages</web-resource-name>
+			<!-- 
+			<url-pattern>/auth/loginView.do</url-pattern>
+			<url-pattern>/auth/loginErrorView.do</url-pattern>
+			<url-pattern>/auth/login.do</url-pattern>
+			 -->
+			<url-pattern>/login</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<!-- Secure My / Edit profile -->
+	<security-constraint>
+		<display-name>my/edit profile securing</display-name>
+		<web-resource-collection>
+			<web-resource-name>secureMyProfile</web-resource-name>
+			<url-pattern>/html/myProfileView.do</url-pattern>
+			<url-pattern>/html/editMyProfileView.do</url-pattern>
+			<url-pattern>/html/editMyProfile.do</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>person</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<!-- Secure OIDC Session endpoint -->
+	<security-constraint>
+		<display-name>OIDC Session secured</display-name>
+		<web-resource-collection>
+			<web-resource-name>secureOidcSession</web-resource-name>
+			<url-pattern>/oidc/session</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>person</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+
+	<security-constraint>
+		<display-name>login redirect</display-name>
+		<web-resource-collection>
+			<web-resource-name>secureLoginRedirect</web-resource-name>
+			<url-pattern>/auth/loginRedirect.do</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>allAuthenticated</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+	    <display-name>Secure Oauth Atom APIs</display-name>
+	    <web-resource-collection>
+	        <web-resource-name>Secure Oauth Atom APIs</web-resource-name>
+		<description/>
+		<url-pattern>/oauth/atom/*</url-pattern>
+		<url-pattern>/oauth/photo.do</url-pattern>
+		<url-pattern>/oauth/app/*</url-pattern>
+		<url-pattern>/oauth/follow/atom/*</url-pattern>
+		<http-method>GET</http-method>	
+		<http-method>PUT</http-method>		
+		<http-method>POST</http-method>
+		<http-method>DELETE</http-method>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <description/>
+	        <role-name>person</role-name>
+	    </auth-constraint>
+	</security-constraint>
+	
+	<!-- dsx feed security contraint -->
+	<security-constraint>
+	    <display-name>DSX APIs</display-name>
+	    <web-resource-collection>
+	        <web-resource-name>DSX APIs</web-resource-name>
+	        <url-pattern>/dsx/*</url-pattern>
+	        <http-method>GET</http-method>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <role-name>dsx-admin</role-name>
+	    </auth-constraint>
+	</security-constraint>
+	
+	<!-- Secure metrics -->
+	<security-constraint>
+		<display-name>Metrics Security</display-name>
+		<web-resource-collection>
+			<web-resource-name>secure metrics</web-resource-name>
+			<url-pattern>/html/servermetrics.do</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+ 		<role-name>metrics-reader</role-name> 
+		</auth-constraint>
+	</security-constraint>
+
+	<!-- Secure Ajax Proxy usage -->
+	<security-constraint>
+		<display-name>ajax proxy constraint</display-name>
+		<web-resource-collection>
+			<web-resource-name>secureajaxproxy</web-resource-name>
+			<url-pattern>/ajaxProxy/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>reader</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<!-- Secure UI -->
+	<security-constraint>
+		<display-name>secure UI constraint</display-name>
+		<web-resource-collection>
+			<web-resource-name>secureUI</web-resource-name>
+			<url-pattern>/html/*</url-pattern>
+			<url-pattern>/home.do</url-pattern>
+			<url-pattern>/xml/*</url-pattern>
+			<url-pattern>/xsl/*</url-pattern>
+			<url-pattern>/config/*</url-pattern>
+			<!-- AhernM: Should not be secured
+			<url-pattern>/resources/*</url-pattern>  -->
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>reader</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-role>
+		<description>Always mapped to 'everyone'.  Used to defer programatic access checks to application.</description>
+		<role-name>everyone</role-name>
+	</security-role>
+	<security-role>
+		<description>Logical role for read-only access to the application.  Mapped to 'everyone' by default.</description>
+		<role-name>reader</role-name>
+	</security-role>
+	<security-role>
+		<description>Logical role for read/write access to the application.  Mapped to 'allAuthenticated' by default.</description>
+		<role-name>person</role-name>
+	</security-role>
+	<security-role>
+		<description>Logical admin role.  No default mappings.</description>
+		<role-name>admin</role-name>
+	</security-role>
+	<security-role>
+		<description>DSX admin role.  No default mappings.</description>
+		<role-name>dsx-admin</role-name>
+	</security-role>
+	<security-role>
+		<description>All authenticated role for login page redirects.  DO NOT CHANGE THE MAPPING OF THIS ROLE.</description>
+		<role-name>allAuthenticated</role-name>
+	</security-role>
+	<security-role>
+		<description>Logical role for read access to the metrics data. No default mappings.</description>
+		<role-name>metrics-reader</role-name>
+	</security-role>
+
+    <security-role>
+        <description></description>
+        <role-name>bss-provisioning-admin</role-name>
+    </security-role>
+
+	<resource-ref id="ResourceRef_1201900596491">
+		<description>Notification Mail Resource</description>
+		<res-ref-name>mail/notification</res-ref-name>
+		<res-type>javax.mail.Session</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+
+	<resource-ref id="ResourceRef_1174664816423">
+		<description>People Pages DataSource</description>
+		<res-ref-name>jdbc/profiles</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+	
+	
+	<resource-env-ref id="ResourceEnvRef_1172250969498">
+		<description>Profiles' employee profile cache</description>
+		<resource-env-ref-name>services/cache/profile_cache</resource-env-ref-name>
+		<resource-env-ref-type>com.ibm.websphere.cache.DistributedMap</resource-env-ref-type>
+	</resource-env-ref>
+
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/login</form-login-page>
+			<form-error-page>/login?error=true</form-error-page>
+		</form-login-config>
+	</login-config>
+
+	<!-- 2 following resources are used by the Profile worker. Located in web.xml for now as
+	Spring is responsible for JNDI lookup (Spring is initialized as context listener) 
+	<resource-ref id="ResourceRef_3214179869313">
+		<description>
+				</description>
+		<res-ref-name>jms/connectionsPlatformTCF</res-ref-name>
+		<res-type>javax.jms.TopicConnectionFactory</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+	
+	<resource-ref id="ResourceRef_3454179869329">
+		<description>
+				</description>
+		<res-ref-name>jms/connectionsProfilesPlatformTopic</res-ref-name>
+		<res-type>javax.jms.Topic</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref> -->
+
+	<!-- event publisher resource reference -->
+	<ejb-local-ref id="EJBLocalRef_1266516033840">
+	  <description></description>
+	  <ejb-ref-name>ejb/EventPublisher</ejb-ref-name>
+	  <ejb-ref-type>Session</ejb-ref-type>
+	  <local-home>com.ibm.lconn.events.internal.publish.impl.JMSPublisherLocalHome</local-home>
+	  <local>com.ibm.lconn.events.internal.publish.impl.JMSPublisherLocal</local>
+	</ejb-local-ref>
+	
+	<!-- STRIPES FRAMEWORK -->
+	<!--  still require stripes for EE. see rtc 113899 and NetworkInviteEE.java -->
+	<filter>
+		<display-name>Stripes Filter</display-name>
+		<filter-name>StripesFilter</filter-name>
+		<filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
+		<init-param>
+			<param-name>ActionResolver.Packages</param-name>
+			<param-value>com.ibm.lconn.profiles.web.ui.actions.</param-value>
+		</init-param>
+		<init-param>
+			<param-name>Extension.Packages</param-name>
+			<param-value>com.ibm.lconn.profiles.web.ui.extensions.</param-value>
+		</init-param>	
+        <init-param>
+            <param-name>LocalePicker.Locales</param-name>
+            <param-value>en,ar,bg,ca,cs,da,de,el,es,fi,fr,hr,hu,it,iw,ja,kk,ko,nl,no,pl,pt,pt_BR,ro,ru,sk,sl,sv,th,tr,zh,zh_TW</param-value>
+        </init-param>
+ 	</filter>
+	<filter-mapping>
+		<filter-name>StripesFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>StripesFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	
+    <filter-mapping>
+        <filter-name>BasicAuthFilter</filter-name>
+        <servlet-name>ProfilesMTProvisioningServlet</servlet-name>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>BSSProvisioningSecurityFilter</filter-name>
+        <servlet-name>ProfilesMTProvisioningServlet</servlet-name>
+    </filter-mapping>
+	
+	<servlet>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<servlet-class>net.sourceforge.stripes.controller.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/app/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/oauth/app/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- LCC THEMES AND STYLES / CSS -->
+	<servlet>
+		<servlet-name>css-base</servlet-name>
+		<servlet-class>com.ibm.lconn.core.web.css.ConnectionsStylesheet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>css-theme</servlet-name>
+		<servlet-class>com.ibm.lconn.core.web.css.ConnectionsStylesheet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>css-base</servlet-name>
+		<url-pattern>/nav/common/styles/base/base.css</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>css-theme</servlet-name>
+		<url-pattern>/WEB-INF/css/theme</url-pattern>
+	</servlet-mapping>
+
+	<!-- For the Following API support -->
+	<servlet>
+	    <description>Servlet for REST API support for Following in Profiles</description>
+	    <display-name>FollowingRESTServlet</display-name>
+	    <servlet-name>FollowingRESTServlet</servlet-name>
+	    <servlet-class>com.ibm.lconn.following.web.FollowingControllerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>FollowingRESTServlet</servlet-name>
+	    <url-pattern>/follow/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>FollowingRESTServlet</servlet-name>
+	    <url-pattern>/oauth/follow/*</url-pattern>
+	</servlet-mapping>
+	
+	<filter-mapping>
+	    <filter-name>AtomFollowSecurityFilter</filter-name>
+	    <url-pattern>/follow/atom/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+	  <filter-name>AtomFormSecurityFilter</filter-name>
+	  <url-pattern>/follow/json/*</url-pattern>
+	</filter-mapping>
+
+	<security-constraint>
+	    <display-name>Secure Following Atom APIs</display-name>
+	    <web-resource-collection>
+	        <web-resource-name>Secure Following Atom APIs</web-resource-name>
+		<description/>
+		<url-pattern>/follow/atomfba/*</url-pattern>
+		<http-method>GET</http-method>
+		<http-method>PUT</http-method>
+		<http-method>POST</http-method>
+		<http-method>DELETE</http-method>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <description/>
+	        <role-name>person</role-name>
+	    </auth-constraint>
+	</security-constraint>
+	
+	<servlet>
+		<!--  rtc 149345: cloud single ear -->
+		<servlet-name>ExtensibleServlet</servlet-name>
+		<servlet-class>com.ibm.lconn.core.web.extension.ExtensibleServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExtensibleServlet</servlet-name>
+		<url-pattern>/wdp/*</url-pattern>
+	</servlet-mapping>
+        
+</web-app>

@@ -1,0 +1,1210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<xsd:schema 
+	targetNamespace="http://www.ibm.com/profiles-config"
+	xmlns="http://www.ibm.com/profiles-config"
+	xmlns:tns="http://www.ibm.com/profiles-config"
+	xmlns:pui="http://www.ibm.com/profiles-config"
+	xmlns:lconn="http://www.ibm.com/LotusConnections-config"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+
+	<xsd:element name="config">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="profileDataModels" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="layoutConfiguration" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="caches" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="dataAccess" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="acf" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="sametimeAwareness" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="javelinGWMailSearch" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="properties" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="board" minOccurs="0" maxOccurs="1"/>
+				<xsd:element ref='scheduledTasks' minOccurs='1'/>
+			</xsd:sequence>
+			<xsd:attribute name="id" type="xsd:string" use="required"/>
+		</xsd:complexType>
+		
+		<!-- Only one version of extension id per doc -->
+		<xsd:unique name="ExtensionIdUniqueness">
+			<xsd:selector xpath="tns:profileExtensionAttributes/tns:*"/>
+			<xsd:field xpath="@extensionId"/>
+		</xsd:unique>
+		
+		<!-- Creates a key on all ExtensionId -->
+		<xsd:key name="AllExtensionIdKey">
+			<xsd:selector xpath="tns:profileDataModels/tns:profileExtensionAttributes/tns:*"/>
+			<xsd:field xpath="@extensionId"/>
+		</xsd:key>
+		
+		<!-- Creates a key on simpl, richttext extension ExtensionId -->
+		<xsd:key name="UIExtensionIdKey">
+			<xsd:selector xpath="tns:profileDataModels/tns:profileExtensionAttributes/tns:simpleAttribute | tns:profileDataModels/tns:profileExtensionAttributes/tns:richtextAttribute"/>
+			<xsd:field xpath="@extensionId"/>
+		</xsd:key>
+		
+		<xsd:key name="SearchUIExtensionIdKey">
+			<xsd:selector xpath="tns:profileDataModels/tns:profileExtensionAttributes/tns:simpleAttribute"/>
+			<xsd:field xpath="@extensionId"/>
+		</xsd:key>
+		
+		<!-- 
+			Requires that data models 'extensionIdRef' match one of the 'AllExtensionIdKey' keys in the data model. 
+		-->
+		<xsd:keyref name="DMExtensionIdKeyRef" refer="tns:AllExtensionIdKey">
+			<xsd:selector xpath="tns:profileDataModels/tns:profileDataModel/tns:draftableExtensionAttribute"/>
+			<xsd:field xpath="@extensionIdRef"/>
+		</xsd:keyref>
+												
+	</xsd:element>
+	
+	<xsd:element name="tdiConfig">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="profileExtensionAttributes" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="properties" minOccurs="0" maxOccurs="1"/>	
+			</xsd:sequence>			
+			<xsd:attribute name="id" type="xsd:NCName" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<!-- ===================================================================
+		 Defines the <profileDataModels> configuration
+	 	 =================================================================== -->
+	 	 
+	<xsd:element name="profileDataModels">
+		<xsd:complexType>
+			<xsd:sequence>			
+				<xsd:element ref="profileExtensionAttributes" minOccurs="1" maxOccurs="1"/>				
+				<xsd:element ref="profileDataModel" minOccurs="1"  maxOccurs="1"/>
+				<xsd:element ref="connectionTypeConfig" minOccurs="0" maxOccurs="1"/>
+				<xsd:element ref="searchAttributeConfig" minOccurs="0" maxOccurs="1"/>
+				<xsd:element ref="tagsConfig" minOccurs="0" maxOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>		
+
+	<xsd:element name="profileDataModel">
+		<xsd:annotation>
+			<xsd:documentation>
+				This section is just used to expressly mark data as
+				being stored in the 'draft tables' for profiles updates.
+			</xsd:documentation>
+		</xsd:annotation>
+	
+		<xsd:complexType>
+			<xsd:choice maxOccurs="unbounded">
+				<xsd:element minOccurs="0" maxOccurs="unbounded" ref="draftableAttribute" />
+                <xsd:element minOccurs="0" maxOccurs="unbounded" ref="draftableExtensionAttribute" />
+            </xsd:choice>
+		</xsd:complexType>
+		
+		<!-- Uniquness Constraint on Attributes -->
+		<xsd:unique name="AttributeIdUniqueness">
+			<xsd:selector xpath="tns:draftableAttribute"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
+		
+		<!-- Uniquness Constraint Extension Attributes -->
+		<xsd:unique name="ExtensionIdRefUniqueness">
+			<xsd:selector xpath="tns:draftableExtensionAttribute"/>
+			<xsd:field xpath="@extensionIdRef"/>
+		</xsd:unique>
+	</xsd:element>
+	
+	<xsd:element name="draftableExtensionAttribute">
+		<xsd:complexType>
+          <xsd:attribute name="extensionIdRef" type="tns:extensionId" use="required"/>
+  		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="draftableAttribute">
+  		<xsd:complexType>
+    		<xsd:simpleContent>
+      			<xsd:extension base="editable"/>
+    		</xsd:simpleContent>
+  		</xsd:complexType>
+	</xsd:element>
+	
+	<!-- ===================================================================
+		 Defines the <layoutConfiguration> configuration
+	 	 =================================================================== -->
+	
+	<xsd:element name="layoutConfiguration">
+		<xsd:complexType>
+			<xsd:sequence>			
+				<xsd:element ref="templateConfiguration" minOccurs="1" maxOccurs="1"/>			
+				<xsd:element ref="vcardExport" minOccurs="1" maxOccurs="1"/>				
+			 	<xsd:element ref="searchLayout" minOccurs="1" maxOccurs="1"/>			 	 
+				<xsd:element ref="businessCardLayout" minOccurs="1" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+										
+		<!-- Only one business card per profile type -->
+		<xsd:unique name="BizCardLayoutUniqueness">
+			<xsd:selector xpath="tns:businessCardLayout"/>
+			<xsd:field xpath="@profileType"/>
+		</xsd:unique>
+		
+	</xsd:element>
+
+  	<!-- ===================================================================
+		Begin Search Layout Definition
+	 	 =================================================================== -->
+	 	 
+	<xsd:element name="searchLayout">
+		<xsd:complexType>
+            <xsd:choice maxOccurs="unbounded">
+				<xsd:element minOccurs="0" maxOccurs="unbounded" name="attribute" type="tns:AdvancedSearchAttributeElem" />
+				<xsd:element minOccurs="0" maxOccurs="unbounded" name="extensionAttribute" type="tns:AdvancedSearchExtensionAttributeElem" />
+            </xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="column">
+		<xsd:complexType>
+            <xsd:choice maxOccurs="unbounded">
+				<xsd:element minOccurs="0" maxOccurs="unbounded" name="attribute" type="tns:SearchDisplayAttributeElem" />
+				<xsd:element minOccurs="0" maxOccurs="unbounded" ref="extensionAttribute" />
+            </xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	
+
+  	<!-- ===================================================================
+		End Search Layout Definition
+	 	 =================================================================== -->
+	 	 
+  	<!-- ===================================================================
+		Begin Template Configuration Definition
+	 	 =================================================================== -->	 	 
+	<xsd:element name="templateConfiguration">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="templateReloading" type="xsd:integer"/>
+				<xsd:element name="templateNlsBundles" type="xsd:string"/>
+				<xsd:element name="template" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element minOccurs="0" maxOccurs="1" name="templateDataModel" type="tns:templateDataModel"/>						
+						</xsd:sequence>
+						<xsd:attribute name="name" type="tns:templateName"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:complexType name="templateDataModel">
+		<xsd:sequence>
+			<xsd:element name="templateData" type="tns:templateData" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>		
+	</xsd:complexType>
+	
+	<xsd:simpleType name="templateName">
+		<xsd:restriction base="xsd:NCName">
+			<xsd:enumeration value="businessCardInfo"/>
+			<xsd:enumeration value="searchResults"/>
+			<xsd:enumeration value="profileDetails"/>
+			<xsd:enumeration value="profileEdit"/>
+		</xsd:restriction>	
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="templateData">
+		<xsd:restriction base="xsd:NCName">
+			<xsd:enumeration value="codes"/>
+			<xsd:enumeration value="extensions"/>
+			<xsd:enumeration value="secretary"/>
+			<xsd:enumeration value="manager"/>
+			<xsd:enumeration value="connection"/>
+		</xsd:restriction>	
+	</xsd:simpleType>
+		
+  	<!-- ===================================================================
+		End Template Configuration
+	 	 =================================================================== -->
+	
+	<xsd:element name="businessCardLayout">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="actions">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element minOccurs="0" maxOccurs="unbounded" name="action" type="tns:bizCardAction"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+            <xsd:attribute name="profileType" type="tns:profileType" use="required"/>
+            <xsd:attribute name="showProfilePhoto" type="xsd:boolean" default="true"/>
+			<xsd:attribute name="enableSametimeAwareness" type="xsd:boolean" default="true"/>
+			<xsd:attribute name="showSametimeStatusMsg" type="xsd:boolean" default="true"/>
+			<xsd:attribute name="showSametimeChatAction" type="xsd:boolean" default="true"/>
+			<xsd:attribute name="showSametimeCallAction" type="xsd:boolean" default="true"/>
+		</xsd:complexType>	
+	</xsd:element>
+	
+	<xsd:complexType name="bizCardAction">
+		<xsd:sequence>
+			<xsd:element name="label" type="tns:basicLabel" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="icon" minOccurs="0" maxOccurs="1">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="alt" type="tns:basicLabel" minOccurs="1" maxOccurs="1"/>				
+					</xsd:sequence>
+					<xsd:attribute name="href" type="xsd:string" use="required"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="urlPattern" type="xsd:string" use="required"/>
+		<xsd:attribute name="emailEnabledRequired" type="xsd:boolean" default="false"/>
+		<xsd:attribute name="liClass" type="xsd:NCName" use="optional"/>
+		<xsd:attribute name="requireAcl" type="xsd:string" use="optional"/>
+		<xsd:attribute name="hideIfAnyConnection" type="xsd:boolean" default="false">
+			<xsd:annotation>
+				<xsd:documentation>
+					Temporary option for 3.0. Use at your own risk. Configuration relying
+					on this will not be migrated automatically. 
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+		   
+  	<xsd:attributeGroup name="uiAttributeDefAttrs">
+  		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of attributes shared by both HTML attributes as well as attributeId attributes 
+			</xsd:documentation>
+		</xsd:annotation>
+	  	<xsd:attribute name="appendHtml" type="xsd:string" use="optional" />
+		<xsd:attribute name="prependHtml" type="xsd:string" use="optional" />
+  		<xsd:attribute name="bundleIdRef" type="tns:bundleIdRef" use="optional"/>
+		<xsd:attribute name="labelKey" type="tns:labelKey" use="optional"/>
+  	</xsd:attributeGroup>
+  
+	<xsd:attributeGroup name="baseAttributeDefAttrs">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of attributes shared by both extension and base profile attribute definitions
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attributeGroup ref="tns:uiAttributeDefAttrs"/>
+		<xsd:attribute name="richtext" type="xsd:boolean" default="false" />
+		<xsd:attribute name="showLabel" type="xsd:boolean" default="false"/>
+		<xsd:attribute name="hideIfEmpty" type="xsd:boolean" default="false"/>
+		<xsd:attribute name="link" type="xsd:boolean" use="optional" />		
+		<xsd:attribute name="blogUrl" type="xsd:boolean" use="optional" />
+	</xsd:attributeGroup>
+	
+	<xsd:attributeGroup name="simpleAttributeDefAttrs">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of attributes shared by both base profile attribute definitions.  
+				This set includes the base attribute def attrs.
+			</xsd:documentation>
+		</xsd:annotation>		
+		<xsd:attributeGroup ref="tns:baseAttributeDefAttrs"/>
+		<xsd:attribute name="email" type="tns:emailAttributes" use="optional"/>
+		<xsd:attribute name="uid" type="tns:uidAttributes" use="optional"/>
+		<xsd:attribute name="userid" type="tns:useridAttributes" use="optional"/>
+		<xsd:attribute name="hcard" type="xsd:boolean" default="false"/>
+		<xsd:attribute name="sametimeLink" type="xsd:boolean" default="false"/>
+	</xsd:attributeGroup>
+
+	<xsd:complexType name="AttributeElem">
+		<xsd:simpleContent>
+			<xsd:extension base="profileAttribute">
+				<xsd:attributeGroup ref="tns:simpleAttributeDefAttrs"/>
+				<xsd:attribute name="photo" type="xsd:boolean" use="optional" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+		
+	<xsd:complexType name="SearchDisplayAttributeElem">
+		<xsd:simpleContent>
+			<xsd:extension base="searchDisplayAttributes">
+				<xsd:attributeGroup ref="tns:simpleAttributeDefAttrs"/>
+				<xsd:attribute name="photo" type="xsd:boolean" use="optional" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="AdvancedSearchAttributeElem">
+		<xsd:simpleContent>
+			<xsd:extension base="advancedSearchAttributes">
+				<xsd:attributeGroup ref="tns:simpleAttributeDefAttrs"/>
+				<xsd:attribute name="photo" type="xsd:boolean" use="optional" />
+				<xsd:attribute name="hideOnSearchUIForm" type="xsd:boolean" default="false" use="optional" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="AdvancedSearchExtensionAttributeElem">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+			    <xsd:attributeGroup ref="tns:baseAttributeDefAttrs"/>			
+			    <xsd:attribute name="editable" type="xsd:boolean" />
+			    <xsd:attribute name="extensionIdRef" type="tns:extensionId" use="required" />
+			    <xsd:attribute name="hideOnSearchUIForm" type="xsd:boolean" default="false" use="optional" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<xsd:element name="extensionAttribute">
+		<xsd:complexType>
+			<xsd:attributeGroup ref="tns:baseAttributeDefAttrs"/>			
+			<xsd:attribute name="editable" type="xsd:boolean" use="optional"/>
+			<xsd:attribute name="multiline" type="xsd:boolean" use="optional" />
+			<xsd:attribute name="extensionIdRef" type="tns:extensionId" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="editableAttribute">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="editable">
+					<xsd:attributeGroup ref="tns:simpleAttributeDefAttrs"/>
+					<xsd:attribute name="disabled" type="xsd:boolean" />
+					<xsd:attribute name="multiline" type="xsd:boolean" use="optional" />
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>	
+
+	<xsd:element name="tagsConfig">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="tagConfig" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="tagConfig">
+		<xsd:complexType>
+			<xsd:attribute name="type" type="xsd:string"/>
+			<xsd:attribute name="phraseSupported" type="xsd:boolean" default="false"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="searchAttributeConfig">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="searchAttribute" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="searchAttribute">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="searchFacet" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:choice>					
+			<xsd:attribute name="fieldId" type="xsd:string" />
+			<xsd:attribute name="fieldSearchable" type="xsd:boolean" default="true"/>
+			<xsd:attribute name="contentSearchable" type="xsd:boolean" default="true"/>
+			<xsd:attribute name="returnable" type="xsd:boolean" default="true"/>
+			<xsd:attribute name="exactMatchSupported" type="xsd:boolean" default="false"/>			
+			<xsd:attribute name="parametric" type="xsd:boolean" default="false"/>
+			<xsd:attribute name="sortable" type="xsd:boolean" default="false"/>
+		</xsd:complexType>
+	</xsd:element>
+		
+	<xsd:element name="searchFacet">
+		<xsd:complexType>
+			<xsd:attribute name="description" type="xsd:string"/>
+			<xsd:attribute name="association">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="author"/>
+						<xsd:enumeration value="commenter"/>
+						<xsd:enumeration value="tagger"/>
+						<xsd:enumeration value="mentioned"/>
+						<xsd:enumeration value="reader"/>
+						<xsd:enumeration value="owner"/>
+						<xsd:enumeration value="member"/>
+						<xsd:enumeration value="self"/>
+						<xsd:enumeration value="profilesfriend"/>
+						<xsd:enumeration value="manager"/>
+						<xsd:enumeration value="persontagger"/>
+						<xsd:enumeration value="taggedwith"/>
+						<xsd:enumeration value="taggedby"/>
+						<xsd:enumeration value="1stlevelemployee"/>
+						<xsd:enumeration value="shared"/>
+						<xsd:enumeration value="assignedto"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="taxonomy" type="xsd:string"/>			
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="connectionTypeConfig">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="connection" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="connection">
+		<xsd:complexType>
+			<xsd:attribute name="type" type="xsd:string" />
+			<xsd:attribute name="workflow" default="none">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="confirmed" />
+						<xsd:enumeration value="none" />
+					</xsd:restriction>
+				</xsd:simpleType>			
+			</xsd:attribute>
+			<xsd:attribute name="graph" default="directional">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="bidirectional" />
+						<xsd:enumeration value="directional" />
+					</xsd:restriction>
+				</xsd:simpleType>			
+			</xsd:attribute>
+			<xsd:attribute name="notificationType" type="xsd:string"/>
+			<xsd:attribute name="indexed" type="xsd:boolean" default="true"/>
+			<xsd:attribute name="nodeOfCreator" default="source">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="source"/>
+						<xsd:enumeration value="target"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="messageAcl" default="source">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="public"/>
+						<xsd:enumeration value="private"/>
+						<xsd:enumeration value="source"/>
+						<xsd:enumeration value="target"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>						
+		</xsd:complexType>
+	</xsd:element>
+		  			
+	<!-- ===================================================================
+		 Defines the extension attribute configuration
+	 	 =================================================================== -->
+	<xsd:element name="profileExtensionAttributes">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="simpleAttribute" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="xmlFileAttribute" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="richtextAttribute" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:complexType name="extensionIdRefElement">
+		<xsd:attribute name="extensionIdRef" type="tns:extensionId" use="required"/>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="extensionId">
+		<xsd:annotation>
+			<xsd:documentation>
+	The extension id type is used to restrict the types of data that are
+	inputed for extension IDs. To be conservative (due to byte costs of
+	characters) this type is restricted to 16 multibyte characters or 64
+	single byte characters.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:NCName">
+					<xsd:maxLength value="16"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:NCName">
+					<xsd:maxLength value="64"/>
+					<xsd:pattern value="[_a-zA-Z][_\-\.a-zA-Z0-9]{0,63}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>		
+	</xsd:simpleType>
+	
+	<xsd:attributeGroup name="CommonExtensionAttributes">
+		<xsd:attribute name="extensionId" type="tns:extensionId" use="required"/>
+		<xsd:attribute name="sourceKey" type="xsd:NCName" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					This is the name of the LDAP attribute used to map the attribute to the DB.  Only the TDI configuration takes advantage of this.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="userLabel" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					A label string for the field in the DB.  Only the TDI configuration takes advantage of this.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="userTypeString" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					A label string for the data type.  Only the TDI configuration takes advantage of this.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
+	
+	<xsd:element name="simpleAttribute">
+		<xsd:complexType>
+			<xsd:attributeGroup ref="tns:CommonExtensionAttributes"/>
+			<xsd:attribute name="pattern" type="xsd:string"/>
+			<!-- 
+				Requires value to be <= 1024 bytes in db
+				Values are 0-64
+			 -->
+			<xsd:attribute name="length" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:maxInclusive value="1000"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="xmlFileAttribute">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="indexFields" minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="tns:CommonExtensionAttributes"/>
+			<xsd:attribute name="schemaFile" type="xsd:string"/>
+			<xsd:attribute name="indexBindingExpr" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="indexFields">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="indexField" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:attribute name="fieldName" type="xsd:string" use="required"/>
+						<xsd:attribute name="fieldExpr" type="xsd:string" use="required"/>
+						<xsd:attribute name="fieldType" type="xsd:string" />
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="richtextAttribute">
+		<xsd:complexType>
+			<xsd:attribute name="maxBytes" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:maxInclusive value="1000000"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attributeGroup ref="tns:CommonExtensionAttributes"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- ===================================================================
+		 Other configuration sections elements
+	 	 =================================================================== -->
+	<xsd:element name="startDelay" type="xsd:integer" />
+	<xsd:element name="taskinterval" type="xsd:integer" />
+	<xsd:element name="indexpath" type="xsd:string" />
+	<xsd:element name="lastIndexTime" type="xsd:string" />
+	<xsd:element name="implclass" type="xsd:string" />
+
+	<xsd:element name="caches">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="fullReportsToChainCache" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="profileObjectCache" minOccurs="1" maxOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="dataAccess">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="organizationalStructureEnabled" type="tns:booleanFeature" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="resolvedCodes" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="search" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="directory" type="tns:directoryConfig" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="allowJsonpJavelin" type="tns:booleanFeature" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="includeExtensionsInJavelinJS" type="tns:booleanFeature" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="nameOrdering" type="tns:booleanFeature" minOccurs="1" maxOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="resolvedCodes">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element maxOccurs="unbounded" ref="resolvedCode" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="resolvedCode" type="xsd:string" />
+
+	<xsd:element name="search">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="maxRowsToReturn" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="pageSize" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="firstNameSearch" minOccurs="0" maxOccurs="1"/>
+				<xsd:element ref="kanjiNameSearch" minOccurs="0" maxOccurs="1"/>
+				<xsd:element ref="sortNameSearchResultsBy" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="sortIndexSearchResultsBy" minOccurs="1" maxOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="maxRowsToReturn" type="xsd:integer" />
+	<xsd:element name="pageSize" type="xsd:integer" />
+	<xsd:element name="firstNameSearchEnabled" type="xsd:boolean" />
+	<xsd:element name="server" type="xsd:string" />
+	<xsd:element name="port" type="xsd:string" />
+
+	<xsd:element name="kanjiNameSearch">
+		<xsd:complexType>
+			<xsd:attribute name="enabled" type="xsd:boolean" />
+			<xsd:attribute name="default" type="xsd:boolean" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="firstNameSearch">
+		<xsd:complexType>
+			<xsd:attribute name="enabled" type="xsd:boolean" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="sortNameSearchResultsBy">
+		<xsd:complexType>
+			<xsd:attribute name="default" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+ 
+	<xsd:element name="sortIndexSearchResultsBy">
+		<xsd:complexType>
+			<xsd:attribute name="default" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="admin">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="management" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="management">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="jmx" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="jmx">
+		<xsd:complexType>
+			<xsd:attribute name="enabled" type="xsd:boolean" />
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<xsd:element name="fullReportsToChainCache">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="enabled" />
+				<xsd:element ref="size" />
+				<xsd:element ref="refreshTime" />
+				<xsd:element ref="refreshInterval" />
+				<xsd:element ref="startDelay" />
+				<xsd:element ref="ceouid" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="enabled" type="xsd:boolean" />
+	<xsd:element name="size" type="xsd:integer" />
+	<xsd:element name="refreshTime" type="xsd:string" />
+	<xsd:element name="refreshInterval" type="xsd:integer" />
+	<xsd:element name="ceouid" type="xsd:string" />
+
+	
+	<xsd:element name="profileObjectCache">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="refreshTime" />
+				<xsd:element ref="refreshInterval" />
+				<xsd:element ref="startDelay" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="filePath" type="xsd:string" />
+	
+	
+	<xsd:complexType name="directoryConfig">
+		<xsd:sequence>
+			<xsd:element name="lconnUserIdField" minOccurs="1" maxOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NCName">
+						<xsd:enumeration value="guid"/>
+						<xsd:enumeration value="uid"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			
+			<xsd:element name="loginAttributes" minOccurs="1" maxOccurs="1">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="loginAttribute" minOccurs="1" maxOccurs="unbounded">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:NCName">
+									<xsd:enumeration value="email" />
+									<xsd:enumeration value="uid" />								
+									<xsd:enumeration value="loginId" />
+								</xsd:restriction>
+							</xsd:simpleType>							
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+						
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:element name="statisticsFilePath" type="xsd:string" />
+	<xsd:element name="statisticsFileName" type="xsd:string" />
+
+	<xsd:element name="statistics">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="statisticsFilePath" />
+				<xsd:element ref="statisticsFileName" />
+			</xsd:sequence>
+			<xsd:attribute name="enabled" type="xsd:boolean" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="acf">
+		<xsd:complexType>
+			<xsd:attribute name="enabled" type="xsd:boolean" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:simpleType name="stInputList">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="email" />	
+			<xsd:enumeration value="uid" />
+		</xsd:restriction>
+	</xsd:simpleType>
+  
+  <xsd:element name="sametimeAwareness">
+    <xsd:complexType>
+      <xsd:attribute name="enabled" type="xsd:boolean" use="required"/>
+	  <xsd:attribute name="href" type="xsd:anyURI" use="required"/>
+	  <xsd:attribute name="ssl_href" type="xsd:anyURI" use="required"/>
+	  <xsd:attribute name="sametimeInputType" type="tns:stInputList" use="required"/>
+    </xsd:complexType>
+  </xsd:element>  
+	
+	<xsd:element name="javelinGWMailSearch">
+		<xsd:complexType>
+			<xsd:attribute name="enabled" type="xsd:boolean" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<!-- 
+		Label configuration
+	 -->	 
+	<xsd:complexType name="basicLabel">
+		<xsd:attribute name="labelKey" type="tns:labelKey" use="required"/>
+		<xsd:attribute name="bundleIdRef" type="tns:bundleIdRef" use="optional"/>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="labelKey">
+		<xsd:annotation>
+			<xsd:documentation>
+				Key is used to reference the resource string key for this label.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NCName"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="bundleIdRef">
+		<xsd:annotation>
+			<xsd:documentation>
+				Optional attribute to specify external bundle id to pull resource from.  If not specified string is assumed to be from default internal bundle.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NCName"/>
+	</xsd:simpleType>
+	
+	<!-- 
+		Config for vCard export feature
+	 -->
+	<xsd:element name="vcardExport">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="charset" minOccurs="1" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="label" type="tns:basicLabel" minOccurs="1" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute name="name" type="xsd:string" use="required"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:unique name="CharsetUniqueness">
+			<xsd:selector xpath="tns:charset"/>
+			<xsd:field xpath="@name"/>
+		</xsd:unique>
+	</xsd:element>
+
+	<xsd:element name="properties">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="property" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:attribute name="name" type="xsd:NCName" use="required"/>
+						<xsd:attribute name="value" type="xsd:string" use="required"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:unique name="PropertyUniqueness">
+			<xsd:selector xpath="tns:property"/>
+			<xsd:field xpath="@name"/>
+		</xsd:unique>
+	</xsd:element>
+
+	<xsd:element name="statusUpdatesInProfileView">
+		<xsd:complexType>
+			<xsd:attribute name="enabled" type="xsd:boolean" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="board">
+		<xsd:complexType>
+			<xsd:attribute name="enabled" type="xsd:boolean" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<!-- 
+	     Scheduled Tasks
+	-->
+	<xsd:element name="scheduledTasks">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="task" minOccurs="1"  maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="task">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="tns:args"  minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+			<xsd:attribute name="name" type="xsd:string" use="required" />
+			<xsd:attribute name="interval" type="xsd:string" use="required" />
+			<xsd:attribute name="startby" type="xsd:string"/>
+			<xsd:attribute name="type" type="xsd:string" use="required" />
+			<xsd:attribute name="enabled" type="xsd:boolean" use="required" />
+			<xsd:attribute name="targetName" type="xsd:string" />
+			<xsd:attribute name="mbeanMethodName" type="xsd:string" />
+			<xsd:attribute name="scope" type="xsd:string" />
+			<xsd:attribute name="serverName" type="xsd:string" />
+			<xsd:attribute name="description" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="args">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="property" minOccurs="0"  maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="property">
+		<xsd:complexType mixed="true">
+			<xsd:attribute name="name" type="xsd:NMTOKEN"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- ===================================================================
+		 Data Types
+	 	 =================================================================== -->
+
+	<xsd:simpleType name="profileType">
+		<xsd:restriction base="xsd:NCName">
+			<xsd:maxLength value="16"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+
+    <xsd:simpleType name="profileAttribute">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="organizationTitle" />
+			<xsd:enumeration value="departmentTitle" />
+			<xsd:enumeration value="employeeTypeDesc" />
+			<xsd:enumeration value="employeeTypeCode" />
+			<xsd:enumeration value="jobResp" />
+			<xsd:enumeration value="title" />
+			<xsd:enumeration value="secretaryName" />
+			<xsd:enumeration value="secretaryUid" />
+			<xsd:enumeration value="secretaryEmail" />
+			<xsd:enumeration value="secretaryUserid" />
+			<xsd:enumeration value="isManager" />
+			<xsd:enumeration value="employeeNumber" />
+			<xsd:enumeration value="managerUid" />
+			<xsd:enumeration value="managerUserid" />
+			<xsd:enumeration value="shift" />
+			<xsd:enumeration value="deptNumber" />
+			<xsd:enumeration value="workLocation.address1" />
+            <xsd:enumeration value="workLocation.address2" />
+			<xsd:enumeration value="workLocation.city" />
+            <xsd:enumeration value="workLocation.state" />
+            <xsd:enumeration value="workLocation.postalCode" />
+			<xsd:enumeration value="countryDisplayValue" />
+			<xsd:enumeration value="countryCode" />
+			<xsd:enumeration value="courtesyTitle" />
+			<xsd:enumeration value="displayName" />
+			<xsd:enumeration value="preferredFirstName" />
+			<xsd:enumeration value="preferredLastName" />
+			<xsd:enumeration value="alternateLastname" />
+			<xsd:enumeration value="nativeFirstName" />
+			<xsd:enumeration value="nativeLastName" />
+			<xsd:enumeration value="preferredLanguage" />
+			<xsd:enumeration value="bldgId" />
+			<xsd:enumeration value="floor" />
+			<xsd:enumeration value="officeName" />
+			<xsd:enumeration value="telephoneNumber" />
+			<xsd:enumeration value="ipTelephoneNumber" />
+			<xsd:enumeration value="mobileNumber" />
+			<xsd:enumeration value="pagerNumber" />
+			<xsd:enumeration value="pagerType" />
+			<xsd:enumeration value="pagerId" />
+			<xsd:enumeration value="pagerServiceProvider" />
+			<xsd:enumeration value="faxNumber" />
+			<xsd:enumeration value="email" />
+			<xsd:enumeration value="groupwareEmail" />
+			<xsd:enumeration value="calendarUrl" />
+			<xsd:enumeration value="freeBusyUrl" />
+			<xsd:enumeration value="timezone" />
+			<xsd:enumeration value="blogUrl" />
+			<xsd:enumeration value="description" />
+			<xsd:enumeration value="experience" />
+			<xsd:enumeration value="givenName" />
+			<xsd:enumeration value="surname" />
+			<xsd:enumeration value="background" />
+			<xsd:enumeration value="profilePicture" />
+			<xsd:enumeration value="profileType" />
+			<xsd:enumeration value="uid" />
+			<xsd:enumeration value="guid" />
+			<xsd:enumeration value="key" />
+			<xsd:enumeration value="loginId" />
+			<xsd:enumeration value="distinguishedName" />
+			<xsd:enumeration value="loginId" />
+			<xsd:enumeration value="sourceUrl" />
+			<xsd:enumeration value="workLocationCode" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="useridAttributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of attributes that can be defined in the
+				'userid' attribute of an &lt;attribute/&gt; element.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="profileAttribute">
+					<xsd:enumeration value="secretaryUserid" />
+					<xsd:enumeration value="managerUserid" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<!-- TODO/needed by current config to work -->
+				<xsd:restriction base="xsd:NCName">
+					<xsd:enumeration value="userid" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+		
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="emailAttributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of attributes that can be defined in the
+				'email' attribute of an &lt;attribute/&gt; element.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="profileAttribute">
+					<xsd:enumeration value="secretaryEmail" />
+					<xsd:enumeration value="email" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:boolean"/>
+			</xsd:simpleType>
+		</xsd:union>
+		
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="uidAttributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of attributes that can be defined in the
+				'uid' attribute of an &lt;attribute/&gt; element.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="tns:profileAttribute">
+					<xsd:enumeration value="secretaryUid" />
+					<xsd:enumeration value="managerUid" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<!-- TODO needed by current config to work -->
+				<xsd:restriction base="xsd:NCName">
+					<xsd:enumeration value="key" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+		
+	</xsd:simpleType>
+
+	<xsd:simpleType name="searchDisplayOnlyAttribute">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of attributes that is unique to the search
+				results page.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NCName">
+			<xsd:enumeration value="profilePicture" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="searchDisplayAttributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of for customizing the search results
+				page. This attribute set is a union of other attribute
+				sets.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:union
+			memberTypes="profileAttribute searchDisplayOnlyAttribute" />
+	</xsd:simpleType>
+
+	<xsd:simpleType name="advancedSearchOnlyAttributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of attributes that is unique to the
+				advanced search configuration
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NCName">
+			<xsd:enumeration value="profileTags" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="advancedSearchAttributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is a set of for customizing the advanced search
+				page. This attribute set is a union of other attribute
+				sets.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:union
+			memberTypes="profileAttribute advancedSearchOnlyAttributes" />
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="editable">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="jobResp" />
+			<xsd:enumeration value="title" />
+			<xsd:enumeration value="secretaryName" />
+			<xsd:enumeration value="secretaryUid" />
+			<xsd:enumeration value="secretaryEmail" />
+			<xsd:enumeration value="isManager" />
+			<xsd:enumeration value="employeeNumber" />
+			<xsd:enumeration value="managerUid" />
+			<xsd:enumeration value="shift" />
+			<xsd:enumeration value="deptNumber" />
+			<xsd:enumeration value="courtesyTitle" />
+			<xsd:enumeration value="displayName" />
+			<xsd:enumeration value="preferredFirstName" />
+			<xsd:enumeration value="preferredLastName" />
+			<xsd:enumeration value="alternateLastname" />
+			<xsd:enumeration value="nativeFirstName" />
+			<xsd:enumeration value="nativeLastName" />
+			<xsd:enumeration value="preferredLanguage" />
+			<xsd:enumeration value="bldgId" />
+			<xsd:enumeration value="floor" />
+			<xsd:enumeration value="officeName" />
+			<xsd:enumeration value="telephoneNumber" />
+			<xsd:enumeration value="ipTelephoneNumber" />
+			<xsd:enumeration value="mobileNumber" />
+			<xsd:enumeration value="pagerNumber" />
+			<xsd:enumeration value="pagerType" />
+			<xsd:enumeration value="pagerId" />
+			<xsd:enumeration value="pagerServiceProvider" />
+			<xsd:enumeration value="faxNumber" />
+			<xsd:enumeration value="email" />
+			<xsd:enumeration value="groupwareEmail" />
+			<xsd:enumeration value="calendarUrl" />
+			<xsd:enumeration value="freeBusyUrl" />
+			<xsd:enumeration value="timezone" />
+			<xsd:enumeration value="blogUrl" />
+			<xsd:enumeration value="description" />
+			<xsd:enumeration value="experience" />
+			<xsd:enumeration value="givenName" />
+			<xsd:enumeration value="surname" />
+			<xsd:enumeration value="profileType" />
+			<xsd:enumeration value="workLocationCode" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	   
+	<!-- 
+		Generic type of the form:
+		
+		<{feature-name} enabled="true|false"/>
+	 -->
+	<xsd:complexType name="booleanFeature">
+		<xsd:attribute name="enabled" type="xsd:boolean" use="required"/>
+	</xsd:complexType>
+</xsd:schema>

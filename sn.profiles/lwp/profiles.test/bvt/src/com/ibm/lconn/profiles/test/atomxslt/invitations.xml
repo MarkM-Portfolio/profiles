@@ -1,0 +1,19 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<invitations xmlns:snx="http://www.ibm.com/xmlns/prod/sn/profiles" xmlns="http://www.ibm.com/xmlns/prod/sn/profiles"
+  ui-level='second third'>
+  <invitation inviter-name='Zhouwen Lu' connectionId='eb022c4a-9ebb-4877-8086-cd5ae55cd56f' date='1204124212390'
+    common-friends='0' msg=' Please accept!' uid='L09593897' userid='92df9f40-8f0a-1028-8767-db07163b51b2' />
+</invitations>

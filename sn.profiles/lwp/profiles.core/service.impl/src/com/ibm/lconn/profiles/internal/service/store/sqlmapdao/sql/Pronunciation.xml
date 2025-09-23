@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Pronunciation">
+
+	<typeAlias alias="pronunciation"
+		type="com.ibm.lconn.profiles.data.Pronunciation" />
+
+	<typeAlias alias="TenantPronunciationOptions"
+		type="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ro.TenantPronunciationRO"/>
+
+	<resultMap id="PronunciationWithoutFileResult" class="pronunciation">
+		<result property="key" column="PROF_KEY" />
+		<result property="updated" column="PROF_UPDATED" javaType="java.util.Date"/>
+		<result property="fileType" column="PROF_FILE_TYPE" javaType="java.lang.String"/>
+		<result property="tenantKey" column="TENANT_KEY"  javaType="java.lang.String" />
+	</resultMap>
+	
+	<resultMap id="PronunciationWithFileResult" class="pronunciation">
+		<result property="key" column="PROF_KEY" />
+		<result property="updated" column="PROF_UPDATED" javaType="java.util.Date"/>
+		<result property="audioFile" column="PROF_PRONOUNCE" />
+		<result property="fileType" column="PROF_FILE_TYPE" javaType="java.lang.String"/>
+		<result property="tenantKey" column="TENANT_KEY"  javaType="java.lang.String" />
+	</resultMap>
+
+	<select id="getAll" resultMap="PronunciationWithFileResult" parameterClass="map">
+		select 
+			PROF_KEY, PROF_UPDATED, PROF_PRONOUNCE, PROF_FILE_TYPE, TENANT_KEY
+		from 
+			EMPINST.PRONUNCIATION
+		where 1=1
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+		<isNotNull property="options.nextPronunciationKey">
+			AND PROF_KEY >= #options.nextPronunciationKey#
+		</isNotNull>
+		order by
+			PROF_KEY ASC
+	</select>
+	
+	<select id="GetPronunciationWithFileByKey" resultMap="PronunciationWithFileResult" parameterClass="map">
+		select PROF_KEY, PROF_UPDATED, PROF_PRONOUNCE, PROF_FILE_TYPE, TENANT_KEY
+		from EMPINST.PRONUNCIATION
+		where PROF_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<select id="GetPronunciationWithoutFileByKey" resultMap="PronunciationWithoutFileResult" parameterClass="map">
+		select PROF_KEY, PROF_UPDATED, PROF_FILE_TYPE, TENANT_KEY
+		from EMPINST.PRONUNCIATION
+		where PROF_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+
+	<select id="countEmployeesWithPronunciation" resultClass="java.lang.Integer" parameterClass="map">
+	    SELECT COUNT(*) FROM EMPINST.PRONUNCIATION
+	    WHERE 1=1
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+
+	<update id="updatePronunciation" parameterClass="map">
+		<!-- do not update keys -->
+		update EMPINST.PRONUNCIATION SET
+  		PROF_PRONOUNCE = #pronunciation.audioFile#,
+  		PROF_FILE_TYPE = #pronunciation.fileType#
+		WHERE
+		PROF_KEY=#pronunciation.key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<insert id="insertPronunciation" parameterClass="pronunciation">
+		insert into EMPINST.PRONUNCIATION
+		(PROF_PRONOUNCE, PROF_KEY, PROF_FILE_TYPE, TENANT_KEY)
+		values
+		(#audioFile#, #key#, #fileType#, #dbTenantKey#)
+	</insert>
+
+	<delete id="deletePronunciationByKey" parameterClass="map">
+		delete FROM EMPINST.PRONUNCIATION WHERE PROF_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+	
+	<!-- This is currently in place for the Cloud and feature parity with the guest model.
+	     This should(?) be dropped for visitor model. -->
+	<update id="updateTenantKey" parameterClass="java.util.Map">
+		update EMPINST.PRONUNCIATION set TENANT_KEY = #newTenantKey# where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>	
+
+</sqlMap>

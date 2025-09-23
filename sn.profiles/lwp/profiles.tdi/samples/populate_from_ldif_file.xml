@@ -1,0 +1,2846 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2012, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<MetamergeConfig IDIversion="Created by TDI7.1.1 - 2010-12-21" created="Mon Apr 23 16:48:25 EDT 2012" createdBy="jferguso" modified="Tue Apr 24 15:56:34 EDT 2012" modifiedBy="jferguso" version="7.1.1">
+    <Folder name="AssemblyLines">
+        <AssemblyLine name="populate_from_ldif_file">
+            <Settings/>
+            <Hooks>
+                <Hook name="prolog">
+                    <Name>prolog</Name>
+                    <Script/>
+                    <Enabled>false</Enabled>
+                </Hook>
+                <Hook name="prolog0">
+                    <Name>prolog0</Name>
+                    <Script><![CDATA[//--------------------------------------------------------------
+// Load the message bundle.  Will set variable messageBundle.
+//--------------------------------------------------------------
+load_lcConf(true);
+
+//--------------------------------------------------------------
+// Get the mappings to create db fields from ldap fields. The
+// call below will create db_from_ldap_array associative array
+//--------------------------------------------------------------
+load_mappings_dbrepos_from_source();
+
+//--------------------------------------------------------------
+// Load the validation functions for validation values being
+// stored into database repository fields
+//--------------------------------------------------------------
+load_validations_dbrepos();]]></Script>
+                    <Enabled>true</Enabled>
+                </Hook>
+            </Hooks>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <SimulationConfig>
+                <SimulationStates>
+                    <Component name="setup_variables" state="Enabled"/>
+                    <Component name="lookup_profile" state="Enabled"/>
+                    <Component name="set_action" state="Enabled"/>
+                    <Component name="profile_exists" state="Enabled"/>
+                    <Component name="update_profile" state="Simulated"/>
+                    <Component name="does_not_exist" state="Enabled"/>
+                    <Component name="add_profile" state="Simulated"/>
+                    <Component name="ldif_iterate" state="Enabled"/>
+                </SimulationStates>
+                <ProxySettings/>
+            </SimulationConfig>
+            <LogConfig/>
+            <ContainerEF name="EntryFeedContainer">
+                <Connector name="ldif_iterate">
+                    <InheritFrom>system:/Connectors/ibmdi.FileSystem</InheritFrom>
+                    <ConnectorMode>Iterator</ConnectorMode>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Configuration>
+                        <UserComment/>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="debug">false</parameter>
+                        <parameter name="filePath">@SUBSTITUTE{property.populate_from_ldif_file:populate_ldif_file}</parameter>
+                        <parameter name="userComment"/>
+                    </Configuration>
+                    <Parser>
+                        <UserComment/>
+                        <InheritFrom>system:/Parsers/ibmdi.LDIF</InheritFrom>
+                        <parameter name="debug">false</parameter>
+                        <parameter name="userComment"/>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings>
+                        <WhenToCommit>After every database operation</WhenToCommit>
+                    </DeltaSettings>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Hook name="after_getnext">
+                            <Name>after_getnext</Name>
+                            <Script/>
+                            <Enabled>false</Enabled>
+                        </Hook>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+            </ContainerEF>
+            <ContainerDF name="DataFlowContainer">
+                <Script name="setup_variables">
+                    <parameter name="script"><![CDATA[var theEntry = system.newEntry();
+if(!map_into_entry(db_from_ldap_array, theEntry)) {
+	log1("ERROR", "err_mapping_failed_for_entry", work.getString("$dn"));
+	system.skipEntry();
+}
+if(!validate_existing(validate_dbrepos_field_array, theEntry)) {
+	log1("WARN", "warn_validation_failed_for_entry", work.getString("$dn"));
+	system.skipEntry();
+}
+
+create_extension_attribute_mappings(db_from_ldap_array, theEntry);
+
+work.merge(theEntry);
+
+var attr = work.newAttribute("sourceUrl");
+attr.setValue(lcConf.sync_store_source_url)]]></parameter>
+                </Script>
+                <Connector name="lookup_profile">
+                    <InheritFrom>system:/Connectors/ProfileConnector</InheritFrom>
+                    <ConnectorMode>Lookup</ConnectorMode>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="debug">false</parameter>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings/>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sourceUrl</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sourceUrl</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <LinkCriteriaItem>
+                            <Key>136bcf98831</Key>
+                            <Attribute>uid</Attribute>
+                            <Operator>equals</Operator>
+                            <Value>$uid</Value>
+                        </LinkCriteriaItem>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Hook name="after_close">
+                            <Name>after_close</Name>
+                            <Script><![CDATA[var outFileName = eval_tdi_expression("{property.Java-Properties:java.io.tmpdir}/_tdi.rc");
+write_return_code(retCode, outFileName);
+
+log4("INFO", "info_iteration_result", "" + getCounterState(successCounter), "0",
+"" + getCounterState(failCounter), "" + lastSuccessfulDN);
+
+console4("out", "info_iteration_result", "" + getCounterState(successCounter), 
+"" + getCounterState(duplicateCounter),
+"" + getCounterState(failCounter), "" + lastSuccessfulDN);
+
+lcIterUtil.report();]]></Script>
+                            <Enabled>true</Enabled>
+                        </Hook>
+                        <Hook name="after_initialize">
+                            <Name>after_initialize</Name>
+                            <Script><![CDATA[var lastSuccessfulDN = null;
+var retCode = 0;
+
+// this is the overall counter
+lcIterUtil.reset();
+
+var successCounter = "successCounter";
+var failCounter = "failCounter";
+var duplicateCounter = "duplicateCounter";
+
+//clear counter result
+clearCounter(successCounter);
+clearCounter(failCounter);
+clearCounter(duplicateCounter);
+
+//re-create counter
+createCounter(successCounter);
+createCounter(failCounter);
+createCounter(duplicateCounter);]]></Script>
+                            <Enabled>true</Enabled>
+                        </Hook>
+                        <Hook name="after_lookup">
+                            <Name>after_lookup</Name>
+                            <Script/>
+                            <Enabled>false</Enabled>
+                        </Hook>
+                        <Hook name="lookup_fail">
+                            <Name>lookup_fail</Name>
+                            <Script><![CDATA[msgText = log2("ERROR", "err_iteration_failure", lastSuccessfulDN, 
+error.getString("message"));
+incrementCounter(failCounter);
+lcIterUtil.incr();
+retCode = 1;
+system.skipEntry();]]></Script>
+                            <Enabled>true</Enabled>
+                        </Hook>
+                        <Hook name="lookup_nomatch">
+                            <Name>lookup_nomatch</Name>
+                            <Script>continue;</Script>
+                            <Enabled>true</Enabled>
+                        </Hook>
+                        <Hook name="lookup_ok">
+                            <Name>lookup_ok</Name>
+                            <Script/>
+                            <Enabled>false</Enabled>
+                        </Hook>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+                <ALMap name="set_action">
+                    <InheritFrom>[no inheritance]</InheritFrom>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>does_exist</Name>
+                            <Type>advanced</Type>
+                            <Script><![CDATA[if (work.key == null)
+	ret.value = "false"
+else
+	ret.value = "true"]]></Script>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <State>Enabled</State>
+                </ALMap>
+                <Branch name="profile_exists">
+                    <Connector name="update_profile">
+                        <InheritFrom>system:/Connectors/ProfileConnector</InheritFrom>
+                        <ConnectorMode>Update</ConnectorMode>
+                        <ConnectorState>Enabled</ConnectorState>
+                        <Configuration>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <parameter name="debug">false</parameter>
+                        </Configuration>
+                        <Parser>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <Schema name="Input">
+                                <InheritFrom>[parent]</InheritFrom>
+                            </Schema>
+                            <Schema name="Output">
+                                <InheritFrom>[parent]</InheritFrom>
+                            </Schema>
+                        </Parser>
+                        <AttributeMap name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </AttributeMap>
+                        <AttributeMap name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                            <AttributeMapItem>
+                                <Name>*</Name>
+                                <Type>simple</Type>
+                                <Simple>*</Simple>
+                            </AttributeMapItem>
+                        </AttributeMap>
+                        <DeltaSettings/>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                            <SchemaItem>
+                                <Name>distinguishedName</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>email</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>guid</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>key</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>sourceUrl</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>uid</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                            <SchemaItem>
+                                <Name>distinguishedName</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>email</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>guid</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>key</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>sourceUrl</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>uid</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                        </Schema>
+                        <LinkCriteria>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <LinkCriteriaItem>
+                                <Key>136bcf21b02</Key>
+                                <Attribute>uid</Attribute>
+                                <Operator>equals</Operator>
+                                <Value>$uid</Value>
+                            </LinkCriteriaItem>
+                        </LinkCriteria>
+                        <Hooks>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <Hook name="default_fail">
+                                <Name>default_fail</Name>
+                                <Script><![CDATA[incrementCounter(failCounter);
+lcIterUtil.incr();]]></Script>
+                                <Enabled>true</Enabled>
+                            </Hook>
+                            <Hook name="default_ok">
+                                <Name>default_ok</Name>
+                                <Script><![CDATA[lastSuccessfulDN = work.getString("$dn");
+incrementCounter(duplicateCounter);
+lcIterUtil.incr();]]></Script>
+                                <Enabled>true</Enabled>
+                            </Hook>
+                            <Hook name="update_fail">
+                                <Name>update_fail</Name>
+                                <Script/>
+                                <Enabled>false</Enabled>
+                            </Hook>
+                        </Hooks>
+                        <CheckpointConfig/>
+                        <SandboxConfig/>
+                        <Reconnect>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <parameter name="initreconnect">false</parameter>
+                            <parameter name="numberOfRetries">1</parameter>
+                            <parameter name="retryDelay">10</parameter>
+                            <ReconnectRules/>
+                        </Reconnect>
+                        <Operations/>
+                        <PoolDefinition>
+                            <InheritFrom>[parent]</InheritFrom>
+                        </PoolDefinition>
+                        <PoolInstance/>
+                        <InitializeOption>0</InitializeOption>
+                    </Connector>
+                    <Conditions>
+                        <BranchCondition>
+                            <LeftHand>does_exist</LeftHand>
+                            <Operator>equals</Operator>
+                            <RightHand>true</RightHand>
+                        </BranchCondition>
+                    </Conditions>
+                    <MatchAny>false</MatchAny>
+                    <Enabled>true</Enabled>
+                    <Type>0</Type>
+                </Branch>
+                <Branch name="does_not_exist">
+                    <Connector name="add_profile">
+                        <InheritFrom>system:/Connectors/ProfileConnector</InheritFrom>
+                        <ConnectorMode>AddOnly</ConnectorMode>
+                        <ConnectorState>Enabled</ConnectorState>
+                        <Configuration>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <parameter name="debug">false</parameter>
+                        </Configuration>
+                        <Parser>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <Schema name="Input">
+                                <InheritFrom>[parent]</InheritFrom>
+                            </Schema>
+                            <Schema name="Output">
+                                <InheritFrom>[parent]</InheritFrom>
+                            </Schema>
+                        </Parser>
+                        <AttributeMap name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </AttributeMap>
+                        <AttributeMap name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                            <AttributeMapItem>
+                                <Name>*</Name>
+                                <Type>simple</Type>
+                                <Simple>*</Simple>
+                            </AttributeMapItem>
+                        </AttributeMap>
+                        <DeltaSettings/>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                            <SchemaItem>
+                                <Name>distinguishedName</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>email</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>guid</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>key</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>sourceUrl</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>uid</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                            <SchemaItem>
+                                <Name>distinguishedName</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>email</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>guid</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>key</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>sourceUrl</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                            <SchemaItem>
+                                <Name>uid</Name>
+                                <Syntax>java.lang.String</Syntax>
+                            </SchemaItem>
+                        </Schema>
+                        <LinkCriteria>
+                            <InheritFrom>[parent]</InheritFrom>
+                        </LinkCriteria>
+                        <Hooks>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <Hook name="addonly_fail">
+                                <Name>addonly_fail</Name>
+                                <Script/>
+                                <Enabled>false</Enabled>
+                            </Hook>
+                            <Hook name="after_add">
+                                <Name>after_add</Name>
+                                <Enabled>false</Enabled>
+                            </Hook>
+                            <Hook name="after_close">
+                                <Name>after_close</Name>
+                                <Enabled>false</Enabled>
+                            </Hook>
+                            <Hook name="before_add">
+                                <Name>before_add</Name>
+                                <Enabled>false</Enabled>
+                            </Hook>
+                            <Hook name="close_fail">
+                                <Name>close_fail</Name>
+                                <Enabled>false</Enabled>
+                            </Hook>
+                            <Hook name="default_fail">
+                                <Name>default_fail</Name>
+                                <Script><![CDATA[incrementCounter(failCounter);
+lcIterUtil.incr();]]></Script>
+                                <Enabled>true</Enabled>
+                            </Hook>
+                            <Hook name="default_ok">
+                                <Name>default_ok</Name>
+                                <Script><![CDATA[lastSuccessfulDN = work.getString("$dn");
+incrementCounter(successCounter);
+lcIterUtil.incr();]]></Script>
+                                <Enabled>true</Enabled>
+                            </Hook>
+                        </Hooks>
+                        <CheckpointConfig/>
+                        <SandboxConfig/>
+                        <Reconnect>
+                            <InheritFrom>[parent]</InheritFrom>
+                            <parameter name="initreconnect">false</parameter>
+                            <parameter name="numberOfRetries">1</parameter>
+                            <parameter name="retryDelay">10</parameter>
+                            <ReconnectRules/>
+                        </Reconnect>
+                        <Operations/>
+                        <PoolDefinition>
+                            <InheritFrom>[parent]</InheritFrom>
+                        </PoolDefinition>
+                        <PoolInstance/>
+                        <InitializeOption>0</InitializeOption>
+                    </Connector>
+                    <Conditions/>
+                    <MatchAny>false</MatchAny>
+                    <Enabled>true</Enabled>
+                    <Type>2</Type>
+                </Branch>
+            </ContainerDF>
+            <ThreadOptions/>
+            <Operations/>
+            <InitParams>
+                <Schema name="AssemblyLineInitParams"/>
+            </InitParams>
+        </AssemblyLine>
+    </Folder>
+    <Folder name="Connectors"/>
+    <Folder name="Parsers"/>
+    <Folder name="Scripts">
+        <Script name="config_utils">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[
+/* ***************************************************************** */
+/*                                                                   */
+/* Copyright IBM Corp. 2010, 2012                                    */
+/*                                                                   */
+/* The source code for this program is not published or otherwise    */
+/* divested of its trade secrets, irrespective of what has been      */
+/* deposited with the U.S. Copyright Office.                         */
+/*                                                                   */
+/* ***************************************************************** */
+
+/**
+ * Utility functions to handle profile config properties
+ */
+lcConfUtils = {
+	
+	/**
+	 * Internal map of keys
+	 */
+	_profileStoreKeys: (function(){
+		var keySet = new java.util.HashSet();
+		var keys = system.getTDIProperties().getPropertyStore("profiles").keys();
+		while (keys.hasNext()) {
+			keySet.add(keys.next());
+		}
+
+		return keySet;
+	})(),
+	
+	/**
+	 * Internal utility function to get raw 'profiles' config property
+	 */
+	_prop: function(pName) {
+		if (!lcConfUtils._profileStoreKeys.contains(pName)) {
+			return null;
+		}
+		
+		return system.getTDIProperty("profiles", pName);
+	},
+	
+	/**
+	 * Internal utility function to ensure default value defined
+	 */
+	_defVal: function(defVal, altVal) {
+		if (!defVal) {
+			return altVal;
+		}
+		
+		return defVal;
+	},
+	
+	/**
+	 * Gets the boolean property.  If defVal is undefined will return false
+	 */
+	boolProp: function (pName, defVal) {
+		var aProp = lcConfUtils._prop(pName);
+		defVal = lcConfUtils._defVal(defVal, false);
+		
+		if ("true" == aProp) {
+			return true;
+		} else if ("false" == aProp) {
+			return false;
+		}
+		
+		return defVal; 
+	},
+
+	/**
+	 * Returns the setting or 'null' if the default value is undefined
+	 */
+	strProp: function (pName, defVal) {
+		var aProp = lcConfUtils._prop(pName);
+		defVal = lcConfUtils._defVal(defVal, null);
+		
+		if (aProp == null || aProp == "") {
+			return defVal;
+		}
+		
+		return aProp;
+	},
+	
+	/**
+	 * Returns a list (guarenteed not null) that results from splitting a config vlaue by ',' and '\s'
+	 */
+	strTokenProp : function(propName) {
+		var confVal = lcConfUtils.strProp(propName);
+		if (confVal != null) {
+			return java.util.Arrays.asList(confVal.split("((\\s+)|(\\s*\\,\\s*))"));
+		} else {
+			return new java.util.ArrayList();
+		}	
+	},
+	
+	/**
+	 * Returns the setting or '0' if the default value is undefined
+	 */
+	intProp: function (pName, defVal) {
+		var aProp = lcConfUtils._prop(pName);
+		defVal = lcConfUtils._defVal(defVal, 0);
+		
+		try {
+			return java.lang.Integer.parseInt(aProp);
+		} catch (e) {
+			return defVal;
+		}
+	},
+	
+	/**
+	 * Returns a pointer to the ldap compute function if one is defined in the config
+	 */
+	getSourceDataComputeFunc : function (propName) {
+		var aProp = lcConfUtils.strProp(propName, "");
+		if ((aProp != null) && (aProp != "") && (aProp.toLowerCase() != "null")) {
+			var func = eval("this." + aProp);
+			if(func) {
+				if(typeof(func) == "function") {
+					if(func.length == 0) {
+						return func;
+					} else {
+						var msgText = log3("FATAL", "err_bad_map_func_arg_count", aProp, "" + func.length, "0");
+						system.abortAssemblyLine(msgText);
+					}	
+				}
+			} else /* !func */ {
+				var msgText = log1("FATAL", "err_map_func_not_loaded", aProp);
+				system.abortAssemblyLine(msgText);
+			}
+		}
+	},
+	
+	/**
+	 * Converts a JavaScript list of values into a HashSet
+	 */
+	valuesToSet : function(valList) {
+		var mSet = new java.util.HashSet();
+		for (var key in valList) {
+			mSet.add(valList[key]);
+		}
+		return mSet;
+	},
+	
+	/**
+	 * Converts a java.util.Collection to a JavaScript array object
+	 */
+	collectionToJSArray : function(coll) {
+		var retVal = [];
+		var it = coll.iterator();
+		while (it.hasNext()) {
+			retVal.push(it.next());
+		}
+		return retVal;
+	}
+};
+
+
+/**
+ * listing of all configuration options
+ */
+function load_lcConf(dontDumpConf) {
+	
+	if (!this.lcConf) {
+		// load dependencies
+		load_message_bundle();
+		
+		//
+		// main config object
+		// 	
+		lcConf = { 
+
+			/**
+			 * Dump the config settings 
+			 */
+			_dumpConfigSettings: function() {
+				var sortedProps = [];
+				for (var p in lcConf) { sortedProps.push(p); } 
+				sortedProps.sort();
+				
+				logmsg("INFO", "START: dump config settings");
+				for (var index in sortedProps) {
+					var p = sortedProps[index];					
+					if (p != '_dumpConfigSettings') {
+						logmsg("INFO", " - lcConf[" + p + "]: " + lcConf[p]);
+					}	
+				}
+				logmsg("INFO", "END: dump config settings");
+			},
+
+			//
+			// Debug settings
+			//
+			debug_source_repository_connectors       : lcConfUtils.boolProp("debug_source_repository_connectors", false),
+
+			debug_managers                            : lcConfUtils.boolProp("debug_managers", false),
+			debug_photos                              : lcConfUtils.boolProp("debug_photos", false),
+			debug_pronounce                           : lcConfUtils.boolProp("debug_pronounce", false),
+			debug_collect                             : lcConfUtils.boolProp("debug_collect", false),
+			debug_fill_codes                          : lcConfUtils.boolProp("debug_fill_codes", false),
+			debug_draft                               : lcConfUtils.boolProp("debug_draft", false),
+			debug_update_profile                      : lcConfUtils.boolProp("debug_update_profile", false),
+			debug_special                             : lcConfUtils.boolProp("debug_special", false),
+
+			//
+			dbrepos_mark_manager_if_referenced : lcConfUtils.boolProp("dbrepos_mark_manager_if_referenced", true),
+			
+			//--------------------------------------------------------------
+			// LDAP / source repository related config settings
+			//--------------------------------------------------------------
+			
+			//--------------------------------------------------------------
+			// Get the regex expression which is used to filter DNs from
+			// property file, if any
+			//--------------------------------------------------------------
+			source_ldap_required_dn_regex_pattern : (function(){
+				var t = lcConfUtils.strProp("source_ldap_required_dn_regex_pattern");
+				if (t != null) {
+					log1("INFO", "info_dn_regex", t);
+					
+					t = eval(t);
+				}
+				return t;
+			})(),
+
+			//-----------------------------------------------
+			// Variables needed in case we do our own sorted
+			// page search
+			//-----------------------------------------------
+			source_ldap_sort_attribute : lcConfUtils.strProp("source_ldap_sort_attribute"),
+						
+			source_ldap_sort_page_size : (function(){
+				var t = lcConfUtils.intProp("source_ldap_sort_page_size", 0);
+				if(t < 0) {
+					var msgTxt = log1("ERROR", "err_sort_page_size_not_valid", t);
+					system.abortAssemblyLine(msgTxt);
+				}
+				return t;
+			})(),
+			
+			// Setting for collect_dns script on how to encode results
+			source_ldap_escape_dns : lcConfUtils.boolProp("source_ldap_escape_dns", false),
+			
+			// DNS collection file setting
+			source_ldap_collect_dns_file : lcConfUtils.strProp("source_ldap_collect_dns_file", "collect.dns"),
+			
+			// mapping functions file
+			source_ldap_map_functions_file : lcConfUtils.strProp("source_ldap_map_functions_file"),
+
+			// indicates if should give debug level output for ldap			
+			source_ldap_debug : lcConfUtils.boolProp("source_ldap_debug", false),
+			
+			// source url
+			source_ldap_url : lcConfUtils.strProp("source_ldap_url", "ldap://_undefined_"),
+			
+			// ldap search base
+			source_ldap_search_base : lcConfUtils.strProp("source_ldap_search_base", "(undefined=_search_base_)"),
+			
+			// ldap search filter
+			source_ldap_search_filter : lcConfUtils.strProp("source_ldap_search_filter", "(undefined=_search_filter_)"),
+			
+			// indicates that the default SRP iterate connector will iterate via the .js iteration file
+			source_ldap_iterate_with_filter : lcConfUtils.boolProp("source_ldap_iterate_with_filter", false),
+			
+			// for sync_all_dns
+			source_ldap_collect_updates_file : 
+				lcConfUtils.strProp("source_ldap_collect_updates_file", "employee.updates"),
+			
+			// binary attributes of the LDAP
+			source_ldap_binary_attributes : (function(){
+				// initialize default value
+				var defVal = lcConfUtils.valuesToSet(["GUID", "objectGUID", "objectSid", "sourceObjectGUID"]);
+
+				// add additional values from config
+				defVal.addAll(lcConfUtils.strTokenProp("source_ldap_binary_attributes"));
+
+				return lcConfUtils.collectionToJSArray(defVal);
+			})(),
+			
+			// explicit return attributes for LDAP connector
+			source_ldap_return_attributes : (function(){
+				// initialize default value
+				var defVal = lcConfUtils.valuesToSet([
+						"ibm-entryUuid", "entryUUID", "objectGUID", 
+						"nsuniqueid", "dominounid", "GUID", "*"]);
+
+				// add additional values from config
+				defVal.addAll(lcConfUtils.strTokenProp("source_ldap_return_attributes"));
+
+				return lcConfUtils.collectionToJSArray(defVal);
+			})(),
+			
+			//--------------------------------------------------------------
+			// SyncUpdates config settings
+			//--------------------------------------------------------------
+			sync_updates_working_directory : lcConfUtils.strProp("sync_updates_working_directory", "sync_updates"),
+			
+			sync_updates_hash_field : lcConfUtils.strProp("sync_updates_hash_field", "uid"),
+			
+			sync_updates_hash_partitions : (function() {
+				var t = lcConfUtils.intProp("sync_updates_hash_partitions", 10);
+				if (t < 1) {
+					system.abortAssemblyLine("sync_updates_hash_partitions may not be set to zero or negative value");
+				}
+				return t;
+			})(),
+						
+			sync_updates_show_summary_only : lcConfUtils.boolProp("sync_updates_show_summary_only", false),
+			
+			perform_deletion_or_inactivate_for_sync : (function() {
+				// default is 'true'.  If user specifies one as 'false' then action should not be carried out
+				return 
+					(lcConfUtils.boolProp("perform_deletion_for_sync", true) &&
+					 lcConfUtils.boolProp("perform_deletion_or_inactivate_for_sync", true));
+			})(),
+						
+			perform_deletion_for_sync : lcConfUtils.boolProp("perform_deletion_for_sync", true),
+			
+			sync_updates_double_check : lcConfUtils.boolProp("sync_updates_double_check", false),
+			
+			// value script should use to override 'source_url' setting with the following value
+			// - initialized below
+			sync_store_source_url : null,
+			
+			// indicates that script should overwrite the sync url
+			sync_source_url_override : lcConfUtils.boolProp("sync_source_url_override", false),
+			
+			// indicates that script should only synchronize against the defined LDAP url for this config
+			sync_source_url_enforce : lcConfUtils.boolProp("sync_source_url_enforce", false),
+			
+			// AL to use for deletion process checking
+			sync_check_if_remove : lcConfUtils.strProp("sync_check_if_remove", "sync_all_dns_check_if_remove"),
+			
+			//--------------------------------------------------------------
+			// Source repository config settings
+			//--------------------------------------------------------------
+			source_repository_lookup_assemblyline :
+				lcConfUtils.strProp("source_repository_lookup_assemblyline", "_internal_ldap_lookup_by_dn"),
+
+			source_repository_iterator_assemblyline : (function(){
+				var with_filter = lcConfUtils.boolProp("source_ldap_iterate_with_filter", false);
+				var doIterate = java.lang.Boolean.parseBoolean(java.lang.System.getenv("CONN_IFIX_COMPATIBILITY_MODE"));
+				var default_al = "_internal_ldap_iterate";
+				
+				if (with_filter || doIterate) {
+					default_al = "_internal_ldap_iterate_loop";
+				}
+				
+				return lcConfUtils.strProp("source_repository_iterator_assemblyline", default_al);
+			})(),
+			
+			// used internally by loop connector; not a public setting
+			_internal_source_repository_iterator_loopflow_assemblyline :
+				lcConfUtils.strProp("_internal_source_repository_iterator_loopflow_assemblyline", "_internal_ldap_iterate"),
+			
+			//--------------------------------------------------------------
+			// Manager / Secretary settings
+			//--------------------------------------------------------------
+			source_repository_lookup_manager_field : (function(){
+				return lcConfUtils.strProp("source_ldap_manager_lookup_field", "manager");
+			})(),
+			
+			source_repository_lookup_secretary_field : (function(){
+				return lcConfUtils.strProp("source_ldap_secretary_lookup_field", "secretary");
+			})()
+	};
+			
+	
+	//
+	// finish init
+	//
+	lcConf.sync_store_source_url = (function() {
+			var aProp = lcConfUtils.strProp("sync_store_source_url");
+			if((aProp != null) && (aProp == "true")) {
+				return 
+					lcConf.source_ldap_url + "/" + lcConf.source_ldap_search_base + "?" 
+						+ lcConf.source_ldap_search_filter;
+			}
+			else {
+				return null;
+			}
+		})();
+
+	// process log4j settings in profile_tdi.properties and javascript tracing
+	if (lcConf.debug_update_profile)
+	{
+		if (js_trace_level.debug <= trace_javascript_level)
+			task.logmsg("Turning on log4j java logging because debug_update_profile is true:"  );
+
+		// turn on standard java logging if using profileconnector
+		com.ibm.lconn.profiles.api.tdi.util.TDIServiceHelper.setRootDebugProperty( "trace_log4j.logger.com.ibm.lconn.profiles.api.tdi", "all");	
+		com.ibm.lconn.profiles.api.tdi.util.TDIServiceHelper.setRootDebugProperty( "trace_log4j.logger.com.ibm.lconn.profiles.internal.service", "all");	
+		com.ibm.lconn.profiles.api.tdi.util.TDIServiceHelper.setRootDebugProperty( "trace_log4j.logger.java.sql", "all");	
+	}
+	js_trace_level = {"off" : 0, "severe" : 1, "error" : 2, "warning" : 3, "info" : 4, "debug" : 5, "fine" : 6, "finer" : 7, "all" : 10};
+	trace_javascript_level = js_trace_level.off;
+	trace_javascript_level_str = "off";
+	var aValue_trace = "off";
+	var stream = java.io.FileInputStream("profiles_tdi.properties");
+	var trace_map = java.util.Properties();
+	trace_map.load(stream);
+	var eNames = trace_map.propertyNames();
+	while(eNames.hasMoreElements()) {
+		var aName = eNames.nextElement();
+		var aValue = trace_map.getProperty(aName);
+		if (aName.startsWith("trace_log4j")) {
+			// support extension of java logging
+			com.ibm.lconn.profiles.api.tdi.util.TDIServiceHelper.setRootDebugProperty( aName, aValue);
+		}
+		if (aName == "trace_profile_tdi_javascript") {
+			aValue_trace = aValue;
+			var lower_aValue = aValue.toLowerCase();
+			if (( lower_aValue == "false") || ( lower_aValue == "off"))
+			{
+				trace_javascript_level_str = lower_aValue;
+				continue;
+			}
+			else
+			if ( lower_aValue == "severe")
+				trace_javascript_level = js_trace_level.severe;
+			else
+			if ( lower_aValue == "error")
+				trace_javascript_level = js_trace_level.error;
+			else
+			if ( lower_aValue == "warning")
+				trace_javascript_level = js_trace_level.warning;
+			else
+			if ( lower_aValue == "info")
+				trace_javascript_level = js_trace_level.info;
+			else
+			if ( lower_aValue == "debug")
+				trace_javascript_level = js_trace_level.debug;
+			else
+			if ( lower_aValue == "fine")
+				trace_javascript_level = js_trace_level.fine;
+			else
+			if ( lower_aValue == "finer")
+				trace_javascript_level = js_trace_level.fine;
+			else
+			if ( lower_aValue == "all")
+				trace_javascript_level = js_trace_level.all;
+		}
+	}
+
+		if (js_trace_level.off != trace_javascript_level)
+		{
+			// property must have been used
+			trace_javascript_level_str = aValue_trace;
+		}
+
+		//
+		// Dump config settings
+		//
+		if (!dontDumpConf) {
+			lcConf._dumpConfigSettings();
+		}	
+	}	
+}]]></parameter>
+        </Script>
+        <Script name="counter_utils">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[function createCounter(counterName)
+{
+	var result = com.ibm.lconn.profiles.api.tdi.util.ProfilesTDIState.createCounter(counterName);
+	return result;
+}
+
+function incrementCounter(counterName)
+{
+	var result = com.ibm.lconn.profiles.api.tdi.util.ProfilesTDIState.incrementCounter(counterName);
+	return result;
+}
+
+function decrementCounter(counterName)
+{
+	var result = com.ibm.lconn.profiles.api.tdi.util.ProfilesTDIState.decrementCounter(counterName);
+	return result;
+}
+
+function getCounterState(counterName)
+{
+	var result = com.ibm.lconn.profiles.api.tdi.util.ProfilesTDIState.getCounterState(counterName);
+	return result;
+}
+
+function clearCounter(counterName)
+{
+	com.ibm.lconn.profiles.api.tdi.util.ProfilesTDIState.clearCounter(counterName);
+	
+}]]></parameter>
+        </Script>
+        <Script name="expression_utils">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//----------------------------------------
+// Try the given attribute and return if
+// not null. Otherwise, evaluate
+// the expression. 
+//----------------------------------------
+function attr_or_expression(attrName, otherwiseExpression) {
+	var result = work.getString(attrName);
+	if(result == null) {
+		result = eval_tdi_expression(otherwiseExpression)
+	}
+
+	return result;
+}
+
+//-----------------------------------------
+// Evaluate the given tdi expression, and
+// return the value. The assumption is that
+// work is the entry used for any entry
+// sourced information
+//-----------------------------------------
+function eval_tdi_expression(expression) {
+	var result = null;
+
+	var ps = new com.ibm.di.util.ParameterSubstitution(expression);
+	var map = new java.util.HashMap();
+	map.put("mc", main.getMetamergeConfig());
+	map.put("work", work);
+	result = ps.substitute(map);
+
+	return result;
+}
+
+//-----------------------------------------
+// Return the opEntry operation, if any
+//-----------------------------------------
+function getOperation() {
+	var result = null;
+
+	var opEntry = task.getOpEntry();
+	if(opEntry != null) {
+		result = opEntry.getString("$operation");
+		opEntry = null;
+	}
+
+	return result;
+}]]></parameter>
+        </Script>
+        <Script name="load_mapping_properties">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles">@SUBSTITUTE{property.profiles:source_ldap_map_functions_file}</parameter>
+            <parameter name="script"><![CDATA[//----------------------------------------------------------------------
+// check debug setting in mapping
+//----------------------------------------------------------------------
+function check_debug_setting_inMapping() {
+	var ret = false;
+	var aProp = system.getTDIProperty("profiles", "source_ldap_debug");
+	if((aProp != null) && (aProp == "true")) {
+		ret = true;
+	}
+	else
+	{
+		var aProp = system.getTDIProperty("profiles", "monitor_changes_debug");
+		if((aProp != null) && (aProp == "true")) {
+			ret = true;
+		}
+		else
+		{
+			var aProp = system.getTDIProperty("profiles", "tds_changelog_debug");
+			if((aProp != null) && (aProp == "true")) {
+				ret = true;
+			}
+			else
+			{
+				var aProp = system.getTDIProperty("profiles", "ad_changelog_debug");
+				if((aProp != null) && (aProp == "true")) {
+					ret = true;
+				}
+			}
+		}
+	}
+	return ret;
+}	
+
+//----------------------------------------------------------------------
+// Load in mapping that shows how DB fields map to source fields. Builds
+// associative array ldap_from_db_array with ldap field names as the
+// indexes.
+//----------------------------------------------------------------------
+function load_mappings_dbrepos_to_source() {
+	var debug = check_debug_setting_inMapping();
+	var stream = java.io.FileInputStream("map_dbrepos_to_source.properties");
+	var map = java.util.Properties();
+	map.load(stream);
+	ldap_from_db_array = {};
+	var eNames = map.propertyNames();
+	while(eNames.hasMoreElements()) {
+		var aName = eNames.nextElement();
+		var aValue = map.getProperty(aName);
+		if(aValue != null) {
+			//------------------------------------------------
+			// Check for function definition and assign the
+			// function as the value in the map if found.
+			// Make sure it has the expected number of
+			// arguments
+			//------------------------------------------------
+			if(aValue.startsWith("{")) {
+				var pos = aValue.indexOf("}");
+				if(pos > 0) {
+					var funcName = aValue.substring(1, pos);
+					var func = eval("this." + funcName);
+					if(func) {
+						if(typeof(func) == "function") {
+							if(func.length == 1) {
+								ldap_from_db_array[aName] = func;
+								if(debug == true)
+									log2("INFO", "info_db_to_source_mapping_function", aName, funcName);
+							}
+							else {
+								msgText = log3("FATAL", "err_bad_map_func_arg_count", funcName, "" + func.length, "1");
+								system.abortAssemblyLine(msgText);
+							}						
+						}
+						else {
+							msgText = log1("FATAL", "err_map_func_not_func", funcName);
+							system.abortAssemblyLine(msgText);
+						}
+					}
+					else {
+						msgText = log1("FATAL", "err_map_func_not_loaded", funcName);
+						system.abortAssemblyLine(msgText);
+					}
+				}
+				else {
+					msgText = log2("FATAL", "err_map_func_syntax", "map_dbrepos_to_source.properties", aName);
+					system.abortAssemblyLine(msgText);
+				}
+			}
+			else {
+				if(aValue.toLowerCase() != "null") {
+					ldap_from_db_array[aName] = aValue;
+					if(debug == true)
+						log2("INFO", "info_db_to_source_mapping", aName, aValue);
+				}
+			}
+		}
+		else {
+			msgText = log2("FATAL", "err_map_no_value", "map_dbrepos_to_source.properties", aName);
+			system.abortAssemblyLine(msgText);
+		}
+	}
+
+	// now load the extension mappings
+	load_extension_mappings_to_source();
+}
+
+
+//----------------------------------------------------------------------
+// Load in mapping that shows how LDAP fields map to DB fields. Builds
+// db_from_ldap_array which is an associative array with database field
+// names as indexes.
+// NOTE: For extension table, name (left-hand-side) will be
+//       PROF_VALUE.name where name is the property name used for.
+//       PROF_VALUE. 
+//       Example: PROF_VALUE.property1=tieline
+//----------------------------------------------------------------------
+function load_mappings_dbrepos_from_source() {
+	var debug = check_debug_setting_inMapping();
+	var stream = java.io.FileInputStream("map_dbrepos_from_source.properties");
+	var map = java.util.Properties();
+	map.load(stream);
+	var extPropCount = 0;
+	db_extension_property_names = new Array();
+	db_from_ldap_array = {};
+	var eNames = map.propertyNames();
+	while(eNames.hasMoreElements()) {
+		var aName = eNames.nextElement();
+		var aValue = map.getProperty(aName);
+		if(aValue != null) {
+			//add by tyw
+			var temp = org.apache.commons.lang.StringUtils.trim(aValue);
+			//if (org.apache.commons.lang.StringUtils.isEmpty(temp))
+			//	continue;
+			//else
+				aValue = temp;
+			// end add by tyw
+			//------------------------------------------------
+			// Check for function definition and assign the
+			// function as the value in the map if found.
+			// Make sure it has the expected number of
+			// arguments
+			//------------------------------------------------
+			if(aValue.startsWith("{")) {
+				var pos = aValue.indexOf("}");
+				if(pos > 0) {
+					var funcName = aValue.substring(1, pos);
+					var func = eval("this." + funcName);
+					if(func) {
+						if(typeof(func) == "function") {
+							if(func.length == 1) {
+								db_from_ldap_array[aName] = func;
+								if(debug == true)
+									log2("INFO", "info_source_to_db_mapping_function", aName, funcName);
+							}
+							else {
+								msgText = log3("FATAL", "err_bad_map_func_arg_count", funcName, "" + func.length, "1");
+								system.abortAssemblyLine(msgText);
+							}						
+						}
+						else {
+							msgText = log1("FATAL", "err_map_func_not_func", funcName);
+							system.abortAssemblyLine(msgText);
+						}
+					}
+					else {
+						msgText = log1("FATAL", "err_map_func_not_loaded", funcName);
+						system.abortAssemblyLine(msgText);
+					}
+				}
+				else {
+					msgText = log2("FATAL", "err_map_func_syntax", "map_dbrepos_from_source.properties", aName);
+					system.abortAssemblyLine(msgText);
+				}
+			}
+			else {
+				if(aValue.toLowerCase() != "null") {
+					if(aName.startsWith("PROF_VALUE.")) {
+						var propName = aName.substring(9);
+						var foundName = false;
+						for(i=0; i < extPropCount; ++i) {
+							if(db_extension_property_names[i] == propName) {
+								foundName = true;
+							}
+						}
+						if(!foundName) {
+							db_extension_property_names.push(propName);
+							++extPropCount;
+						}
+					}
+					db_from_ldap_array[aName] = aValue;
+					if(debug == true)
+						log2("INFO", "info_source_to_db_mapping", aName, aValue);
+				}
+//add by tyw
+				else // aValue == null
+				{
+					if(aName.toLowerCase()=="guid" || aName.toLowerCase()=="guid" )
+					{
+						system.abortAssemblyLine("ERROR: guid cannot be null in the mapping file.");
+					}
+				}
+//end add
+			}
+		}
+		else {
+			msgText = log2("FATAL", "err_map_no_value", "map_dbrepos_from_source.properties", aName);
+			system.abortAssemblyLine(msgText);
+		}
+	}
+
+	// now load the extension mappings
+	load_extension_mappings_to_source();
+}
+
+function load_extension_mappings_to_source()
+{
+	extension_property_id_array = new Array();
+	extension_def_array = {};
+	var tdiCRUDSvc = com.ibm.lconn.profiles.api.tdi.service.impl.ProfilesTDICRUDServiceImpl.getInstance();
+	var extenArray = new Array();
+	extenArray = tdiCRUDSvc.getExtensionArray();
+	var i;
+	for(i=0;i<extenArray.length;i++){
+		var id = extenArray[i].getExtensionId();
+		if(id!=null){
+			var aKey = extenArray[i].getSourceKey();
+			if(aKey!=null){
+				var aName = extenArray[i].getUserLabel();
+				var aDataType = extenArray[i].getUserDataType();
+				if(aDataType == null) {
+					aDataType = "String";
+				}
+				if(aName == null) {	 // if display name not provided, set it to the ldap field name
+					aName = aKey;
+				}
+				var anEntry = {
+					key : aKey,		   // the ldap field name (sourceKey in tdi-profiles-config.xml)
+					name : aName,	   // display name (userLabel in tdi-profiles-config.xml)
+					dataType : aDataType
+				};
+				extension_def_array[id] = anEntry;
+
+				if (js_trace_level.debug <= trace_javascript_level)
+				{
+					task.logmsg("extension id: " + id);
+					task.logmsg("extension anEntry: " + anEntry);
+					task.logmsg("extension aKey: " + aKey);
+					task.logmsg("extension aName: " + aName);
+					task.logmsg("extension aDataType: " + aDataType);
+				}
+
+			}else{
+				log3("WARN", "warn_ext_mapping_missing_value", id, id, "tdi-profiles-config.xml");
+			}
+		}else{
+			log2("WARN", "warn_ext_mapping_missing_ids", "extensionId", "tdi-profiles-config.xml");
+		}
+	}
+}
+
+function map_ext_into_entry( entry)
+{
+	var valid = true;
+	log0("DEBUG", "info_begin_mapping_process");
+
+	var names2 = work.getAttributeNames();
+	if (js_trace_level.debug <= trace_javascript_level) {
+		task.logmsg("+++ attribute names2.length: " + names2.length);
+	}
+
+	var count = 0;
+	for (nameIndex=0; nameIndex < names2.length; ++nameIndex)
+	{
+		var name2 = names2[nameIndex];
+		var attr = work.getString(name2);
+		
+		if (js_trace_level.debug <= trace_javascript_level) {
+			task.logmsg("+++ attribute name2: " + name2);
+			task.logmsg("+++ attribute attr2: " + attr);
+
+			task.logmsg("about to call getLDAPnameGivenExtensionId for real: ");
+		}			
+
+		// convert to ldap name
+		var ldapName = getLDAPnameGivenExtensionId(name2);
+		if (js_trace_level.debug <= trace_javascript_level) {
+			task.logmsg("return value of about to call getLDAPnameGivenExtensionId: " + ldapName); 
+		}			
+
+		if (ldapName != null)
+		{
+			count++;
+			var ldapattr = connEntry.newAttribute(ldapName);
+			if (js_trace_level.debug <= trace_javascript_level)	{
+				task.logmsg("about to add for real to ldapattr: attr: " + attr);
+			}			
+			ldapattr.setValue( attr);
+		}
+	}
+
+	if (count == 0)
+		valid = false;
+
+	return valid;
+}
+function getLDAPnameGivenExtensionId( id)
+{
+	//task.logmsg("extension list id: " + id);
+	for(anAttrName in extension_def_array) 
+	{
+		//task.logmsg("extension list anAttrName: " + anAttrName); //qqqtr, prob keeper
+		if (anAttrName == id) {
+			var entry = extension_def_array[anAttrName];
+			//task.logmsg("extension list entry: " + entry);
+
+			//task.logmsg("extension list entry.key: " + entry.key);
+			//task.logmsg("extension list entry.name: " + entry.name);
+			//task.logmsg("extension list entry.dataType: " + entry.dataType);
+
+			return(entry.key);
+		}
+	}
+	return(null);
+
+}
+
+
+
+]]></parameter>
+        </Script>
+        <Script name="load_validation_properties">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[
+//----------------------------------------------------------------------
+// check debug setting in validation
+//----------------------------------------------------------------------
+function check_debug_setting_inValidation() {
+	var ret = false;
+	var aProp = system.getTDIProperty("profiles", "source_ldap_debug");
+	if((aProp != null) && (aProp == "true")) {
+		ret = true;
+	}
+	else
+	{
+		var aProp = system.getTDIProperty("profiles", "monitor_changes_debug");  // qqq
+		if((aProp != null) && (aProp == "true")) {
+			ret = true;
+		}
+		else
+		{
+			var aProp = system.getTDIProperty("profiles", "tds_changelog_debug");
+			if((aProp != null) && (aProp == "true")) {
+				ret = true;
+			}
+			else
+			{
+				var aProp = system.getTDIProperty("profiles", "ad_changelog_debug");
+				if((aProp != null) && (aProp == "true")) {
+					ret = true;
+				}
+			}
+		}
+	}
+	return ret;
+}	
+
+
+//----------------------------------------------------------------------
+// Load in mapping that shows how to validate database repository 
+// fields.  Creates the associative array validate_dbrepos_field_array
+// indexed by database field name with functions as values
+//----------------------------------------------------------------------
+function load_validations_dbrepos() {
+	var debug = check_debug_setting_inValidation();
+	var stream = java.io.FileInputStream("validate_dbrepos_fields.properties")
+	var map = java.util.Properties();
+	map.load(stream);
+	validate_dbrepos_field_array = {};
+	var eNames = map.propertyNames();
+	while(eNames.hasMoreElements()) {
+		var aName = eNames.nextElement();
+		var aValue = map.getProperty(aName);
+		if(aValue != null) {
+			aValue = "" + aValue; //convert to js string
+			//------------------------------------------------
+			// Check for function definition and assign the
+			// function as the value in the map if found.
+			// Make sure it has the expected number of
+			// arguments
+			//------------------------------------------------
+			if(aValue.startsWith("{")) {
+				var pos = aValue.indexOf("}");
+				if(pos > 0) {
+					var funcName = aValue.substring(1, pos);
+					var func = eval("this." + funcName);
+					if(func) {
+						if(typeof(func) == "function") {
+							if((func.length == 1) || (func.length == 2)) {
+								validate_dbrepos_field_array[aName] = func;
+								if(debug == true)
+									log2("INFO", "info_validate_db_function_name", aName, funcName);
+							}
+							else {
+								msgText = log4("FATAL", "err_bad_valid_func_arg_count", funcName, "" + func.length, "1", "2");
+								system.abortAssemblyLine(msgText);
+							}						
+						}
+						else {
+							msgText = log1("FATAL", "err_valid_func_not_func", funcName);
+							system.abortAssemblyLine(msgText);
+						}
+					}
+					else {
+						msgText = log1("FATAL", "err_valid_func_not_loaded", funcName);
+						system.abortAssemblyLine(msgText);
+					}
+				}
+				else {
+					msgText = log2("FATAL", "err_valid_func_syntax", "map_dbrepos_from_source.properties", aName);
+					system.abortAssemblyLine(msgText);
+				}
+			}
+			else {
+				if(aValue.toLowerCase() != "null") {
+					var funcArg = null;
+					var funcBody = null;
+					//-------------------------------------------------
+					// Check to see if the string is an integer. If so
+					// so we create a function that checks to see if 
+					// the length is less than or equal to that
+					// integer
+					//-------------------------------------------------
+					if(aValue.match(/^([0-9])*$/)) {
+						funcArg = "x";
+						funcBody = "return ((x == null) || (x.length() <= " + aValue + "));";
+					}
+					else {
+						funcArg = "x";
+						funcBody = "return (" + aValue + ");";
+					}
+					try
+					{
+						//-------------------------------------------------
+						// We tried to use new Function(funcArg, funcBody))
+						// to create an anonymous function, but it did not 
+						// seem to work, so we eval a function
+						// definition instead
+						//-------------------------------------------------
+						validate_dbrepos_field_array[aName] = eval("function ___func_val___" + aName + "(" + funcArg + ") {" + funcBody + "}");
+						if(debug == true)
+							log2("INFO", "info_validate_db_function", aName, "Function(" + funcArg + ") {" + funcBody + "}");
+					}
+					catch(e)
+					{
+						msgText = log2("FATAL", "err_valid_internal_func_exception", aName, "" + e);
+						system.abortAssemblyLine(msgText);
+					}
+					
+					
+				}
+			}
+		}
+		else {
+			msgText = log2("FATAL", "err_map_no_value", "validate_dbrepos_fields.properties", aName);
+			system.abortAssemblyLine(msgText);
+		}
+	}
+}
+]]></parameter>
+        </Script>
+        <Script name="log_functions">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//----------------------------------------------------------
+// Load the main message bundle if not done already
+//
+// Loads messages into variable messageLookup
+//----------------------------------------------------------
+function load_message_bundle() {
+	if(!this.messageBundle) {
+		var messageBundle = java.util.PropertyResourceBundle.getBundle("profiles_messages");
+		messageLookup = new com.ibm.peoplepages.tdi.util.MessageLookup(messageBundle);
+	}
+}
+
+//----------------------------------------------------------
+// Log an untranslated message
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param text the text
+//----------------------------------------------------------
+function logmsg(level, text) {
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 0 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+//----------------------------------------------------------
+function log0(level, res) {
+	var text = messageLookup.getString(res);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log the exception stack trace
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param the exception
+//----------------------------------------------------------
+function logStackTrace(level, throwable){
+	var stringwriter = java.io.StringWriter();
+	var printWriter = java.io.PrintWriter(stringwriter);
+	throwable.printStackTrace(printWriter);
+	task.logmsg(level, stringwriter.toString());
+    return stringwriter.toString();
+}
+
+//----------------------------------------------------------
+// Log a translated message with 1 parameter
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter
+//----------------------------------------------------------
+function log1(level, res, param1) {
+	var text = messageLookup.getString1(res);
+	text = task.getLog().getString(text, param1);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 2 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+//----------------------------------------------------------
+function log2(level, res, param1, param2) {
+	var text = messageLookup.getString2(res);
+	text = task.getLog().getString(text, param1, param2);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 3 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+//----------------------------------------------------------
+function log3(level, res, param1, param2, param3) {
+	var text = messageLookup.getStringN(res, 3);
+	text = task.getLog().getString(text, [param1, param2, param3]);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 4 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+// @param param1 parameter 4
+//----------------------------------------------------------
+function log4(level, res, param1, param2, param3, param4) {
+	var text = messageLookup.getStringN(res, 4);
+	text = task.getLog().getString(text, [param1, param2, param3, param4]);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Write an untranslated message to the console
+//
+// @param type console type ("out" or "err")
+// @param text the text
+//----------------------------------------------------------
+function consoleMsg(type, text) {
+	if(type == "out") {
+		java.lang.System.out.println(text);
+	}
+	else {
+		java.lang.System.err.println(text);
+	}
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 0 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+//----------------------------------------------------------
+function console0(type, res) {
+	var text = messageLookup.getString(res);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 1 parameter
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter
+//----------------------------------------------------------
+function console1(type, res, param1) {
+	var text = messageLookup.getString1(res);
+	text = task.getLog().getString(text, param1);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 2 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+//----------------------------------------------------------
+function console2(type, res, param1, param2) {
+	var text = messageLookup.getString2(res);
+	text = task.getLog().getString(text, param1, param2);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 3 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+//----------------------------------------------------------
+function console3(type, res, param1, param2, param3) {
+	var text = messageLookup.getStringN(res, 3);
+	text = task.getLog().getString(text, [param1, param2, param3]);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 4 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+// @param param1 parameter 4
+//----------------------------------------------------------
+function console4(type, res, param1, param2, param3, param4) {
+	var text = messageLookup.getStringN(res, 4);
+	text = task.getLog().getString(text, [param1, param2, param3, param4]);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write the given return code to the given file
+//
+// @param returnCode the return code
+// @param file the name of the file to write to
+//----------------------------------------------------------
+function write_return_code(returnCode, file) {
+	try
+	{
+		var out = new java.io.FileWriter(file);
+		out.write("" + returnCode + "\n");
+		out.close();
+	}
+	catch(e)
+	{
+		task.logmsg("" + e);
+	}
+}
+
+
+]]></parameter>
+        </Script>
+        <Script name="parse_dn">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//---------------------------------------------------
+// Parse the given dn into an associative array of
+// parts.
+//
+// @param dn the DN
+//
+// @return an associative array containing the parts
+//         of the dn indexed by attribute name
+//---------------------------------------------------
+function parse_dn(dn)
+{
+	var error = 0;
+	var result = {};
+	var start = 0;
+	var pos = dn.indexOf(",");
+	var eqpos = -1;
+	while(pos > 0) {
+		var aField = dn.substring(start, pos);
+		eqpos = aField.indexOf("=");
+		if(eqpos > 0) {
+			result[aField.substring(0, eqpos)] = aField.substring(eqpos + 1);
+		}
+		else {
+			task.logmsg("ERROR: DN subfield does not contain equals:" + aField);
+			error = 1;
+		}
+		start = pos + 1;
+		pos = dn.indexOf(",", start);	
+	}
+	if(start < dn.length) {
+		var aField = dn.substring(start);
+		eqpos = aField.indexOf("=");
+		if(eqpos > 0) {
+			result[aField.substring(0, eqpos)] = aField.substring(eqpos + 1);
+		}
+		else {
+			task.logmsg("ERROR: DN subfield does not contain equals:" + aField);
+			error = 1;
+		}
+	}
+	if(error != 0) {
+		result = null;
+	}
+	
+	return result;
+}]]></parameter>
+        </Script>
+        <Script name="perform_mappings">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//------------------------------------------------
+// Take the given associative array and
+// map values from work and map them
+// into the given entry object (typically conn)
+//
+// @param assoc_array the mapping array
+// @param entry the entry object to map into
+//
+// @return true if successful, false otherwise
+//------------------------------------------------
+function map_into_entry(assoc_array, entry)
+{
+	var valid = true;
+	log0("DEBUG", "info_begin_mapping_process");
+	
+	//----------------------------------------------
+	// Loop through all the names in our associative
+	// array and do the mapping and put the result
+	// in the given toEntry object
+	//----------------------------------------------
+	for (key in assoc_array) {
+		var result = null;
+		var aValue = assoc_array[key];
+		if(aValue != null) {
+			if(typeof(aValue) == "function") {
+				//----------------------------------
+				// The value is a function, so we
+				// call it passing the field name,
+				// which is our convention
+				//----------------------------------
+				try
+				{
+					result = aValue(key);
+				}
+				catch(e)
+				{
+					//----------------------------------------------------
+					// We log the error and set valid to false so
+					// that the caller will know it failed. It should
+					// log the identity of the record which failed
+					//----------------------------------------------------
+					log2("ERROR", "err_map_func_exception", key, "" + e);
+					valid = false;
+				}
+			}
+			else 
+			{
+				//----------------------------------
+				// The value must be an attribute, 
+				// so we get that value from the 
+				// source
+				//----------------------------------
+
+					result = work.getAttribute(aValue);
+				if(result != null) {
+					//------------------------------
+					// Make a copy so we don't
+					// modify the original map
+					//------------------------------
+					result = result.clone();
+					
+					var len = result.size();
+					for (var i = 0; i < len; i++) {
+						var val = result.getValue(i);
+						if (!(val instanceof java.lang.String)) {
+							val = java.lang.String.valueOf(val);
+							result.setValue(i, val);
+						}
+					}
+				}
+			}
+
+			// added to support 'blanking' of null ldap attributes
+			if (result == null) 
+			{
+				result = new java.lang.String("");
+			}
+
+			//--------------------------------------
+			// If we got a value, add it to the
+			// entry object.  In case the value is
+			// expressed as an Attribute object
+			// already, we handle that
+			//--------------------------------------
+			if(result != null) {
+				if(result instanceof com.ibm.di.entry.AttributeInterface) {	
+					result.setName(key);
+					entry.setAttribute(result);
+				}
+				if (result instanceof com.ibm.di.entry.Attribute) 
+				{
+					result.setName (key);
+					entry.setAttribute (result);
+				} 
+				else {
+					var attr = entry.newAttribute(key);
+					attr.setValue(result);
+				}
+				log2("DEBUG", "info_mapping_process_result", key, result);
+			}
+		}
+	}
+	
+	log0("DEBUG", "info_end_mapping_process");
+
+	return valid;
+}
+
+//------------------------------------------------
+// Take the given associative array and
+// map the given field name, returning the
+// Attribute object or null if none. Uses work.
+//
+// @param fieldname the field name needed
+// @param assoc_array the mapping array
+// 
+//
+// @return Attribute object if successful, null
+//         otherwise
+//------------------------------------------------
+function map_single_field(fieldName, assoc_array) {
+	var result = null;
+	var tmpEntry = system.newEntry();
+	var tmpMapping = {};
+	tmpMapping[fieldName] = assoc_array[fieldName];
+	if(map_into_entry(tmpMapping, tmpEntry)) {
+		result = tmpEntry.getAttribute(fieldName);
+		if(result != null) {
+			//------------------------------
+			// Make a copy so we don't
+			// modify the original map
+			//------------------------------
+			result = result.clone();
+		}
+	}
+
+	return result;
+}
+
+//
+// Create extension attribute mappings
+//
+function create_extension_attribute_mappings(assoc_array, entry)
+{
+	for(anAttrName in extension_def_array) 
+	{
+		var e = extension_def_array[anAttrName];
+
+		var extAttrId = "extattr." + anAttrName;
+		var extVal = null;
+
+		if (assoc_array[extAttrId] == null) 
+		{
+			extVal = work.getString(e.key);
+		} 
+		else 
+		{
+			extVal = entry.getString(extAttrId);
+			if (extVal != null) 
+			{
+				// this is done to allow validations to find the value
+				var ta = entry.newAttribute(extAttrId);
+				ta.addValue(extVal);
+			}
+		}
+
+		// Added to support 'blanking' of 'null' ldap attributes
+		if (extVal == null) 
+		{
+			extVal = "";  //make sure extVal can not be null
+		}
+
+		if (extVal != null) 
+		{
+			//work.setString(extVal); 
+
+			var extAttr = entry.newAttribute("_extAttrs_" + anAttrName);
+
+			var keyString = "key:" + e.key;
+			var valueString = "value:" + extVal;
+			var nameString = "name:" + e.name;
+			var dataTypeString = "dataType:" + e.dataType;
+
+			extAttr.addValue(keyString);
+			extAttr.addValue(valueString);
+			extAttr.addValue(nameString);
+			extAttr.addValue(dataTypeString);
+		}
+
+		else 
+		{
+			// Not an error condition if LDAP does not contain value
+			log1("DEBUG", "err_mapping_extensionAttrb",anAttrName);
+		}
+	}
+}
+
+//------------------------------------------------
+// Take the given entry and find all attributes
+// with names starting with the given prefix and
+// remove them from the entry, and return an 
+// entry containing the removed attributes
+//
+// @param prefix the field name prefix
+// @param entry the entry to remove attrs from
+// 
+//
+// @return entry with removed entries, can be empty
+//------------------------------------------------
+function split_prefixed_fields_from_entry(prefix, entry) {
+	result = system.newEntry();
+
+	var names = entry.getAttributeNames();
+	for(i=0; i < names.length; ++i) {
+		var aName = names[i];
+		if(aName.startsWith(prefix)) {
+			var attr = entry.getAttribute(aName);
+			if(attr != null) {
+				entry.removeAttribute(aName);
+				var propName = aName.substring(prefix.length());
+				attr.setName(propName);
+				result.setAttribute(attr);
+			}
+		}
+	}
+
+	return result;
+
+}]]></parameter>
+        </Script>
+        <Script name="perform_validation">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//----------------------------------------
+// Validate all entries in the given
+// associative_array against the given
+// entry
+//
+//@param assoc_array the associative array
+//@param entry the entry attrs are in
+//----------------------------------------
+function validate_all(assoc_array, entry)
+{
+	var result = true;
+	log0("DEBUG", "info_begin_validation_process");
+	//----------------------------------------------
+	// Loop through all the names in our associative
+	// array and run the validation function. The
+	// entry may not have a value for the given
+	// entry but the validation may have a check
+	// for not null. We will warn about any that
+	// fail validation 
+	//----------------------------------------------
+	for (key in assoc_array) {
+		var aFunc = assoc_array[key];
+		if(!call_validation_func(aFunc, entry)) {
+			result = false;
+		}
+	}
+	log0("DEBUG", "info_end_validation_process");
+
+	return result;
+}
+
+//----------------------------------------
+// Validate existing entries in the given
+// entry using the validation functions
+// in the given associative array
+//
+//@param assoc_array the associative array
+//@param entry the entry attrs are in
+//----------------------------------------
+function validate_existing(assoc_array, entry)
+{
+	var result = true;
+	log0("DEBUG", "info_begin_validation_process");
+	//----------------------------------------------
+	// Loop through all the names in entry
+	// array and run the associated validation 
+	// function if any. We will warn about any that
+	// fail validation 
+	//----------------------------------------------
+	var names = entry.getAttributeNames();
+	for (i = 0; i < names.length; ++i) {
+		key = names[i];
+		var aFunc = assoc_array[key];
+		if(!call_validation_func(aFunc, entry)) {
+			result = false;
+		}
+	}
+	log0("DEBUG", "info_end_validation_process");
+
+	return result;
+}
+
+function call_validation_func(aFunc, entry) {
+	var result = true;
+	if(aFunc != null) {
+		if(typeof(aFunc) == "function") {
+			//----------------------------------
+			// The value is a function, so we
+			// call it passing the value of the
+			// attribute or, if it takes 2 
+			// arguments the name as well
+			//----------------------------------
+			try
+			{
+				var aValue = entry.getAttribute(key);
+				if(aValue != null) {
+					aValue = aValue.getValue(0);
+				}
+				var valid = null;
+				if(aFunc.length == 2) {
+					valid = aFunc(key, aValue);
+				}
+				else {
+					valid = aFunc(aValue);
+				}
+				log2("DEBUG", "info_validation_result_for", key, "" + valid);
+				if(typeof(valid) != "boolean") {
+					log1("ERROR", "err_valid_func_not_boolean", key);
+					result = false;
+				}
+				else {
+					if(!valid) {
+						log2("WARN", "warn_validation_failed_for", key, "" + aValue);
+						result = false;
+					}
+				}
+			}
+			catch(e)
+			{
+				msgText = log2("ERROR", "err_valid_func_exception", key, "" + e);
+				result = false;
+			}
+		}
+		else {
+			//----------------------------------
+			// It should only be a function so
+			// this is an internal error
+			//----------------------------------
+			log2("ERROR", "err_valid_internal_not_func", key, typeof(aFunc));
+			result = false;
+		}
+	}
+
+	return result;
+}]]></parameter>
+        </Script>
+        <Script name="read_functions_from_file">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//-------------------------------------------------
+// Read functions from the given filename and
+// return the file text as a string
+// 
+// @param filename name of file to read
+//
+// @return the function text to evaluate
+//-------------------------------------------------
+function read_functions_from_file(filename) {
+	var funcData = null;	
+	try
+	{
+		var reader = system.openFileForInput(filename);
+		var funcData = "";
+		var aLine = null;
+		while((aLine = reader.readLine()) != null) {
+			funcData = funcData + aLine + "\n";
+		}
+		reader.close();
+	}
+	catch(e)
+	{
+		msgText = log2("ERROR", "err_reading_map_functions_file", filename, e.toString());
+		system.abortAssemblyLine(msgText);
+	}
+
+	return funcData;
+}]]></parameter>
+        </Script>
+        <Script name="state_utils">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[/**
+ * Utility class for keeping track of iterations
+ */
+if (!this.lcIterUtil) {
+	lcIterUtil = {		
+		/**
+		 * Format the time string for output
+		 */
+		_formattedTimeString : function() {
+			var timeStamp = java.lang.System.currentTimeMillis();
+			var dateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+			return dateFormat.format(timeStamp);
+		},
+		
+		/**
+		 * reset the counter
+		 */
+		reset : function() {
+			clearCounter("globalIterCntr");
+		},
+		
+		/**
+		 * Increment the counter
+		 */
+		incr : function() {
+			incrementCounter("globalIterCntr");
+			
+			var itrCount = lcIterUtil.getValue();
+			
+			if((itrCount % 10000) == 0) {
+				var time = lcIterUtil._formattedTimeString();
+				console2("out", "disp_iteration_count", "" + time, "" + itrCount);
+			}
+		},
+		
+		/**
+		 * Get the current value
+		 */
+		getValue : function() {
+			return getCounterState("globalIterCntr");
+		},
+		
+		/**
+		 * Report the value
+		 */
+		report : function() {
+			var time = lcIterUtil._formattedTimeString();
+			var itrCount = lcIterUtil.getValue();
+			console2("out", "disp_iteration_count_total", "" + time, "" + itrCount);
+		}	
+	};
+}]]></parameter>
+        </Script>
+        <Script name="utilities">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//function getCurrentTime()
+//{
+//	var currentTime = com.ibm.lconn.profiles.api.tdi.util.TDIServiceHelper.getCurrentTimeStamp();
+//	return currentTime;
+//}
+
+//-------------------------------------------
+// Get the java class of the given object
+// or return javascript otherwise
+//-------------------------------------------
+function getClass(o) {
+	var result = null;
+
+	try
+	{
+		result = o.getClass().getName();
+	}
+	catch(e)
+	{
+		result = "javascript";
+	}
+
+	return result;
+}
+
+function fileExists(path) {
+	var f = java.io.File(path);
+	return f.exists();
+}
+
+//-------------------------------------------
+// Convert a modify operation into a replace.
+// NOTE: This only really makes sense for a
+// single-valued attribute (or multi-valued)
+// where all values being deleted and added
+//-------------------------------------------
+function convert_modify_attr_to_replace(anAttr) {
+	var op = anAttr.getOperation();
+	if((op != null) && (op == "modify")) {
+		var list = new java.util.ArrayList();
+		var newAttr = system.newAttribute(anAttr.getName());
+		for(i=0; i < anAttr.size(); ++i) {
+			var anAttrVal = anAttr.getValueAV(i);
+			var valOp = anAttrVal.getOperation();
+			if((valOp != null) && (valOp == "add")) {
+				list.add(anAttrVal.getValue());
+			}
+		}
+		anAttr.clear();
+		for(i=0; i < list.size(); ++i) {
+			anAttr.addValue(list.get(i));
+		}
+	}
+	
+}
+
+//---------------------------------------
+// Look up the path for the given
+// property store for display purposes
+//---------------------------------------
+function get_properties_file_path_for(storeName) {
+	var path = null;
+	
+	var propertiesConfig = main.getConfiguration("Properties");
+	if(propertiesConfig != null) {
+		var storeConfig = propertiesConfig.getPropertyStore(storeName);
+		if(storeConfig != null) {
+			var connConfig = storeConfig.getConnectionConfig();
+			if(connConfig != null) {
+				path = connConfig.getParameter("collection");
+			}
+		}
+	}
+
+	return path;
+}
+
+//---------------------------------------
+// Look up the path for the profiles
+// property store for display purposes
+//---------------------------------------
+function get_properties_file_path() {
+	return get_properties_file_path_for("profiles");
+}
+
+//---------------------------------------
+// Validate a given property is set and
+// not empty in given property store.
+// Abort if not set
+//---------------------------------------
+function abort_if_required_property_not_set_in(propertyName, storeName) {
+	var propVal = system.getTDIProperty(storeName, propertyName);
+	if((propVal == null) || (propVal == "")) {
+		var path = get_properties_file_path_for(storeName);
+		var msgText = null;
+		if(path != null) {
+			msgText = log2("ERROR", "err_required_property_not_set_in", propertyName, path);
+		}
+		else {
+			msgText = log1("ERROR", "err_required_property_not_set", propertyName);
+		}
+		system.abortAssemblyLine(msgText);
+	}
+}
+
+function abbreviate_notes_email(email) {
+	var result = email;
+	if(result != null) {
+		if(result.startsWith("CN=")) {
+			result = result.substring(3);
+			var pos = result.indexOf("/OU=");
+			while(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 3);
+				pos = result.indexOf("/OU=");
+			}
+			pos = result.indexOf("/O=");
+			if(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 2);
+			}
+			pos = result.indexOf("/C=");
+			if(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 2);
+			}
+		}
+	}
+
+	return result;
+}
+
+//---------------------------------------
+// Validate a given property is set and
+// not empty in profiles property store
+//---------------------------------------
+function abort_if_required_property_not_set(propertyName) {
+	return abort_if_required_property_not_set_in(propertyName, "profiles");
+}
+
+//---------------------------------------
+// Compare two entries for equivalence.
+// Return true if they have the same
+// attribute names and values, and 
+// false otherwise
+//
+// @param entry1 first entry
+// @param entry2 second entry
+//
+// @return true if equivalent
+//---------------------------------------
+function entriesEquiv(entry1, entry2) {
+	var result = true;
+	if(entry1.size() == entry2.size()) {
+		var names = entry1.getAttributeNames();
+ 		for (i = 0; result && (i < names.length); i++) {
+    		var attr1 = entry1.getAttribute(names[i]);
+			var attr2 = entry2.getAttribute(names[i]);
+			if((attr2 != null) && (attr1.size() == attr2.size())) {
+    			for (j = 0;result && (j < attr1.size()); j++) {
+      				if(!attr1.getValue(j).equals(attr2.getValue(j))) {
+						result = false;
+					}
+    			}
+			}
+			else {
+				result = false;
+			}
+ 		}
+	}
+	else {
+		result = false;
+	}
+
+	return result;
+}
+
+function parsePageNumber(pns) {
+	var indexOf = pns.indexOf('.');
+	return pns.substrint(0,indexOf-1);
+}
+
+function removeSpaces(s) {
+	var js = "" + s;//make sure js string
+	return js.replace(/ /g,"");
+}
+
+function escape_dn(dnVal) {
+	if(dnVal != null) {
+		var startPos = 0;
+		var pos = 0;
+		pos = dnVal.indexOf('\\', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('\\', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('+', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('+', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('<', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('<', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('>', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('>', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('#', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('#', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf(';', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf(';', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('"', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('"', startPos);
+		}
+	}
+	return dnVal;
+}
+
+function checkALExist(alName)
+{
+	var instances = session.getConfigInstances();
+	var isExist = false;
+	
+	for(var j = 0; j < instances.length; j++)
+	{
+		if(isExist == true)
+			break;
+		var configuration = instances[j].getConfiguration();
+		var configFolder = configuration.getDefaultFolder(main.getMetamergeConfig().ASSEMBLYLINE_FOLDER); 
+		var assemblyLineNames = configFolder.getNames();
+		if (assemblyLineNames != null)
+		{ 
+			for (var k=0; k<assemblyLineNames.length; k++) 
+			{
+				if(assemblyLineNames[k].equals(alName))
+				{
+					isExist = true;
+					break;
+				}
+				isExist = false;
+			}
+		}
+	}
+
+	var msgText = null;
+	if(isExist == true) {
+		msgText = "AssemblyLine defined in check_if_remove property: "  + alName + " exist in current project";
+		logmsg("INFO", msgText);
+	}
+	else
+	{
+		msgText = "ERROR! AssemblyLine defined in check_if_remove property: " + alName + " cannot be found in current project";
+		logmsg("ERROR", msgText);
+		consoleMsg("err", msgText);
+		system.abortAssemblyLine(msgText);
+	}
+}
+
+// want to print:
+// - version info of jars in solution dir (profiles_tdi.jar)
+// - metamerge info from top of this file
+// - time of this file (profiles_tdi.xml)
+// this function should be called from a Prolog after init hook
+function print_version_info() {
+
+	try {
+		logmsg("INFO", "START: TDI solution version info");
+
+		// log metamergeconfig info from top of profiles_tdi.xml
+		var root = main.getMetamergeConfig().getRootElement();
+		logmsg("INFO", " - START: profiles_tdi.xml MetamergeConfig information ");
+		logmsg("INFO", " - MetamergConfig IDIversion=" + root.getAttribute("IDIversion"));
+		logmsg("INFO", " - MetamergConfig created=" + root.getAttribute("created"));
+		logmsg("INFO", " - MetamergConfig createdBy=" + root.getAttribute("createdBy"));
+		logmsg("INFO", " - MetamergConfig modified=" + root.getAttribute("modified"));
+		logmsg("INFO", " - MetamergConfig modifiedBy=" + root.getAttribute("modifiedBy"));
+		logmsg("INFO", " - END: profiles_tdi.xml MetamergeConfig information ");
+
+		// log jar manifest info for profiles_tdi.jar
+		var jarfile = new java.util.jar.JarFile("lib/profiles_tdi.jar");
+		var version = jarfile.getManifest().getMainAttributes().getValue( "Implementation-Version");
+		logmsg("INFO", " - profiles_tdi.jar version " + version);
+		jarfile.close();
+
+		// log profiles_tdi.xml file modified time
+		var configName = "profiles_tdi.xml";	
+		var configFile = java.io.File(configName);
+		var configDate = new Date(configFile.lastModified());
+		var dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+		var configDateStr = dateFormat.format(configDate);
+
+		logmsg("INFO", " - profiles_tdi.xml file modified time " + configDateStr);
+
+		logmsg("INFO", "END: TDI solution version info");
+	}	
+	catch(e) {
+		system.abortAssemblyLine("" + e);
+	}
+	
+}]]></parameter>
+        </Script>
+    </Folder>
+    <JavaLibraries/>
+    <JavaProperties/>
+    <Folder name="Includes"/>
+    <Folder name="Config">
+        <LogConfig name="Logging"/>
+        <InstanceProperties name="AutoStart">
+            <AutoStart/>
+        </InstanceProperties>
+        <TombstonesConfig name="Tombstones"/>
+        <SolutionInterface name="SolutionInterface">
+            <PollInterval>-1</PollInterval>
+            <InstanceID>populate_from_ldif_file</InstanceID>
+            <enabled>true</enabled>
+        </SolutionInterface>
+    </Folder>
+    <Folder name="Functions"/>
+    <Folder name="AttributeMaps"/>
+    <Properties name="Properties">
+        <Stores>
+            <PropertyStore name="Solution-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">Solution-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="Global-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">Global-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="System-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">System-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="profiles">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <UserComment/>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="autorewrite">true</parameter>
+                    <parameter name="collection">profiles_tdi.properties</parameter>
+                    <parameter name="collectionType">User-Defined</parameter>
+                    <parameter name="debug">false</parameter>
+                    <parameter name="userComment"/>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="Java-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">@SUBSTITUTE{config.$directory}/pop_ldif.properties</parameter>
+                    <parameter name="collectionType">Java-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="populate_from_ldif_file">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <UserComment/>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">populate_from_ldif.properties</parameter>
+                    <parameter name="collectionType">Default</parameter>
+                    <parameter name="debug">false</parameter>
+                    <parameter name="userComment"/>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+        </Stores>
+    </Properties>
+</MetamergeConfig>

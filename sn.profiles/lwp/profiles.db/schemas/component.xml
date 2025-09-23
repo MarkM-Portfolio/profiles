@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.db/schemas" description="Profiles DB Schema Files" spec-version="1.0" type="">
+
+	<output-group name="dist">
+		<output type="directory" visibility="public" platform="all" location="_schema.bld"/>
+	</output-group>
+
+</component>

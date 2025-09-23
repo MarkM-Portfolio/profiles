@@ -1,0 +1,2 @@
+<!-- This XML fragment is used to set the configuration information for the CompXref report  -->
+    		<result component="build" fe="sn.profiles" />

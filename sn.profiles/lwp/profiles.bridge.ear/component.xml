@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ************************************************************** -->
+<!--                                                                -->
+<!-- Licensed Materials - Property of HCL                           -->
+<!--                                                                -->
+<!-- Copyright HCL Technologies Limited 2006, 2021                  -->
+<!--                                                                -->
+<!-- US Government Users Restricted Rights                          -->
+<!--                                                                -->
+<!-- ************************************************************** -->
+<component name="profiles.bridge.ear" description="Profiles Bridge EAR" spec-version="3.0" project-type="ear">
+
+	<output-group name="dist">
+		<output type="ear" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/profiles.bridge.ear" preferredInstallLocation="tmp" />
+	</output-group>
+	
+	<output-group name="to_ear">      
+		<output type="dir" visibility="public" platform="all" location="itv"/>
+	</output-group>
+
+	<dependency name="profiles.bridge.war/app" type="war" version="3.0" />
+
+	<!-- Events API -->
+
+	<!-- Profiles Jars -->
+    <dependency name="prereqs.sn/log4j2" type="jar"/>
+	<!-- the core EJBs must be be declared first, so the specialized versions override them -->
+	<dependency name="lc.events.30/publish" type="jar" />
+	<dependency name="lc.events.30/internal" type="jar" />
+
+
+	<!-- specialized EJBs -->
+	<dependency name="profiles.bridge.events.publish.ejb" type="jar" />	
+
+	
+</component>

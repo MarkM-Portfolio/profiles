@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  	   xmlns:context="http://www.springframework.org/schema/context"
+  	   xmlns:jee="http://www.springframework.org/schema/jee"
+  	   xsi:schemaLocation="
+  	   		http://www.springframework.org/schema/beans 
+  	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+  	   		http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<context:annotation-config/>
+	
+	<bean id="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.SqlMapClientTemplate"
+		class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient">
+			<bean id="sqlMapClient"
+				  class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+				<property name="configLocation">
+					<value>classpath:com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql-map-config.xml</value>
+				</property>
+				<property name="useTransactionAwareDataSource" value="true"/>
+				<property name="dataSource">
+					<ref bean="com.ibm.lconn.core.appext.spi.SNAXDataSource"/>
+				</property>
+				<property name="sqlMapClientProperties">
+					<ref bean="com.ibm.lconn.core.appext.spi.SNAXDaoProperties"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+ 
+ 	<bean id="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean" abstract="true">
+ 		<property name="sqlMapClientTemplate" ref="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.SqlMapClientTemplate" />
+ 	</bean>
+	
+	<!-- 
+		DAO AOP Configuration
+	 -->
+	
+	<!-- DAO Pointcut.  Matches all @Repository objects -->
+	<bean id="com.ibm.lconn.profiles.internal.service.store.aop.ProfilesDaoObjectMatcher"
+		  class="com.ibm.lconn.profiles.internal.service.store.aop.ProfilesDaoObjectMatcher"/>
+
+	<!-- Base Advisor -->
+	<bean id="com.ibm.lconn.profiles.internal.service.store.advise.BasePointcutAdvisor"
+		  class="org.springframework.aop.support.DefaultPointcutAdvisor"
+		  abstract="true">
+		<property name="pointcut"
+				  ref="com.ibm.lconn.profiles.internal.service.store.aop.ProfilesDaoObjectMatcher"/>
+		<property name="order" value="1000"/>
+	</bean>
+
+	<!-- DAO Advise -->	
+	<bean id="com.ibm.lconn.profiles.internal.service.store.aop.RetryConnectionClosedPointcut"
+		  parent="com.ibm.lconn.profiles.internal.service.store.advise.BasePointcutAdvisor">
+		<property name="advice">
+			<bean class="com.ibm.lconn.profiles.internal.service.store.aop.RetryConnectionClosedAdvise"/>
+		</property>
+		<property name="order" value="100000"/>
+	</bean>
+	
+	<bean id="com.ibm.lconn.profiles.internal.service.store.aop.MethodBenchmarkingPointcut"
+		  parent="com.ibm.lconn.profiles.internal.service.store.advise.BasePointcutAdvisor">
+		<property name="advice"
+				  ref="com.ibm.lconn.profiles.internal.service.aop.MethodBenchmarkingAdvise"/>
+		<property name="order" value="500"/>
+	</bean>
+	
+	<!-- 
+		Refactored DAOs
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.ProfilesConstantsDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ProfilesConstantsSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.PhotoDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.PhotoSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.PronunciationDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.PronunciationSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.SurnameDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.SurnameSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.GivenNameDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.GivenNameSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.ProfileDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ProfileSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.TenantDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.TenantSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.ProfileDraftDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ProfileDraftSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.ProfileExtensionDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ProfileExtensionSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.store.interfaces.ProfileExtensionDraftDao"
+		class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ProfileExtensionDraftSqlMapDao"
+		parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean" />
+		
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.ProfileTagDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ProfileTagSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+		      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.TDIProfileDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.TDIProfileSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.store.interfaces.ConnectionDao"
+		class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ConnectionSqlMapDao"
+		parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean" />
+	
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.SearchDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.SearchSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.EventLogDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.EventLogSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.ProfileLoginDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ProfileLoginSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.OrgStructureDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.OrgStructureSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.SchemaVersionDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.SchemaVersionSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>     
+	      
+	<!-- Codes Dao's -->
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.CountryDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.CountrySqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	      
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.DepartmentDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.DepartmentSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.EmployeeTypeDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.EmployeeTypeSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.OrganizationDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.OrganizationSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.WorkLocationDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.WorkLocationSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/>
+	
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.UserPlatformEventsDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserPlatformEventsSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/> 
+	
+	<bean id="com.ibm.lconn.profiles.internal.service.store.interfaces.RoleDao" 
+	      class="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.RoleSqlMapDao"
+	      parent="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.AbstractBaseSqlMapDaoBean"/> 
+</beans>

@@ -1,0 +1,19 @@
+This details how to retrieve the manager in a single query.
+
+In order for this to work correctly, we need to create a PROF_MANAGER_LOWER column.  
+When executing, one of the criterial would need to be max_level to prevent looping. 
+We really need a MANGER_LOWER column anyways to properly construct the org info chart.
+
+Alternatively, we could make the 'select' a 'select distinct' with out the 'LEVEL' criteria.  This would prevent duplicates / loops also. 
+
+
+with OrgStruct (PROF_UID, PROF_MANAGER_UID, LEVEL) as
+(
+select PROF_UID, PROF_MANAGER_UID, 0
+  from EMPINST.EMPLOYEE where PROF_MAIL_LOWER = 'ahernm@us.ibm.com'
+union all 
+select A.PROF_UID, B.PROF_MANAGER_UID, A.LEVEL + 1
+  from OrgStruct A, EMPINST.EMPLOYEE B
+  where A.PROF_MANAGER_UID = B.PROF_UID 
+)
+select * from OrgStruct

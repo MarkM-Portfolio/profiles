@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		*****************************************************************
+	-->
+	<!--
+	-->
+	<!--
+		IBM Confidential
+	-->
+	<!--
+	-->
+	<!--
+		OCO Source Materials
+	-->
+	<!--
+	-->
+	<!--
+		Copyright IBM Corp. 2008, 2015
+	-->
+	<!--
+	-->
+	<!--
+		The source code for this program is not published or otherwise
+	-->
+	<!--
+		divested of its trade secrets, irrespective of what has been
+	-->
+	<!--
+		deposited with the U.S. Copyright Office.
+	-->
+	<!--
+	-->
+	<!--
+		*****************************************************************
+	-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+  	   		http://www.springframework.org/schema/beans 
+  	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+  	   		http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd
+            http://www.springframework.org/schema/aop
+  	   		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+  	   		http://www.springframework.org/schema/tx
+  	   		http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!-- 
+		Define global advisor
+	 -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+
+	<context:annotation-config />
+	<tx:annotation-driven
+		transaction-manager="com.ibm.lconn.core.appext.spi.SNAXTransactionManager"
+		order="5000" />
+
+	<!-- Define global advisers -->
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.aop.MethodBenchmarkingAdvise"
+		class="com.ibm.lconn.profiles.internal.service.aop.MethodBenchmarkingAdvise" />
+
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.aop.ProfilesServiceObjectMatcher"
+		class="com.ibm.lconn.profiles.internal.service.aop.ProfilesServiceObjectMatcher" />
+
+	<!-- Define service advisors -->
+	<!-- Base Advisor -->
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.advise.BasePointcutAdvisor"
+		class="org.springframework.aop.support.DefaultPointcutAdvisor"
+		abstract="true">
+		<property name="pointcut"
+			ref="com.ibm.lconn.profiles.internal.service.aop.ProfilesServiceObjectMatcher" />
+		<property name="order" value="1000" />
+	</bean>
+
+	<!-- Service Class Advise -->
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.aop.MethodBenchmarkingPointcut"
+		parent="com.ibm.lconn.profiles.internal.service.advise.BasePointcutAdvisor">
+		<property name="advice"
+			ref="com.ibm.lconn.profiles.internal.service.aop.MethodBenchmarkingAdvise" />
+		<property name="order" value="500" />
+	</bean>
+
+	<!-- Prevents org structure actions if the feature is disabled -->
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.aop.OrgStructureDisabledPointcut"
+		parent="com.ibm.lconn.profiles.internal.service.advise.BasePointcutAdvisor">
+		<property name="advice">
+			<bean
+				class="com.ibm.lconn.profiles.internal.service.aop.OrgStructureDisabledAdvise" />
+		</property>
+		<property name="pointcut">
+			<bean
+				class="com.ibm.lconn.profiles.internal.service.aop.OrgStructureMatcher" />
+		</property>
+		<property name="order" value="600" />
+	</bean>
+
+	<!-- 
+		Import sub packages
+	 -->
+	<import
+		resource="classpath:com/ibm/lconn/profiles/appext/impl/profiles-appext-spi-context.xml" />
+	<import
+		resource="classpath:com/ibm/lconn/profiles/internal/service/store/sqlmapdao/profiles-dao-context.xml" />
+	<!--
+	<import
+		resource="classpath:com/ibm/peoplepages/internal/service/store/sqlmapdao/tobe-refactored-dao-context.xml" />
+	-->
+		<!-- 
+	<import
+		resource="classpath:com/ibm/lconn/profiles/worker/lconn-worker-context.xml" /> -->
+
+	<!-- 
+		Utility classes for services
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.TransactionTemplate"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<constructor-arg
+			ref="com.ibm.lconn.core.appext.spi.SNAXTransactionManager" />
+	</bean>
+
+	<!-- 
+		Service Definitions
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.ProfilesAppService"
+		class="com.ibm.lconn.profiles.internal.service.ProfilesAppServiceImpl"/>
+	
+	<!-- internal implementation class to prevent circular dependencies -->
+	<bean id="com.ibm.lconn.profiles.internal.service.ProfileServiceBase"
+		class="com.ibm.lconn.profiles.internal.service.ProfileServiceBaseImpl"/>
+	 
+	<bean id="com.ibm.lconn.profiles.internal.service.ProfileExtensionService"
+		class="com.ibm.lconn.profiles.internal.service.ProfileExtensionServiceImpl"/>
+
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.ProfileExtensionDraftService"
+		class="com.ibm.lconn.profiles.internal.service.ProfileExtensionDraftServiceImpl">
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.TransactionTemplate" />
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.store.interfaces.ProfileExtensionDraftDao" />
+	</bean>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.PhotoService"
+		class="com.ibm.lconn.profiles.internal.service.PhotoServiceImpl"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.PronunciationService"
+		class="com.ibm.lconn.profiles.internal.service.PronunciationServiceImpl"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.ConnectionService"
+		class="com.ibm.lconn.profiles.internal.service.ConnectionServiceImpl"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.SurnameService"
+		class="com.ibm.lconn.profiles.internal.service.SurnameServiceImpl"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.GivenNameService"
+		class="com.ibm.lconn.profiles.internal.service.GivenNameServiceImpl"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.ProfileService"
+		class="com.ibm.lconn.profiles.internal.service.ProfileServiceImpl"/>
+
+	<bean id="com.ibm.lconn.profiles.internal.service.TDIProfileService"
+		class="com.ibm.lconn.profiles.internal.service.AdminProfileServiceImpl"/>
+	
+	<!-- 
+		Search service support to ues search service EJB
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.SearchService2"
+		class="com.ibm.lconn.profiles.internal.service.SearchServiceImpl"/>
+	
+	<!--
+		Org structure service. This consolidates a bunch of org structure code
+		that had been split over a pile of files.
+	-->
+	<bean id="com.ibm.lconn.profiles.internal.service.OrgStructureService"
+		class="com.ibm.lconn.profiles.internal.service.OrgStructureServiceImpl"/>
+
+	<!-- 
+		Event Log service support
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.EventLogService"
+		class="com.ibm.lconn.profiles.internal.service.EventLogServiceImpl"/>
+
+	<!--
+		Profile tag service 
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.ProfileTagService"
+		class="com.ibm.lconn.profiles.internal.service.ProfileTagServiceImpl"/>
+
+	<!-- 
+		Country Service
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.CountryService"
+		class="com.ibm.lconn.profiles.internal.service.CountryServiceImpl">
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.TransactionTemplate" />
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.store.interfaces.CountryDao" />
+	</bean>
+
+	<!-- 
+		Department Service
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.DepartmentService"
+		class="com.ibm.lconn.profiles.internal.service.DepartmentServiceImpl">
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.TransactionTemplate" />
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.store.interfaces.DepartmentDao" />
+	</bean>
+
+	<!-- 
+		EmployeeType Service
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.EmployeeTypeService"
+		class="com.ibm.lconn.profiles.internal.service.EmployeeTypeServiceImpl">
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.TransactionTemplate" />
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.store.interfaces.EmployeeTypeDao" />
+	</bean>
+
+	<!-- 
+		Organization Service
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.OrganizationService"
+		class="com.ibm.lconn.profiles.internal.service.OrganizationServiceImpl">
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.TransactionTemplate" />
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.store.interfaces.OrganizationDao" />
+	</bean>
+
+	<!-- 
+		WorkLocation Service
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.WorkLocationService"
+		class="com.ibm.lconn.profiles.internal.service.WorkLocationServiceImpl">
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.TransactionTemplate" />
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.store.interfaces.WorkLocationDao" />
+	</bean>
+
+	<!-- 
+		ProfileLogin Service
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.ProfileLoginService"
+		class="com.ibm.lconn.profiles.internal.service.ProfileLoginServiceImpl"/>
+
+	<!-- 
+		UserPlatformEventService Service
+	 -->
+	<bean
+		id="com.ibm.lconn.profiles.internal.service.UserPlatformEventService"
+		class="com.ibm.lconn.profiles.internal.service.UserPlatformEventServiceImpl">
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.store.interfaces.UserPlatformEventsDao" />
+	</bean>	
+
+	<!-- 
+		Transitional Service Definition
+	 -->
+	<bean id="com.ibm.peoplepages.service.PeoplePagesService"
+		class="com.ibm.peoplepages.internal.service.PeoplePagesServiceImpl">
+		<constructor-arg
+			ref="com.ibm.lconn.profiles.internal.service.TransactionTemplate" />
+	</bean>
+
+
+	<!-- 
+		Following service
+	 -->
+	<bean id="com.ibm.lconn.profiles.internal.service.FollowingService"
+		class="com.ibm.lconn.profiles.internal.service.FollowingServiceImpl"/>
+
+</beans>

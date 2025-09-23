@@ -1,0 +1,22 @@
+{
+  "name": "com.ibm.lconn.profiles.web.resources.test",
+  "version": "1.0.0",
+  "description": "IBM Connections Profiles Tests",
+  "main": "karma.conf.js",
+  "scripts": {
+    "pretest": "npm install && export PHANTOMJS_BIN=node_modules/karma-phantomjs-launcher/node_modules/phantomjs/bin/phantomjs",
+    "test": "karma start karma.conf.js --verbose",
+    "pretest-single-run": "npm install && export PHANTOMJS_BIN=node_modules/karma-phantomjs-launcher/node_modules/phantomjs/bin/phantomjs",
+    "test-single-run": "karma start karma.conf.js  --single-run --verbose"
+  },
+  "author": "Claudio Procida <procidac@ie.ibm.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine-core": "^2.2.0",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-cli": "0.0.4",
+    "karma-jasmine": "^0.3.5",
+    "karma-phantomjs-launcher": "^0.1.4"
+  }
+}

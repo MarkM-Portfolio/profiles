@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>Search Seedlist Servlet</display-name>
+
+	<!-- Public Seedlist Authorization Filter -->
+	<filter>
+		<filter-name>PublicSeedlistAuthorizationFilter</filter-name>
+		<filter-class>com.ibm.ilel.seedlist.servlet.filter.PublicSeedlistFilter</filter-class>
+	</filter>
+	
+	<!-- App Context filter to correctly integrate with profiles service layer -->
+	<filter>
+		<filter-name>AppContextFilter</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.AppContextFilter</filter-class>
+	</filter>
+	
+	<!-- Needed by URL rewriting API -->
+	<filter>
+		<filter-name>HttpRequestFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.request.HttpRequestFilter</filter-class>
+	</filter>
+	
+	<!-- Disable caching -->
+	<filter>
+		<filter-name>DisableCachingFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.cache.NoCacheFilter</filter-class>
+	</filter>
+
+	<!-- Public Seedlist Authorization Filter Mapping -->
+	<filter-mapping>
+		<filter-name>HttpRequestFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>DisableCachingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>PublicSeedlistAuthorizationFilter</filter-name>
+		<url-pattern>/server/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>AppContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>Secured GetACLTokensServlet</display-name>
+		<servlet-name>GetACLTokensServletSecured</servlet-name>
+		<servlet-class>
+			com.ibm.lotus.search.providers.api.external.GetACLTokensForUser
+		</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>GetACLTokensServletSecured</servlet-name>
+		<url-pattern>/authverify/getACLTokens</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>Secured ValidateUserServlet</display-name>
+		<servlet-name>UserValidateServletSecured</servlet-name>
+		<servlet-class>
+			com.ibm.lotus.search.providers.api.external.ValidateUserServlet
+		</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>UserValidateServletSecured</servlet-name>
+		<url-pattern>/authverify/validateUser</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description/>
+		<display-name>Search Seedlist Secured Servlet</display-name>
+		<servlet-name>SearchSeedlistSecuredServlet</servlet-name>
+		<servlet-class>com.ibm.ilel.seedlist.servlet.SecuredSeedlistServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>SearchSeedlistSecuredServlet</servlet-name>
+		<url-pattern>/myserver/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- PUBLIC SEEDLIST SERVLET(IBM INTERNAL)	-->
+	<servlet>
+	    <description/>
+	    <display-name>Search Seedlist Public Servlet</display-name>
+	    <servlet-name>SearchSeedlistPublicServlet</servlet-name>
+	    <servlet-class>
+	        com.ibm.ilel.seedlist.servlet.PublicSeedlistServlet
+	    </servlet-class>
+	</servlet>
+
+	<!-- PUBLIC SEEDLIST SERVLET MAPPING(IBM INTERNAL)	-->
+	<servlet-mapping>
+	    <servlet-name>SearchSeedlistPublicServlet</servlet-name>
+	    <url-pattern>/server/*</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<description></description>
+		<param-name>Source</param-name>
+		<param-value>com.ibm.connections.profiles.seedlist.ProfilesRetrieverFactory</param-value>
+	</context-param>
+	<context-param>
+		<description></description>
+		<param-name>Format</param-name>
+		<param-value>ATOM</param-value>
+	</context-param>
+    <context-param>
+        <description>Default requested action</description>
+        <param-name>Action</param-name>
+        <param-value>GetDocuments</param-value>
+    </context-param>
+    <context-param>
+        <description>
+            Default index to start entries collecting
+        </description>
+        <param-name>Start</param-name>
+        <param-value>0</param-value>
+    </context-param>
+    <context-param>
+        <description>
+            Default number of displayed entries per page
+        </description>
+        <param-name>Range</param-name>
+        <param-value>100</param-value>
+    </context-param>
+
+   <!-- SECURITY -->
+
+   <security-constraint>
+
+      <display-name>profiles seedlist ssl</display-name>
+
+      <web-resource-collection>
+
+         <web-resource-name>profiles seedlist content</web-resource-name>
+
+         <url-pattern>/myserver/*</url-pattern>
+
+         <http-method>GET</http-method>
+         <http-method>PUT</http-method>
+         <http-method>POST</http-method>
+         <http-method>DELETE</http-method>
+
+      </web-resource-collection>
+
+      <auth-constraint>
+         <role-name>search-admin</role-name>
+      </auth-constraint>
+<!--
+      <user-data-constraint>
+         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+-->
+   </security-constraint>  
+	
+   <security-constraint>
+
+      <display-name>profiles authverify ssl</display-name>
+
+      <web-resource-collection>
+
+         <web-resource-name>profiles seedlist content</web-resource-name>
+
+         <url-pattern>/authverify/*</url-pattern>
+
+         <http-method>GET</http-method>
+         <http-method>PUT</http-method>
+         <http-method>POST</http-method>
+         <http-method>DELETE</http-method>
+
+      </web-resource-collection>
+
+      <auth-constraint>
+         <role-name>person</role-name>
+      </auth-constraint>
+
+      <user-data-constraint>
+         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+
+   </security-constraint>
+
+	<security-constraint>
+		<display-name>Profiles Public Seedlist </display-name>
+		<web-resource-collection>
+			<web-resource-name>Profiles Public Seedlist</web-resource-name>
+			<description>Used to force SSL for the Public Profiles Seedlist</description>
+			<url-pattern>/server/*</url-pattern>			
+			<http-method>GET</http-method>
+			<http-method>PUT</http-method>
+			<http-method>POST</http-method>
+			<http-method>DELETE</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Allow for everyone.</description>
+			<role-name>everyone</role-name>
+		</auth-constraint>
+		<!--
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+		-->
+	</security-constraint>	
+
+   
+   <login-config>
+      <auth-method>BASIC</auth-method>
+   </login-config>
+   <security-role>
+   	<description>
+   	search-admin</description>
+   	<role-name>search-admin</role-name>
+   </security-role>
+   	
+   	<security-role>
+		<description>Logical role for read/write access to the application.  Mapped to 'allAuthenticated' by default.</description>
+		<role-name>person</role-name>
+	</security-role>
+   	<security-role>
+   		<role-name>everyone</role-name>
+   	</security-role>
+	
+
+	<!-- DATA SOURCE (if not already included) -->
+	<resource-ref id="ResourceRef_1207234599181">
+		<description>Profiles data source.</description>
+		<res-ref-name>jdbc/profiles</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+
+</web-app>

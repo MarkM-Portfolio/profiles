@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<?NLS  TYPE="org.eclipse.help.toc"?>
+<toc label="Perfis " topic="frame.html">
+   <topic label="Descrições gerais, procedimentos e perguntas frequentes dos Perfis" href="frame.html">
+      <topic label="Perguntas mais frequentes" href="c_pers_faq.html"/>
+      <topic label="Bem-vindo aos Perfis" href="c_persona_welcome.html"/>
+      <topic label="Novidades nesta edição?" href="c_whats_new.html"/>
+      <topic label="Visualizar perfis" href="c_pers_profiles.html"/>
+      <topic label="Funções de acessibilidade" href="pDojo_accessibility.html"/>
+      <topic label="Procurar perfis" href="c_pers_search_options.html"/>
+      <topic label="Efectuar uma procura rápida" href="t_pers_find_people.html"/>
+      <topic label="Efectuar uma procura avançada" href="t_pers_search_profiles.html"/>
+      <topic label="Visualizar os resultados da procura" href="t_pers_search_results.html"/>
+      <topic label="Utilizar o cartão de visita dos Perfis" href="t_pers_use_biz_card.html"/>
+      <topic label="Exportar detalhes de contacto" href="t_pers_export_details.html"/>
+      <topic label="Eliminar colegas" href="t_pers_delete_colleague.html"/>
+      <topic label="Editar o perfil" href="t_pers_edit_profiles.html"/>
+      <topic label="Actualizar informações de contacto" href="t_pers_update_contact_info.html"/>
+      <topic label="Alterar informações de segundo plano" href="t_pers_change_bgd_info.html"/>
+      <topic label="Alterar a imagem do perfil" href="t_pers_edit_photo.html"/>
+      <topic label="Transferir um ficheiro áudio" href="t_pers_audiofile_upload.html"/>
+      <topic label="Utilizar etiquetas" href="c_pers_tags.html"/>
+      <topic label="Atribuir etiquetas ao perfil" href="t_pers_tag_your_profile.html"/>
+      <topic label="Adicionar ligações externas ao perfil" href="t_add_external_links.html"/>
+      <topic label="Adicionar colegas" href="t_pers_add_colleagues.html"/>
+      <topic label="Visualizar colegas" href="t_pers_view_colleagues.html"/>
+      <topic label="Aceitar convites de colegas" href="t_pers_accept_invitations.html"/>
+      <topic label="Atribuir etiquetas a pessoas" href="t_pers_tag_people.html"/>
+   </topic>
+   <topic label="Criar um ficheiro áudio" href="t_pers_audiofile_create.html"/>
+</toc>

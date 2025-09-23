@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2012, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<entry xmlns:app="http://www.w3.org/2007/app" xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:fh="http://purl.org/syndication/history/1.0" xmlns:snx="http://www.ibm.com/xmlns/prod/sn" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns="http://www.w3.org/2005/Atom">
+
+<content type="application/xml">
+<person xmlns="http://ns.opensocial.org/2008/opensocial">
+<com.ibm.snx_profiles.attrib>
+
+<entry>
+  <key>com.ibm.snx_profiles.base.distinguishedName</key> 
+  <value>
+    <type>text</type>
+    <data>uid=test_user_uid,c=us,ou=bluepages,o=ibm.com</data>
+  </value>
+</entry>
+<entry>
+  <key>com.ibm.snx_profiles.base.guid</key> 
+  <value>
+    <type>text</type> 
+    <data>ef3ec240-edfb-102b-87b1-a1760d1511aa</data> 
+  </value>
+</entry>
+<entry>
+  <key>com.ibm.snx_profiles.base.surname</key> 
+  <value>
+    <type>text</type> 
+    <data>test_user</data> 
+  </value>
+</entry>
+<entry>
+  <key>com.ibm.snx_profiles.base.uid</key> 
+  <value>
+    <type>text</type> 
+    <data>test_user_uid</data> 
+  </value>
+</entry>
+<entry>
+  <key>com.ibm.snx_profiles.base.displayName</key>
+  <value>
+     <type>text</type>
+     <data>Test User</data>
+  </value>
+</entry>
+
+<entry>
+  <key>com.ibm.snx_profiles.base.email</key>
+  <value>
+    <type>text</type>
+    <data>unit_test_user@us.ibm.com</data>
+  </value>
+</entry>
+<entry>
+    <key>com.ibm.snx_profiles.sys.usrState</key> 
+        <value>
+            <type>text</type> 
+            <data>active</data> 
+        </value>
+</entry>
+        
+</com.ibm.snx_profiles.attrib>
+</person>
+</content>
+</entry>

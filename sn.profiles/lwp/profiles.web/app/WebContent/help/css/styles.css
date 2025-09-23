@@ -1,0 +1,51 @@
+/* ***************************************************************** */
+/*                                                                   */
+/* IBM Confidential                                                  */
+/*                                                                   */
+/* OCO Source Materials                                              */
+/*                                                                   */
+/* Copyright IBM Corp. 2007, 2010                                    */
+/*                                                                   */
+/* The source code for this program is not published or otherwise    */
+/* divested of its trade secrets, irrespective of what has been      */
+/* deposited with the U.S. Copyright Office.                         */
+/*                                                                   */
+/* ***************************************************************** */
+
+/* Body and box-like elements */
+html, body { padding: 0; margin: 0; }
+body {
+	background: #f3f3f3;
+	padding: 15px;
+	border-top: 1px dotted #888;
+	font: normal 11px/1.5em "Helvetica", "Verdana", sans-serif; }
+
+h1.pagetitle{
+	margin: 15px 0 0 15px;
+	padding: 15px 0 0 65px;
+	background: #fff url(../images/header.gif) top left no-repeat;
+	height: 50px;
+}
+
+a {
+	border-bottom: 1px dotted #bbb;
+	text-decoration: none; }
+
+a:hover{
+	border-bottom: 1px solid #000;
+	color: #000;
+}
+
+ul{
+margin: 0 0 0 10px;
+padding: 0;
+}
+
+li{
+margin: 0 0 0 10px;
+padding: 0;
+}
+
+li a{
+ color: #444;
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC 
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<struts-config>
+	
+	<form-beans>
+	</form-beans>
+
+	<global-exceptions>
+	</global-exceptions>
+
+	<global-forwards>
+	</global-forwards>
+
+	<action-mappings>
+		<action path="/vcard/profile" type="com.ibm.peoplepages.vcard.actions.ProfileAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<exception key="error.atomGeneral" type="java.lang.RuntimeException" path="/WEB-INF/internal/atom/errorHandler.do"/>
+			<forward name="vcard" path="/WEB-INF/jsps/vcard/vcard.jsp" />
+			<forward name="vcard_jp" path="/WEB-INF/jsps/vcard/vcard_jp.jsp" />
+		</action>
+	</action-mappings>
+</struts-config>

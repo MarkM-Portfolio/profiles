@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2017                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<application id="Profiles.Bridge" version="1.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/application_1_4.xsd">
+	<display-name>ProfilesBridge</display-name>
+	<module id="WebModule_1195517565312">
+		<web>
+			<web-uri>lc.profiles.bridge.war</web-uri>
+			<context-root>/profilesbridge</context-root>
+		</web>
+	</module>
+
+	<module id="EventPublish">
+	    <ejb>lc.events.publish.jar</ejb>
+	</module>
+
+
+	<security-role id="SecurityRole_1202919220253"> 
+		<description>
+		Mapped to all users in the system at all times.  This role is used to defer security checks to programatic access checking code.</description>
+		<role-name>everyone</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220263">
+		<description>
+		Logical role for read-only access to the application.  Mapped to 'everyone' by default.</description>
+		<role-name>reader</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220273">
+		<description>
+		Logical role for read/write access to the application.  Mapped to 'allAuthenticated' by default.</description>
+		<role-name>person</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220274">
+		<description>
+		Logical admin role.  No default mappings.</description>
+		<role-name>admin</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220277">
+		<description>All authenticated role for login page redirects.  DO NOT CHANGE THE MAPPING OF THIS ROLE.</description>
+		<role-name>allAuthenticated</role-name>
+	</security-role>
+
+</application>

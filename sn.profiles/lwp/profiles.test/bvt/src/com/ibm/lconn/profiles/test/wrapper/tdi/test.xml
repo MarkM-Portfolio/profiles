@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2009, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:snx="http://www.ibm.com/xmlns/prod/sn">
+    <category scheme="http://www.ibm.com/xmlns/prod/sn/type" term="profile"></category>
+    <content type="text">
+        BEGIN:VCARD
+		VERSION:2.1
+		PHOTO;VALUE=URL:http://ahernm.lotus.com:9082/profiles/photo.do?uid=938139897&amp;lastMod=1189524284000
+		FN:MICHAEL I. AHERN_changed
+		URL:http://ahernm.lotus.com:9082/profiles/atom/profile.do?uid=938139897
+		SOUND;VALUE=URL:null
+		EMAIL;INTERNET:ahernm@us.ibm.com
+		EMAIL;X_GROUPWARE_MAIL:Michael Ahern/Cambridge/IBM@IBMUS
+		X_BLOG_URL;VALUE=URL:
+		ORG:IBM Software Group, WPLC
+		ROLE:IBM employee, Regular
+		TITLE:Test of title update
+		ADR;WORK:;;4 TECHNOLOGY PARK DR,;WESTFORD;MA;01886-3140;United States
+		X_COUNTRY_CODE:us
+		X_WORKLOCATION_CODE:WMA
+		X_BUILDING:WTF4
+		X_FLOOR:2
+		X_OFFICE_NUMBER:2238H
+		TEL;WORK:1-978-399-7712
+		X_MANAGER_UID:L37000897
+		UID:ab41d440-773f-1029-9e32-882a644e52b4
+		X_PROFILE_UID:938139897
+		X_PROFILE_SOURCE_UID:miked
+		REV:2007-09-11T15:52:11.467Z
+		END:VCARD
+    </content>
+    <snx:givenNames>
+        <snx:givenName>Liang</snx:givenName>
+        <snx:givenName>Lianglu</snx:givenName>
+    </snx:givenNames>
+    <snx:surnames>
+        <snx:surname>chen</snx:surname>
+        <snx:surname>chan</snx:surname>
+    </snx:surnames>
+    <snx:logins>
+        <snx:login>lchen1</snx:login>
+        <snx:login>chlcc1</snx:login>
+    </snx:logins>
+</entry>

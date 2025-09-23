@@ -1,0 +1,101 @@
+/* ***************************************************************** */
+/*                                                                   */
+/* IBM Confidential                                                  */
+/*                                                                   */
+/* OCO Source Materials                                              */
+/*                                                                   */
+/* Copyright IBM Corp. 2008, 2015                                    */
+/*                                                                   */
+/* The source code for this program is not published or otherwise    */
+/* divested of its trade secrets, irrespective of what has been      */
+/* deposited with the U.S. Copyright Office.                         */
+/*                                                                   */
+/* ***************************************************************** */
+
+.fetcher {
+}
+
+.fetcher .shell {
+  padding-top: 1em;
+}
+
+.fetcher .box {
+  background-color: white;
+  border: 1px solid #CFCFCF;
+  padding: 3px;
+}
+
+/**
+ * Hack to get the network selector dropdown
+ * area to be the same width as the result list.
+ */
+.fetcher .netSelect {
+  width: 101%;
+  position: relative;
+  left: -1px;
+}
+
+.fetcher .networkTable {
+  width: 100%;
+}
+
+.fetcher .loadProgress {
+	align: middle;
+	padding: 5px;
+}
+
+.fetcher .loadArea {
+	text-align: center;
+}
+
+.fetcher .resultContainer {
+	text-align: left;
+}
+
+.fetcher .toolBox {
+	margin-bottom: 0.3em;
+	margin-top: 0.3em;
+}
+
+.fetcher .list {
+	overflow: auto;
+	max-height: 200px;
+}
+
+.fetcher .buttonDiv {
+	margin-top: 2px;
+}
+
+.messageDialog {
+	border: 1px solid #1581A6;
+	color: #1F3859;
+	background-color: white;
+	position: fixed;
+  width: 400px;
+}
+
+.messageDialog .exists-notify {
+	color: #73BE59;
+}
+
+.messageDialog .name {
+	font-weight: bold;
+}
+
+.progressOuter {
+  width: 100%;
+  height: 1.5em;
+  border: 1px solid #CFCFCF;
+  text-align: left;
+}
+.progressBar {
+  height: 100%;
+  background-color: lightblue;
+}
+
+.loadMessage {
+  position: relative;
+  top: -1.3em;
+  left: 0.3em;
+  z-index: 100;
+}

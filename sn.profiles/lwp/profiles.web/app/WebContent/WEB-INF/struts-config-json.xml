@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC 
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2017                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<struts-config>
+
+	<form-beans>
+	</form-beans>
+
+	<global-exceptions>
+	</global-exceptions>
+
+	<global-forwards>
+	</global-forwards>
+
+	<action-mappings>
+		<action path="/json/profile" type="com.ibm.peoplepages.json.actions.ProfileAction">
+			<forward name="profile" path="/WEB-INF/jsps/json/profile.jsp" />
+		</action>
+
+		<!--RTC 188295 bulk query of profKey by external ID & external ID by profKey -->
+		<action path="/json/profileBulk" type="com.ibm.peoplepages.json.actions.ProfileBulkAction">
+		</action>
+
+		<!--added special entry for semantic tag so we can have something other than basic auth -->
+		<action path="/json/semanticTagProfileView" type="com.ibm.peoplepages.json.actions.ProfileAction">
+			<forward name="profile" path="/WEB-INF/jsps/json/profile.jsp" />
+		</action>
+		
+		<!--To query profile key by login ID -->
+		<action path="/json/profileKey" type="com.ibm.peoplepages.json.actions.ProfileLoginAction">
+			<forward name="profileKey" path="/WEB-INF/jsps/json/profileKey.jsp" />
+		</action>
+	</action-mappings>
+</struts-config>

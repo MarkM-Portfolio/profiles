@@ -1,0 +1,54 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- ***************************************************************** -->
+<!--    Property of IBM                                                -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+<iw:iwidget name="fetcher" title="Import Colleagues" xmlns:iw="http://www.ibm.com/iWidget">
+    <iw:content>
+        <![CDATA[
+            <div id="fetcher_default_widgetContainer">
+            	 <img src='/profiles/images/progress-anim.gif'>&nbsp;
+            </div>
+            
+            <!-- Main scripts and styles -->
+            <link rel="stylesheet" type="text/css" href="/widgets/fetcher/fetcher.css" />
+            <script type="text/javascript" src="/widgets/encoding.js"></script>
+            <script type="text/javascript" src="/widgets/fetcher/fetcher.js"></script>
+            
+            <!-- Network modules -->
+            <script type="text/javascript" src="/widgets/fetcher/fetcher-beehive.js"></script>
+            <script type="text/javascript" src="/widgets/fetcher/fetcher-fringe.js"></script>
+            <script type="text/javascript" src="/widgets/fetcher/fetcher-sameManager.js"></script>
+            
+            <script type="text/javascript">
+
+                var widgetId = this.iContext.widgetId;
+                
+                // This variable is used to construct URLs for images
+                var fetcherDir = '/widgets/fetcher/';
+                
+                fetchContainer = document.getElementById("fetcher_default_widgetContainer");
+                //fetchContainer.id = widgetId + "_widgetContainer";
+                
+                // This is incorrect. The _fetcher object should be put in a collection
+                // or something so that it can be accessed correctly.
+                _fetcher = new Fetcher("_" + widgetId);
+        			  _fetcher.loadUI(fetchContainer);
+        			  
+            </script>
+		    ]]>
+     </iw:content>
+</iw:iwidget>

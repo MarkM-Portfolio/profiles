@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2007, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="ProfileExtension">
+
+	<typeAlias alias="profileExtension"
+		type="com.ibm.lconn.profiles.data.ProfileExtension" />
+	<typeAlias alias="ProfileRetrievalOptions"
+		type="com.ibm.peoplepages.data.ProfileRetrievalOptions" />
+
+	<resultMap id="ProfileExtensionResult" class="profileExtension">
+		<result property="key" column="PROF_KEY" />
+		<result property="profileType" column="PROF_TYPE" />
+		<result property="extKey" column="PROF_EXT_KEY" />
+		<result property="name" column="PROF_NAME" />
+		<result property="value" column="PROF_VALUE" />
+		<result property="dataType" column="PROF_DATA_TYPE" />
+		<result property="propertyId" column="PROF_PROPERTY_ID" />
+		<result property="recordUpdated" column="PROF_LAST_UPDATE" javaType="date"/>
+		<result property="supportLabel" column="SUPPORT_LABEL" />
+		<result property="tenantKey" column="TENANT_KEY"/>
+	</resultMap>
+	
+	<resultMap id="ProfileExtensionResultNU" class="profileExtension">
+		<result property="key" column="PROF_KEY" />
+		<!-- result property="profileType" column="PROF_TYPE" /-->
+		<result property="extKey" column="PROF_EXT_KEY" />
+		<result property="name" column="PROF_NAME" />
+		<result property="value" column="PROF_VALUE" />
+		<result property="dataType" column="PROF_DATA_TYPE" />
+		<result property="propertyId" column="PROF_PROPERTY_ID" />
+		<result property="supportLabel" column="SUPPORT_LABEL" />
+		<result property="tenantKey" column="TENANT_KEY"/>
+	</resultMap>
+	
+	<resultMap id="ProfileExtensionResultWithExtended" class="profileExtension">
+		<result property="key" column="PROF_KEY" />
+		<result property="profileType" column="PROF_TYPE" />
+		<result property="extKey" column="PROF_EXT_KEY" />
+		<result property="name" column="PROF_NAME" />
+		<result property="value" column="PROF_VALUE" />
+		<result property="extendedValue" column="PROF_VALUE_EXTENDED" typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.util.ExtendedDataValueHelper"/>
+		<result property="dataType" column="PROF_DATA_TYPE" />
+		<result property="propertyId" column="PROF_PROPERTY_ID" />
+		<result property="recordUpdated" column="PROF_LAST_UPDATE" javaType="date"/>
+		<result property="supportLabel" column="SUPPORT_LABEL" />
+		<result property="tenantKey" column="TENANT_KEY"/>
+	</resultMap>
+	
+	<resultMap id="ProfileExtensionResultWithExtendedNU" class="profileExtension">
+		<result property="key" column="PROF_KEY" />
+		<!-- result property="profileType" column="PROF_TYPE" /-->
+		<result property="extKey" column="PROF_EXT_KEY" />
+		<result property="name" column="PROF_NAME" />
+		<result property="value" column="PROF_VALUE" />
+		<result property="extendedValue" column="PROF_VALUE_EXTENDED" typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.util.ExtendedDataValueHelper"/>
+		<result property="dataType" column="PROF_DATA_TYPE" />
+		<result property="propertyId" column="PROF_PROPERTY_ID" />
+		<result property="supportLabel" column="SUPPORT_LABEL" />
+		<result property="tenantKey" column="TENANT_KEY"/>
+	</resultMap>
+	
+	<sql id="sql_SelectProfileExtension">
+		PE.PROF_KEY as PROF_KEY,
+		PE.PROF_EXT_KEY as PROF_EXT_KEY,
+		PE.PROF_NAME as PROF_NAME,
+		PE.PROF_DATA_TYPE as PROF_DATA_TYPE,
+		PE.PROF_PROPERTY_ID as PROF_PROPERTY_ID,
+		PE.PROF_VALUE as PROF_VALUE,
+		PE.SUPPORT_LABEL as SUPPORT_LABEL,
+		PE.TENANT_KEY AS TENANT_KEY
+	</sql>
+	
+	<sql id="sql_SelectProfileExtensionWithExtended">
+		PE.PROF_KEY as PROF_KEY,
+		PE.PROF_EXT_KEY as PROF_EXT_KEY,
+		PE.PROF_NAME as PROF_NAME,
+		PE.PROF_DATA_TYPE as PROF_DATA_TYPE,
+		PE.PROF_PROPERTY_ID as PROF_PROPERTY_ID,
+		PE.PROF_VALUE as PROF_VALUE,
+		PE.PROF_VALUE_EXTENDED as PROF_VALUE_EXTENDED,
+		PE.SUPPORT_LABEL as SUPPORT_LABEL,
+		PE.TENANT_KEY AS TENANT_KEY
+	</sql>
+	
+	<sql id="sql_SelectProfileExtensionRet">
+		E.PROF_KEY as PROF_KEY,
+		E.PROF_TYPE as PROF_TYPE,
+		PE.PROF_EXT_KEY as PROF_EXT_KEY,
+		PE.PROF_NAME as PROF_NAME,
+		PE.PROF_DATA_TYPE as PROF_DATA_TYPE,
+		PE.PROF_PROPERTY_ID as PROF_PROPERTY_ID,
+		PE.PROF_VALUE as PROF_VALUE,
+		PE.SUPPORT_LABEL as SUPPORT_LABEL,
+		PE.TENANT_KEY AS TENANT_KEY
+	</sql>
+	
+	<sql id="sql_SelectProfileExtensionWithExtendedRet">
+		E.PROF_KEY as PROF_KEY,
+		E.PROF_TYPE as PROF_TYPE,
+		PE.PROF_EXT_KEY as PROF_EXT_KEY,
+		PE.PROF_NAME as PROF_NAME,
+		PE.PROF_DATA_TYPE as PROF_DATA_TYPE,
+		PE.PROF_PROPERTY_ID as PROF_PROPERTY_ID,
+		PE.PROF_VALUE as PROF_VALUE,
+		PE.PROF_VALUE_EXTENDED as PROF_VALUE_EXTENDED,
+		PE.SUPPORT_LABEL as SUPPORT_LABEL,
+		PE.TENANT_KEY AS TENANT_KEY
+	</sql>
+
+	<sql id="sql_SelectLastUpdate">
+		E.PROF_LAST_UPDATE as PROF_LAST_UPDATE
+	</sql>
+
+	<sql id="sql_TBL_SelectProfileExtensionsWithExtended">
+		(
+			select
+				<include refid="sql_SelectProfileExtensionWithExtended"/>
+			from
+				EMPINST.PROFILE_EXTENSIONS PE
+			where
+				PE.PROF_PROPERTY_ID IN
+					<iterate open="(" close=")" conjunction="," property="propertyIds">
+						#propertyIds[]#
+					</iterate>
+			<include refid="Tenant.sql_WhereByTenantKeyPE"/>
+		) PE
+	</sql>
+	
+	<sql id="sql_TBL_SelectProfileExtensions">
+		(
+			select
+				<include refid="ProfileExtension.sql_SelectProfileExtension"/>
+			from
+				EMPINST.PROFILE_EXTENSIONS PE
+			where
+				PE.PROF_PROPERTY_ID IN
+					<iterate open="(" close=")" conjunction="," property="propertyIds">
+						#propertyIds[]#
+					</iterate>
+			<include refid="Tenant.sql_WhereByTenantKeyPE"/>
+		) PE
+	</sql>
+	
+	<sql id="sql_TBL_SelectEmployee">
+		(
+			select
+				E.PROF_KEY as PROF_KEY,
+				E.PROF_LAST_UPDATE as PROF_LAST_UPDATE,
+				E.PROF_TYPE as PROF_TYPE
+			from
+				EMPINST.EMPLOYEE E
+			where
+				<isEqual property="lookupType" compareValue="KEY">
+					E.PROF_KEY = #lookupValue#
+				</isEqual>
+				<isEqual property="lookupType" compareValue="EMAIL">
+					E.PROF_MAIL_LOWER = #lookupValue#
+				</isEqual>
+				<isEqual property="lookupType" compareValue="UID">
+					E.PROF_UID_LOWER = #lookupValue#
+				</isEqual>
+				<isEqual property="lookupType" compareValue="GUID">
+					E.PROF_GUID = #lookupValue#
+				</isEqual>
+				<isEqual property="lookupType" compareValue="DN">
+					E.PROF_SOURCE_UID = #lookupValue#
+				</isEqual>
+				<isEqual property="lookupType" compareValue="HASHID">
+					E.PROF_IDHASH = #lookupValue#
+				</isEqual>
+				<include refid="Tenant.sql_WhereByTenantKeyE"/>
+		) E
+	</sql>
+	
+	
+	<select id="SelectProfileExtensions" resultMap="ProfileExtensionResult" parameterClass="java.util.Map">
+		select 
+			<include refid="ProfileExtension.sql_SelectProfileExtensionRet"/>,
+			<include refid="ProfileExtension.sql_SelectLastUpdate"/>
+		from 
+			<include refid="ProfileExtension.sql_TBL_SelectProfileExtensions"/> <!-- has tenantKey constraint -->
+		join
+			<include refid="ProfileExtension.sql_TBL_SelectEmployee"/>
+		on
+			PE.PROF_KEY = E.PROF_KEY
+	</select>
+	
+	<select id="SelectProfileExtensionsWithExtended" resultMap="ProfileExtensionResultWithExtended" parameterClass="java.util.Map">
+		select 
+			<include refid="ProfileExtension.sql_SelectProfileExtensionWithExtendedRet"/>,
+			<include refid="ProfileExtension.sql_SelectLastUpdate"/>
+		from 
+			<include refid="ProfileExtension.sql_TBL_SelectProfileExtensionsWithExtended"/> <!-- has tenantKey constraint -->
+		join
+			<include refid="ProfileExtension.sql_TBL_SelectEmployee"/>
+		on
+			PE.PROF_KEY = E.PROF_KEY
+	</select>
+	
+	<select id="SelectProfileExtension" resultMap="ProfileExtensionResultWithExtended" parameterClass="java.util.Map">
+		select 
+			<include refid="ProfileExtension.sql_SelectProfileExtensionWithExtendedRet"/>,
+			<include refid="ProfileExtension.sql_SelectLastUpdate"/>
+		from 
+			<include refid="ProfileExtension.sql_TBL_SelectProfileExtensionsWithExtended"/> <!-- has tenantKey constraint -->
+		join
+			<include refid="ProfileExtension.sql_TBL_SelectEmployee"/>
+		on
+			PE.PROF_KEY = E.PROF_KEY			
+	</select>
+	
+	<!-- TODO? this query has no join for profile type -->
+	<select id="SelectProfileExtensionsForProfiles" resultMap="ProfileExtensionResultNU" parameterClass="java.util.Map">
+		select
+			<include refid="ProfileExtension.sql_SelectProfileExtension"/>
+		from
+			EMPINST.PROFILE_EXTENSIONS PE
+		where
+			PE.PROF_KEY IN
+				<iterate open="(" close=")" conjunction="," property="keys">
+					#keys[]#
+				</iterate>
+			AND
+			PE.PROF_PROPERTY_ID IN
+				<iterate open="(" close=")" conjunction="," property="propertyIds">
+					#propertyIds[]#
+				</iterate>
+			<include refid="Tenant.sql_WhereByTenantKeyPE"/>
+	</select>
+	
+	<!-- TODO? this query has no join for profile type -->
+	<select id="SelectProfileExtensionsWithExtendedForProfiles" resultMap="ProfileExtensionResultWithExtendedNU" parameterClass="java.util.Map">
+		select
+			<include refid="ProfileExtension.sql_SelectProfileExtensionWithExtended"/>
+		from
+			EMPINST.PROFILE_EXTENSIONS PE
+		where
+			PE.PROF_KEY IN
+				<iterate open="(" close=")" conjunction="," property="keys">
+					#keys[]#
+				</iterate>
+			AND
+			PE.PROF_PROPERTY_ID IN
+				<iterate open="(" close=")" conjunction="," property="propertyIds">
+					#propertyIds[]#
+				</iterate>
+			<include refid="Tenant.sql_WhereByTenantKeyPE"/>
+	</select>
+			
+	<select id="SelectAllProfileExtensionsForProfile" resultMap="ProfileExtensionResultNU" parameterClass="map">
+		select 
+			<include refid="sql_SelectProfileExtensionWithExtended"/>
+		from
+			EMPINST.PROFILE_EXTENSIONS PE
+		where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<update id="UpdateProfileExtension" parameterClass="map">
+		<!--  code should be making sure that both value and extendedValue are non-null -->
+		<!--  TODO? we do not updating SUPPORT_LABEL -->
+		update EMPINST.PROFILE_EXTENSIONS SET
+			<isNotNull property="profextension.value">PROF_VALUE = #profextension.value#</isNotNull>
+			<isNull property="profextension.value">PROF_VALUE = null</isNull>
+			<isNotNull property="profextension.name">,PROF_NAME = #profextension.name#</isNotNull>
+			<isNull property="profextension.name">,PROF_NAME = null</isNull>			
+			<isNotNull property="profextension.extendedValue">,PROF_VALUE_EXTENDED = #profextension.extendedValue#</isNotNull>
+			<isNull property="profextension.extendedValue">,PROF_VALUE_EXTENDED = null</isNull>
+		where
+			PROF_KEY=#profextension.key# AND 
+			PROF_PROPERTY_ID=#profextension.propertyId#
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<insert id="InsertProfileExtension" parameterClass="profileExtension">
+		insert into EMPINST.PROFILE_EXTENSIONS
+		<dynamic prepend="(">
+			<!-- some of these can't be null. -->
+			PROF_KEY,
+			PROF_PROPERTY_ID,
+			<isNotNull property="extKey">PROF_EXT_KEY,</isNotNull>
+			<isNotNull property="name">PROF_NAME,</isNotNull>
+			<isNotNull property="dataType">PROF_DATA_TYPE,</isNotNull>
+			<isNotNull property="value">PROF_VALUE,</isNotNull>
+			<isNotNull property="extendedValue">PROF_VALUE_EXTENDED,</isNotNull>
+			SUPPORT_LABEL,
+			TENANT_KEY
+			)
+		</dynamic>
+		VALUES
+		<dynamic prepend="(">
+			#key#,
+			#propertyId#,
+			<isNotNull property="extKey">#extKey#,</isNotNull>
+			<isNotNull property="name">#name#,</isNotNull>
+			<isNotNull property="dataType">#dataType#,</isNotNull>
+			<isNotNull property="value">#value#,</isNotNull>
+			<isNotNull property="extendedValue">#extendedValue#,</isNotNull>
+			#supportLabel#,
+			#dbTenantKey#
+			)
+		</dynamic>
+	</insert>
+	
+	<delete id="DeleteProfileExtension" parameterClass="map">
+		delete from EMPINST.PROFILE_EXTENSIONS
+		where PROF_KEY = #profextension.key#
+		and PROF_PROPERTY_ID=#profextension.propertyId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+	
+	<delete id="DeleteProfileExtensions" parameterClass="map">
+		delete from EMPINST.PROFILE_EXTENSIONS
+		where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+
+	<select id="countProfilesWithLinks" resultClass="java.lang.Integer" parameterClass="map">
+		SELECT count(*)
+		FROM EMPINST.PROFILE_EXTENSIONS P
+		WHERE P.PROF_PROPERTY_ID = 'profileLinks'
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+
+</sqlMap>

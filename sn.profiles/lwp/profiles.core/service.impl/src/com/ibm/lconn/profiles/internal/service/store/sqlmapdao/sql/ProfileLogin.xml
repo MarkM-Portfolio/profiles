@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Login">
+
+	<typeAlias alias="login" type="com.ibm.lconn.profiles.data.ProfileLogin" />
+	<typeAlias alias="lastLogin" type="com.ibm.lconn.profiles.data.ProfileLastLogin" />
+	<typeAlias alias="profileResult" type="com.ibm.peoplepages.data.Employee" />
+	<typeAlias alias="userState" type="com.ibm.lconn.profiles.internal.data.profile.UserState" />
+	<typeAlias alias="userMode" type="com.ibm.lconn.profiles.internal.data.profile.UserMode" />
+
+	<resultMap id="ProfileLoginRM" class="login">
+		<result property="key" column="L_PROF_KEY" />
+		<result property="login" column="L_PROF_LOGIN" />
+		<result property="tenantKey" column="L_TENANT_KEY" />
+	</resultMap>
+	
+	<resultMap id="LastLoginResult" class="lastLogin">
+		<result property="key" column="PROF_KEY" />
+		<result property="lastLogin" column="PROF_LAST_LOGIN" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+
+<!-- xxxxxx -->
+	<resultMap id="LoginMinimalProfileResult" class="profileResult">
+		<result property="guid" column="E_PROF_GUID" />
+		<result property="uid" column="E_PROF_UID" />
+		<result property="key" column="E_PROF_KEY" />
+		<result property="distinguishedName" column="E_PROF_SOURCE_UID" />
+		<result property="displayName" column="E_PROF_DISPLAY_NAME" />
+		<result property="email" column="E_PROF_MAIL" />
+		<result property="lastUpdate" column="E_PROF_LAST_UPDATE" javaType="java.sql.Timestamp" />
+		<result property="managerUid" column="E_PROF_MANAGER_UID" />
+		<result property="givenName" column="E_PROF_GIVEN_NAME" />
+		<result property="surname" column="E_PROF_SURNAME" />
+		<result property="loginId" column="E_PROF_LOGIN" />
+		<result property="profileType" column="E_PROF_TYPE" />
+		<result property="sourceUrl" column="E_PROF_SOURCE_URL" />
+		<result property="tenantKey" column="E_TENANT_KEY" />
+		<result property="homeTenantKey" column="E_H_TENANT_KEY" />
+		<result property="state" column="E_PROF_STATE" javaType="userState"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserStateTypeHandler" />
+		<result property="mode" column="E_PROF_MODE" javaType="userMode"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserModeHandler" />
+	</resultMap>
+
+	<!-- shouldn't this be defined in Profile.xml? -->
+	<sql id="sql_MinimalResultSelect">
+		E.PROF_GUID AS E_PROF_GUID,
+		E.PROF_UID AS E_PROF_UID,
+		E.PROF_KEY AS E_PROF_KEY,
+		E.PROF_SOURCE_UID AS E_PROF_SOURCE_UID,
+		E.PROF_DISPLAY_NAME AS E_PROF_DISPLAY_NAME,
+		E.PROF_MAIL AS E_PROF_MAIL,
+		E.PROF_LAST_UPDATE AS E_PROF_LAST_UPDATE,
+		E.PROF_MANAGER_UID AS E_PROF_MANAGER_UID,
+		E.PROF_GIVEN_NAME AS E_PROF_GIVEN_NAME,
+		E.PROF_SURNAME AS E_PROF_SURNAME,
+		E.PROF_LOGIN AS E_PROF_LOGIN,
+		E.PROF_TYPE AS E_PROF_TYPE,
+		E.PROF_SOURCE_URL AS E_PROF_SOURCE_URL,
+		E.TENANT_KEY AS E_TENANT_KEY,
+		E.H_TENANT_KEY AS E_H_TENANT_KEY,
+		E.PROF_STATE AS E_PROF_STATE,
+		E.PROF_MODE as E_PROF_MODE
+	</sql>
+
+	<sql id="sql_SelectProfileLoginWithKey">
+		L.PROF_KEY as L_PROF_KEY,
+		L.PROF_LOGIN as L_PROF_LOGIN,
+		L.TENANT_KEY as L_TENANT_KEY
+	</sql>
+	
+	<select id="getLogins" resultClass="string" parameterClass="map">
+		select
+			L.PROF_LOGIN
+		from
+			EMPINST.PROFILE_LOGIN L
+		where
+			L.PROF_KEY = #key#
+			<include refid="Tenant.sql_WhereByTenantKeyL"/>
+	</select>
+
+	<select id="getLoginsForKeys" resultMap="ProfileLoginRM" parameterClass="map">
+		select
+			<include refid="Login.sql_SelectProfileLoginWithKey"/>
+		from
+			EMPINST.PROFILE_LOGIN L
+		where
+			L.PROF_KEY in <iterate property="keyList" open="(" close=")" conjunction=",">#keyList[]#</iterate>
+			<include refid="Tenant.sql_WhereByTenantKeyL"/>
+	</select>
+	
+	<delete id="removeLogins" parameterClass="map">
+		delete from 
+			EMPINST.PROFILE_LOGIN
+		where
+			PROF_KEY = #key#
+			and	PROF_LOGIN in <iterate property="logins" open="(" close=")" conjunction=",">#logins[]#</iterate>
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+	
+	<insert id="createLogin" parameterClass="login">
+		insert into
+			EMPINST.PROFILE_LOGIN (PROF_KEY, PROF_LOGIN, TENANT_KEY)
+		SELECT #key#, 
+			#login#,
+			TENANT_KEY FROM EMPINST.EMPLOYEE WHERE PROF_KEY = #key#
+	</insert>
+	
+	<sql id="sql_WhereForLogins">
+		E.PROF_KEY in 
+		(<isEmpty property="loginAttr">
+			select 
+				L.PROF_KEY
+			from
+				EMPINST.PROFILE_LOGIN L
+			where
+				L.PROF_LOGIN = #login#
+				<include refid="Tenant.sql_WhereByTenantKeyL"/>
+		 </isEmpty>
+		 <isNotEmpty property="loginAttr">
+			select
+				L.PROF_KEY
+			from
+				EMPINST.EMPLOYEE  L
+			where
+				<isEqual property="loginAttr" compareValue="uid">
+					L.PROF_UID_LOWER = #login#
+				</isEqual>
+				<isEqual property="loginAttr" compareValue="email">
+					L.PROF_MAIL_LOWER = #login#
+				</isEqual>
+				<isEqual property="loginAttr" compareValue="loginId">
+					L.PROF_LOGIN_LOWER = #login#
+				</isEqual>
+				<include refid="Tenant.sql_WhereByTenantKeyL"/>
+		  </isNotEmpty>)
+	</sql>
+		
+	<select id="getProfileByLoginMinimal" resultMap="LoginMinimalProfileResult" parameterClass="map">
+		select
+			<include refid="Login.sql_MinimalResultSelect"/>
+		from 
+			EMPINST.EMPLOYEE E	
+		where
+			<include refid="Login.sql_WhereForLogins"/>
+			<include refid="Tenant.sql_WhereByTenantKeyE"/>
+	</select>
+
+	<insert id="insertLastLogin" parameterClass="java.util.Map">
+		insert into EMPINST.PROFILE_LAST_LOGIN
+		(PROF_KEY, PROF_LAST_LOGIN, TENANT_KEY)
+		values
+		(#key#, #lastLogin#, #dbTenantKey#)
+	</insert>
+
+	<update id="setLastLogin" parameterClass="map">
+		update EMPINST.PROFILE_LAST_LOGIN SET
+  			PROF_LAST_LOGIN=#lastLogin#
+		WHERE
+			PROF_KEY=#key#
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<select id="getLastLogin" resultMap="LastLoginResult" parameterClass="map">
+		select
+			L.PROF_KEY, L.PROF_LAST_LOGIN, L.TENANT_KEY
+		from
+			EMPINST.PROFILE_LAST_LOGIN L
+		where
+			L.PROF_KEY = #key#
+			<include refid="Tenant.sql_WhereByTenantKeyL"/>
+	</select>
+	
+	<delete id="deleteLastLogin" parameterClass="map">
+		delete from
+			EMPINST.PROFILE_LAST_LOGIN
+		where
+			PROF_KEY = #key#
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+	
+	<select id="countLastLogin" resultClass="java.lang.Integer" parameterClass="map">
+		SELECT COUNT(*) AS total 
+		FROM EMPINST.PROFILE_LAST_LOGIN L
+		WHERE L.PROF_LAST_LOGIN > #since#
+		<include refid="Tenant.sql_WhereByTenantKeyL"/>
+	</select>
+	
+	<!-- This is currently in place for the Cloud and feature parity with the guest model.
+	     This may be dropped for visitor model. -->
+	<update id="updateTenantKeyLastLogin" parameterClass="java.util.Map">
+		update EMPINST.PROFILE_LAST_LOGIN set TENANT_KEY = #newTenantKey# where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<!-- This is currently in place for the Cloud and feature parity with the guest model.
+	     This should(?) be dropped for visitor model. -->
+	<update id="updateTenantKeyLogin" parameterClass="java.util.Map">
+		update EMPINST.PROFILE_LOGIN set TENANT_KEY = #newTenantKey# where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update> 
+</sqlMap>

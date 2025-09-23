@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Search">
+
+	<cacheModel type="LRU" id="DBSearchCache" readOnly="true" serialize="false">
+		<flushInterval minutes="${Profiles_DBSearchCache_Expiration}"/>
+		<property name="size" value="${Profiles_DBSearchCache_Size}" />
+	</cacheModel>
+
+	<sql id="sql_name_filterUsrState">
+		<isEqual property="activeUsersOnly" compareValue="true">
+        	AND PROF_USRSTATE = 0
+        </isEqual>
+	</sql>
+	
+	<sql id="sql_employee_filterState">
+		<isEqual property="activeUsersOnly" compareValue="true">
+        	AND PROF_STATE = 0
+        </isEqual>
+	</sql>
+	
+	<sql id="sql_employee_filterMode">
+		<isNotEmpty property="mode">
+			AND PROF_MODE = #mode#
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="sql_name_filterMode">
+		<isNotEmpty property="mode">
+			AND PROF_MODE = #mode#
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="like_escape">
+		<isNotEqual property="dbType" compareValue="MSSQL">
+		    escape '*'
+		</isNotEqual>
+		<isEqual property="dbType" compareValue="MSSQL">
+		    {escape '*'}
+		</isEqual>
+	</sql>
+
+	<select id="findProfile" resultClass="string" cacheModel="Search.DBSearchCache">
+ 		with key_list as
+		(
+		<dynamic prepend="SELECT PROF_KEY from EMPINST.EMPLOYEE WHERE">
+			<isNotEmpty prepend="AND" property="tagList">
+				(EMPINST.EMPLOYEE.PROF_KEY IN (  
+				<iterate property="tagList" conjunction="INTERSECT">
+					SELECT PROF_TARGET_KEY FROM EMPINST.PEOPLE_TAG
+					WHERE PROF_TAG LIKE #tagList[]# <include refid="like_escape"/>
+					<include refid="Tenant.sql_WhereByTenantKey"/>
+				</iterate>
+				))
+				<!--  more efficient to have user mode on the tag table? -->
+				<include refid="Search.sql_employee_filterState"/>
+				<include refid="Search.sql_employee_filterMode"/>
+			</isNotEmpty>
+        </dynamic>
+        <dynamic>
+			<isNotEmpty property="nameList">
+			    <isEqual property="searchOnMoreThanName" compareValue="true">AND PROF_KEY IN </isEqual>
+				(
+				<isNotEmpty property="lastnameList">
+					<isNotEmpty property="firstnameList">(select PROF_KEY from <!-- Parens around INTERSECT --> </isNotEmpty>
+					(SELECT PROF_KEY FROM EMPINST.SURNAME WHERE
+					 <iterate property="lastnameList" conjunction="OR" open="(" close=")">
+						EMPINST.SURNAME.PROF_SURNAME LIKE #lastnameList[]# <include refid="like_escape"/>
+					 </iterate>
+					 	<include refid="Search.sql_name_filterUsrState"/>
+					 	<include refid="Search.sql_name_filterMode"/>
+					 	<include refid="Tenant.sql_WhereByTenantKey"/> )
+					 <isNotEmpty property="firstnameList">SN where PROF_KEY in </isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="firstnameList">
+					(SELECT PROF_KEY FROM EMPINST.GIVEN_NAME WHERE
+					 <iterate property="firstnameList" conjunction="OR" open="(" close=")">
+						EMPINST.GIVEN_NAME.PROF_GIVENNAME LIKE #firstnameList[]# <include refid="like_escape"/>
+					 </iterate>
+					 	<include refid="Search.sql_name_filterUsrState"/>
+					 	<include refid="Search.sql_name_filterMode"/>
+					 	<include refid="Tenant.sql_WhereByTenantKey"/> )
+					 <isNotEmpty property="lastnameList">) <!-- Parens around INTERSECT --> </isNotEmpty>
+				</isNotEmpty>
+				<!-- 
+					Support for FL && LF in name search
+				  -->
+				<isEqual property="nameOrdering" compareValue="false">
+					<isEqual property="hasNameList" compareValue="true">UNION ALL</isEqual>
+					<isNotEmpty property="firstnameList">
+						<isNotEmpty property="lastnameList">(select PROF_KEY from <!-- Parens around INTERSECT --> </isNotEmpty>
+						(SELECT PROF_KEY FROM EMPINST.SURNAME WHERE
+						 <iterate property="firstnameList" conjunction="OR" open="(" close=")">
+							EMPINST.SURNAME.PROF_SURNAME LIKE #firstnameList[]# <include refid="like_escape"/>
+						 </iterate>
+						 	<include refid="Search.sql_name_filterUsrState"/>
+						 	<include refid="Search.sql_name_filterMode"/>
+						 	<include refid="Tenant.sql_WhereByTenantKey"/>)
+					</isNotEmpty>
+					<isNotEmpty property="lastnameList">
+						SN where PROF_KEY in 
+						(SELECT PROF_KEY FROM EMPINST.GIVEN_NAME WHERE
+						 <iterate property="lastnameList" conjunction="OR" open="(" close=")">
+							EMPINST.GIVEN_NAME.PROF_GIVENNAME LIKE #lastnameList[]# <include refid="like_escape"/>
+						 </iterate>
+						  <include refid="Search.sql_name_filterUsrState"/>
+						  <include refid="Search.sql_name_filterMode"/>
+						 	<include refid="Tenant.sql_WhereByTenantKey"/>)
+						 <isNotEmpty property="firstnameList">) <!-- Parens around INTERSECT --> </isNotEmpty>
+					</isNotEmpty>				
+				</isEqual>	
+				<isNotEmpty property="lastName">
+					<isEqual property="hasNameList" compareValue="true">UNION ALL</isEqual>
+					(SELECT PROF_KEY FROM EMPINST.SURNAME
+					 WHERE EMPINST.SURNAME.PROF_SURNAME LIKE #lastName# <include refid="like_escape"/>
+					 <include refid="Search.sql_name_filterUsrState"/>
+					 <include refid="Search.sql_name_filterMode"/>
+					 <include refid="Tenant.sql_WhereByTenantKey"/>)
+				</isNotEmpty>
+				<isNotEmpty property="firstName">
+					<isEqual property="hasNameList" compareValue="true">UNION ALL</isEqual>
+					<isEqual property="hasNameList" compareValue="false"><isNotEmpty property="lastName">UNION ALL</isNotEmpty></isEqual>
+					(SELECT PROF_KEY FROM EMPINST.GIVEN_NAME WHERE EMPINST.GIVEN_NAME.PROF_GIVENNAME LIKE #firstName# <include refid="like_escape"/>
+					<include refid="Search.sql_name_filterUsrState"/>
+					<include refid="Search.sql_name_filterMode"/>
+					<include refid="Tenant.sql_WhereByTenantKey"/>)
+				</isNotEmpty>
+				)
+			</isNotEmpty>
+        </dynamic>
+        		) <include refid="snaxUtil.sql_limitStart_selectDistinct"/>
+        		  key_list.PROF_KEY from key_list
+        		  
+        		  <include refid="snaxUtil.sql_limitEnd"/>
+	</select>
+</sqlMap>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2011, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<config xmlns="http://www.ibm.com/profiles-types" xmlns:pt="http://www.ibm.com/profiles-types"
+	xmlns:tns="http://www.ibm.com/profiles-config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	id="profiles-types" xsi:schemaLocation="http://www.ibm.com/profiles-types profiles-types.xsd">
+	<type>
+		<parentId>snx:person</parentId>
+		<id>default</id>
+		<property>
+			<ref>jobResp</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>secretaryUid</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>bldgId</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>floor</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>officeName</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>telephoneNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>ipTelephoneNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>mobileNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>pagerNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>faxNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>groupwareEmail</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>blogUrl</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>description</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<richText>true</richText>
+		</property>
+		<property>
+			<ref>experience</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<richText>true</richText>
+		</property>
+		<property>
+			<ref>profileLinks</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>timezone</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>email</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>displayName</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+	</type>
+	<type>
+		<parentId>snx:person</parentId>
+		<id>surnameNotIndexed</id>
+		<!--  override surname to not be indexed -->
+		<property>
+			<ref>surname</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<fullTextIndexed>false</fullTextIndexed>
+		</property>
+	</type>	
+</config>

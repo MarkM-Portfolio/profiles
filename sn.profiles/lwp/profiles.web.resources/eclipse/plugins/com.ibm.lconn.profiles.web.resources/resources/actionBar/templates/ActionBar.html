@@ -1,0 +1,21 @@
+<span style="overflow:visible; height:auto;">
+	<span dojoAttachPoint="stylesNode" class="${hiddenClassName}">
+		<style type="text/css">
+			.AEMenuItemIcon_${id} {
+				width: 13px;
+				height: 13px;
+			}
+		</style>
+	</span>
+	<span dojoAttachPoint="buttonsNode" class="${hiddenClassName}"></span>
+	<button dojoAttachPoint="singleButtonNode" class="lotusBtn ${hiddenClassName}" title="">
+		<img dojoAttachPoint="singleButtonImageNode" alt="" class="AEMenuItemIcon_${id} ${hiddenClassName}" src="${blankGif}" />
+		<span dojoAttachPoint="singleButtonTextNode">&nbsp;</span>
+	</button>	
+	<button dojoAttachPoint="moreActionsNode" dojoAttachEvent="onclick: _showMoreActions" class="lotusBtn ${hiddenClassName}" title="${strings.personCardMoreActions}" aria-haspopup="true" id="moreActionsBtn_${id}">
+		<span>${strings.personCardMoreActions}<span> 
+		<img alt="" class="lotusArrow lotusDropDownSprite" src="${blankGif}" /><span class="lotusAltText">&#9660;</span>
+	</button>	
+	<div dojoAttachPoint="menuNode" class="${hiddenClassName}" id="AEMenu_${id}"></div>
+</span>
+

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2015, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<config id="profiles-policy"
+		xmlns="http://www.ibm.com/profiles-policy" 
+		xmlns:tns="http://www.ibm.com/profiles-policy" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.ibm.com/profiles-policy internal-profiles-policy.xsd">
+<!--
+	This is the internal policy features XML configuration file used for Multi-Tenant
+	environments.  This configuration will be loaded into Profiles as not-modifiable.
+	It is imperative that this be a complete list of all Out-Of-The-Box Policy 
+	configurations as this is the baseline against which the customer-loaded 
+	profiles-policy.xml file will be loaded from the LCC directory.  
+	
+	If a permission is not explicitly defined in here, it can be overridden from 
+	the profiles-policy.xml	in the LCC directory.  So edit/remove stuff from here
+	with care.
+-->
+	<features>
+		<feature name="profile.board">
+			<profileType enabled="true">
+				<acl name="profile.board.write.message" scope="person_and_self" />
+				<acl name="profile.board.write.comment" scope="person_and_self" />
+				<acl name="profile.board.recommend.message" scope="person_and_self" />
+			</profileType>
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.status">
+			<profileType enabled="true">
+				<acl name="profile.status.view" scope="reader" />
+				<acl name="profile.status.update" scope="self" />
+			</profileType>
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.search">
+			<profileType enabled="true">
+				<acl name="profile.search.view" scope="reader" />
+				<acl name="profile.search.guests.view" scope="reader" />
+				<acl name="profile.search.organizations.view" scope="reader" />
+				<acl name="profile.search.contacts.view" scope="reader" />
+			</profileType>
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false">
+				<!-- acl name="profile.search.guests.view" scope="none" /-->
+				<!-- acl name="profile.search.organizations.view" scope="none" /-->
+				<!-- acl name="profile.search.contacts.view" scope="none" /-->
+			</profileType>
+		</feature>
+		<feature name="profile.sand">
+			<profileType enabled="true">
+				<acl name="profile.sand.dyk.view" scope="reader" />
+				<acl name="profile.sand.recommend.view" scope="reader" />
+				<acl name="profile.sand.inCommon.view" scope="reader" />
+				<acl name="profile.sand.socialPath.view" scope="reader" />
+			</profileType>		
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.activitystream">
+			<profileType enabled="true">
+				<acl name="profile.activitystream.targetted.event" scope="person_and_self" />
+			</profileType>		
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.connection">
+			<profileType enabled="true">
+				<acl name="profile.connection.view" scope="reader" />
+				<acl name="profile.connection.message.view" scope="self" />
+			</profileType>
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.colleague">
+			<profileType enabled="true">
+				<acl name="profile.colleague.connect" scope="person_not_self" />
+			</profileType>
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.following">
+			<profileType enabled="true">
+				<acl name="profile.following.view" scope="reader" />
+				<acl name="profile.following.add" scope="person_not_self" />
+			</profileType>
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.peopleManaged">
+			<profileType enabled="true" />	
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.reportTo">
+			<profileType enabled="true">
+				<acl name="profile.reportTo.view" scope="reader" />
+			</profileType>
+			<profileType actorMode="external" mode="external" enabled="false" />
+			<profileType actorMode="external" mode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.typeAhead">
+			<profileType enabled="true">
+				<acl name="profile.typeAhead.view" scope="reader" />
+			</profileType>		
+			<profileType actorMode="external" enabled="false" />
+			<profileType mode="external" enabled="false" />
+		</feature>
+		<feature name="profile.tag">
+			<profileType enabled="true">
+				<acl name="profile.tag.view" scope="reader" />
+				<acl name="profile.tag.add" scope="person_and_self" />
+			</profileType>		
+			<profileType actorMode="external" mode="external" enabled="true">
+				<acl name="profile.tag.add" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.profile">
+			<profileType enabled="true">
+				<acl name="profile.profile.view" scope="reader" />
+				<acl name="profile.profile.edit" scope="self" />
+			</profileType>
+			<profileType actorMode="external" enabled="true">
+				<acl name="profile.profile.view" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.photo">
+			<profileType enabled="true">
+				<acl name="profile.photo.view" scope="reader" />
+				<acl name="profile.photo.update" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.pronunciation">
+			<profileType enabled="true">
+				<acl name="profile.pronunciation.view" scope="reader" />
+				<acl name="profile.pronunciation.update" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.extension">
+			<profileType enabled="true">
+				<acl name="profile.extension.view" scope="reader" />
+				<acl name="profile.extension.edit" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.link">
+			<profileType enabled="true">
+				<acl name="profile.link.update" scope="self" />
+			</profileType>
+		</feature>
+	</features>
+	
+	<!-- freemium -->
+	<features>
+		<feature name="profile.board">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.status">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.search">
+			<profileType identity="freemium" actorIdentity="freemium" mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.search.view" scope="reader" />
+				<!-- acl name="profile.search.guests.view" scope="none" /-->
+				<!-- acl name="profile.search.organizations.view" scope="none" /-->
+				<!-- acl name="profile.search.contacts.view" scope="none" /-->
+			</profileType>
+		</feature>
+		<feature name="profile.sand">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.activitystream">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.connection">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.colleague">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.following">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.peopleManaged">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.reportTo">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.typeAhead">		
+			<profileType identity="freemium" actorIdentity="freemium" mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.typeAhead.view" scope="reader" />
+			</profileType>
+		</feature>
+		<feature name="profile.tag">
+			<profileType identity="freemium" actorIdentity="freemium" enabled="false" />
+		</feature>
+		<feature name="profile.profile">
+			<profileType identity="freemium" actorIdentity="freemium" mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.profile.view" scope="reader" />
+				<acl name="profile.profile.edit" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.photo">		
+			<profileType identity="freemium" actorIdentity="freemium" mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.photo.view" scope="reader" />
+				<acl name="profile.photo.update" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.pronunciation">		
+			<profileType identity="freemium" actorIdentity="freemium" mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.pronunciation.view" scope="reader" />
+				<acl name="profile.pronunciation.update" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.extension">
+			<profileType identity="freemium" actorIdentity="freemium" mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.extension.view" scope="reader" />
+				<acl name="profile.extension.edit" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.link">
+			<profileType identity="freemium" actorIdentity="freemium" mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.link.update" scope="self" />
+			</profileType>
+		</feature>
+	</features>
+	
+	<!-- nullorg (cloud users with the 'null' home org) -->
+	<features orgId="0">
+		<feature name="profile.board">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.status">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.search">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.sand">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.activitystream">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.connection">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.colleague">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.following">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.peopleManaged">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.reportTo">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.typeAhead">
+			<profileType mode="internal" actorMode="internal" enabled="false" />
+		</feature>
+		<feature name="profile.tag">
+			<profileType mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.tag.view" scope="self" />
+				<acl name="profile.tag.add" scope="self" />
+			</profileType>		
+		</feature>
+		<feature name="profile.profile">
+			<profileType mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.profile.view" scope="self" />
+				<acl name="profile.profile.edit" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.photo">
+			<profileType mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.photo.view" scope="reader" />
+				<acl name="profile.photo.update" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.pronunciation">
+			<profileType mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.pronunciation.view" scope="self" />
+				<acl name="profile.pronunciation.update" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.extension">
+			<profileType mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.extension.view" scope="self" />
+				<acl name="profile.extension.edit" scope="self" />
+			</profileType>
+		</feature>
+		<feature name="profile.link">
+			<profileType mode="internal" actorMode="internal" enabled="true">
+				<acl name="profile.link.update" scope="self" />
+			</profileType>
+		</feature>
+	</features>
+</config>

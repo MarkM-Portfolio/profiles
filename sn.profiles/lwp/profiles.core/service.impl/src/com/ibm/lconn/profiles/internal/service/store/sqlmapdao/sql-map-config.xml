@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMapConfig>
+
+	<settings cacheModelsEnabled="true" useStatementNamespaces="true" maxRequests="${maxRequests}" maxSessions="${maxSessions}" maxTransactions="${maxTransactions}" statementCachingEnabled="false"/>
+
+	<!--  ordering matters. refids that are referenced in other files must appear prior to the
+	      referencing code. most files have a dependency on Tenant.xml. -->
+	
+	<sqlMap resource="com/ibm/lconn/core/appext/util/ibatis/snax-utils.xml"/>
+	
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Tenant.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/MVRelated.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Profile.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/ProfileDraft.xml" />
+	<!-- obsolete sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/ProfileIndex.xml"/-->
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/ProfileExtensions.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/ProfileExtensionsDraft.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/ProfileTag.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/TDIProfile.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Search.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/ProfileConstants.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Photo.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Pronunciation.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Surname.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/GivenName.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/EventLog.xml" />	
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/OrgStructure.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/ProfileLogin.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/UserPlatformEvents.xml" /> 
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Connection.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Role.xml" />
+	
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/SchemaVersion.xml" /> 
+		
+	<!-- Codes related sqlmaps -->
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Country.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Department.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/EmployeeType.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/Organization.xml" />
+	<sqlMap resource="com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/WorkLocation.xml" />
+
+</sqlMapConfig>

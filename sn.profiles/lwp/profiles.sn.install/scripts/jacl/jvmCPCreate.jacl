@@ -1,0 +1,79 @@
+# ***************************************************************** 
+#                                                                   
+# IBM Confidential                                                  
+#                                                                   
+# OCO Source Materials                                              
+#                                                                   
+# Copyright IBM Corp. 2008, 2010                                    
+#                                                                   
+# The source code for this program is not published or otherwise    
+# divested of its trade secrets, irrespective of what has been      
+# deposited with the U.S. Copyright Office.                         
+#                                                                   
+# ***************************************************************** 
+
+# 5724-S68                                                          
+set FileName "jvmCPCreate.jacl"
+
+set FlagDebug "True"
+
+#----------------------------------------------------------------------
+# Main
+#----------------------------------------------------------------------
+if {$FlagDebug == "True"} {
+    puts stdout " "
+    puts stdout "--------------------------------"
+    puts stdout "---- Start $FileName"
+    puts stdout "--------------------------------"
+}
+
+set CellName         "@CellName@"
+set NodeName	     "@NodeName@"
+set ServerName       "@ServerName@"
+set CustPropName     "@CustPropName@"
+set CustPropValue    "@CustPropValue@"
+
+# Get Server ID
+set ServerId [$AdminConfig getid /Cell:$CellName/Node:$NodeName/Server:$ServerName/]
+if {$ServerId == ""} {
+    puts stdout "SEVERE $FileName Config.object.notexist.failure /Node:$NodeName/Server:$ServerName/"
+    puts stdout "SEVERE $FileName Config.modify.as.attributes.failure /Node:$NodeName/Server:$ServerName/"
+    exit 0
+}
+
+set JavaVirtualMachineId [$AdminConfig getid /Node:$NodeName/Server:$ServerName/JavaProcessDef:/JavaVirtualMachine:/]
+
+if {$JavaVirtualMachineId == ""} {
+    puts stdout "SEVERE $FileName Config.object.exist.failure JVM: /Node:$NodeName/Server:$ServerName/JavaProcessDef:/JavaVirtualMachine:/"
+    puts stdout "SEVERE $FileName Config.modify.as.attributes.failure /Node:$NodeName/Server:$ServerName/"
+    exit 0
+}
+if {[llength $JavaVirtualMachineId] != 1} {
+    puts stdout "SEVERE $FileName Config.object.exist.failure More than one JVM: /Node:$NodeName/Server:$ServerName/JavaProcessDef:/JavaVirtualMachine:/"
+    puts stdout "SEVERE $FileName Config.modify.as.attributes.failure /Node:$NodeName/Server:$ServerName/"
+    exit 0
+}
+set JVMId [lindex $JavaVirtualMachineId 0]
+
+#set the JVM Custom Property
+
+set attrs [subst {{name {$CustPropName}} {value {$CustPropValue}} {required {false}}}]
+
+set JVMCustomProp [subst {{name {$CustPropName}} {value {$CustPropValue}} {required {false}}}]
+#set PropName [lindex [lindex $JVMCustomProp 0] 1]
+set PropId [$AdminConfig getid /Property:$CustPropName/]
+if {$PropId != "" } {
+   puts stdout "INFO $FileName Config.object JVM Custom Property ${CustPropName} is already exists, no action taken"
+} else {
+   $AdminConfig create Property $JVMId $JVMCustomProp
+   $AdminConfig save
+   puts stdout "INFO $FileName Config.object.create.success JVM Custom Property ${CustPropName}"
+}
+
+if {$FlagDebug == "True"} {
+    puts stdout " "
+    puts stdout "--------------------------------"
+    puts stdout "---- End $FileName"
+    puts stdout "--------------------------------"
+}
+

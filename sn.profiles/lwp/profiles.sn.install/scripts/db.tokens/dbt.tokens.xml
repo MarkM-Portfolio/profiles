@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<dbTransfer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<database name="@SOURCE_DB_NAME@" role="source" driver="@SOURCE_DB_DRIVER@" url="@SOURCE_DB_URL@" userId="@SOURCE_DB_USER@" schema="@SOURCE_DB_SCHEMA@" dbType="@SOURCE_DB_TYPE@"/>
+	<database name="@TARGET_DB_NAME@" role="target" driver="@TARGET_DB_DRIVER@" url="@TARGET_DB_URL@" userId="@TARGET_DB_USER@" schema="@TARGET_DB_SCHEMA@" dbType="@TARGET_DB_TYPE@"/>
+</dbTransfer>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC 
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!--
+	@author ahernm, testrada
+-->
+
+
+<struts-config>
+
+	<form-beans />
+	<global-exceptions />
+	<global-forwards />
+
+	<action-mappings>
+		<action path="/ajax/searchProfiles" type="com.ibm.peoplepages.webui.actions.AuthenticatedUserAction">
+			<forward name="success" path="scene2.search_profiles_view"/>
+		</action>
+		<action path="/ajax/invitationAccess" type="com.ibm.peoplepages.webui.actions.ProfileViewAction">
+       	 	<forward name="profileView" path="/WEB-INF/jsps/ajax/invitationStatus.jsp" />
+	    </action>	
+		<action path="/ajax/businessCard" type="com.ibm.peoplepages.webui.actions.ProfileViewAction">
+       	 	<forward name="profileView" path="/WEB-INF/jsps/ajax/businessCard.jsp" />
+       	 	<forward name="uiUserNotFound" path="/WEB-INF/jsps/ajax/invalidBusinessCard.jsp" />
+	    </action>	
+	</action-mappings>
+</struts-config>

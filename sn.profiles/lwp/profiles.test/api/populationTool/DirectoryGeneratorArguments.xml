@@ -1,0 +1,125 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2012                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- Input File for File Registry Generation Tool -->
+<input>
+	<!-- number of tenants to generate -->
+	<property key="numTenants" value="2" />
+	<!-- minimum number of people per tenant -->
+	<property key="minPersonAccountPerTenant" value="1" />
+	<!-- maximum number of people per tenant -->
+	<property key="maxPersonAccountPerTenant" value="10" />
+	<!-- the prefix for orgAccount objects o value (i.e. o=org<count>) -->
+	<property key="org-oPrefix" value="org" />
+	<!-- the prefix for orgAccount objects cn value (i.e. cn=Organization<count>) -->
+	<property key="org-cnPrefix" value="Organization" />
+	<!-- the URI template for organizational url segment - replaces {tenant} -->
+	<property key="org-url" value="{tenant}.host.com" />
+	<!-- Base64 encoding: SHA-1 of "password" -->
+	<property key="password"
+		value="U0hBLTE6am8wY3l5Y2ozbXJ5OldDczBJamF2dThxZkdRNy81b3RVdmRvSHlDND0NCg==" />
+	<!-- the system admin account -->
+	<sysAdmin uid="wasadmin" cn="wasadmin" sn="wasadmin" />
+	<!-- the set of users we should generate personAccount objects -->
+	<personAccountPool>
+		<personAccount uid="asingh" cn="Allie Singh" sn="Singh" />
+		<personAccount uid="aalain" cn="Amadou Alain" sn="Alain" />
+		<personAccount uid="ablanks" cn="Amy Blanks" sn="Blanks" />
+		<personAccount uid="aberzat" cn="Andreas Berzat" sn="Berzat" />
+		<personAccount uid="abauer" cn="Anna Bauer" sn="Bauer" />
+		<personAccount uid="bheinz" cn="Betty Heinz" sn="Heinz" />
+		<personAccount uid="bzechman" cn="Betty Zechman" sn="Zechman" />
+		<personAccount uid="bjordan" cn="Bill Jordan" sn="Jordan" />
+		<personAccount uid="branney" cn="Bill Ranney" sn="Ranney" />
+		<personAccount uid="bgossens" cn="Boyd Gossens" sn="Gossens" />
+		<personAccount uid="cgarfield" cn="Caitlin Garfield" sn="Garfield" />
+		<personAccount uid="cbounar" cn="Charles Bounar" sn="Bounar" />
+		<personAccount uid="cmilan" cn="Christina Milan" sn="Milan" />
+		<personAccount uid="dmisawa" cn="Dan Misawa" sn="Misawa" />
+		<personAccount uid="dmishkey" cn="Dan Mishkey" sn="Mishkey" />
+		<personAccount uid="dmissille" cn="Daniel Missille" sn="Missille" />
+		<personAccount uid="dmaroni" cn="Dina Maroni" sn="Maroni" />
+		<personAccount uid="dyannatos" cn="Dmitri Yannatos" sn="Yannatos" />
+		<personAccount uid="eblanks" cn="Ed Blanks" sn="Blanks" />
+		<personAccount uid="eelamon" cn="Ed El-Amon" sn="El-Amon" />
+		<personAccount uid="fbrion" cn="Fernando Brion" sn="Brion" />
+		<personAccount uid="graynes" cn="Gardner Raynes" sn="Raynes" />
+		<personAccount uid="gcloud" cn="Glenn Cloud" sn="Cloud" />
+		<personAccount uid="hgreene" cn="Harry Greene" sn="Greene" />
+		<personAccount uid="hreeds" cn="Heather Reeds" sn="Reeds" />
+		<personAccount uid="hmuzakis" cn="Helena Muzakis" sn="Muzakis" />
+		<personAccount uid="hmedway" cn="Herb Medway" sn="Medway" />
+		<personAccount uid="jashaj" cn="Jasmine Haj" sn="Haj" />
+		<personAccount uid="jlendler" cn="Jim Lendler" sn="Lendler" />
+		<personAccount uid="jodyliu" cn="Jody Liu" sn="Liu" />
+		<personAccount uid="jsanchez" cn="Juan Sanchez" sn="Sanchez" />
+		<personAccount uid="khardart" cn="Kelly Hardart" sn="Hardart" />
+		<personAccount uid="larmoriarty" cn="Larry Moriarty" sn="Moriarty" />
+		<personAccount uid="lklein" cn="Laura Klein" sn="Klein" />
+		<personAccount uid="lfedynsky" cn="Leo Fedynsky" sn="Fedynsky" />
+		<personAccount uid="ltruoc" cn="Lin Truoc" sn="Truoc" />
+		<personAccount uid="lingshin" cn="Ling Shin" sn="Shin" />
+		<personAccount uid="lstarky" cn="Lisa Starky" sn="Starky" />
+		<personAccount uid="lschonfeld" cn="Liz Schonfeld" sn="Schonfeld" />
+		<personAccount uid="lfitzgerald" cn="Louise Fitzgerald"
+			sn="Fitzgerald" />
+		<personAccount uid="lgeiger" cn="Lukas Geiger" sn="Geiger" />
+		<personAccount uid="marmond" cn="Madison Armond" sn="Armond" />
+		<personAccount uid="malivo" cn="Mali Vo" sn="Vo" />
+		<personAccount uid="mklensch" cn="Marie-Elise Klensch"
+			sn="Klensch" />
+		<personAccount uid="mkravitz" cn="Marjorie Kravitz" sn="Kravitz" />
+		<personAccount uid="mpierpont" cn="Matthew Pierpont" sn="Pierpont" />
+		<personAccount uid="mleclair" cn="Maureen Leclair" sn="Leclair" />
+		<personAccount uid="mihiro" cn="Mikako Hiro" sn="Hiro" />
+		<personAccount uid="mmotler" cn="Mike Motler" sn="Motler" />
+		<personAccount uid="mtompkin" cn="Misha Tompkin" sn="Tompkin" />
+		<personAccount uid="nsmith" cn="Nancy Smith" sn="Smith" />
+		<personAccount uid="nolmos" cn="Natalie Olmos" sn="Olmos" />
+		<personAccount uid="noshin" cn="Nora Shin" sn="Shin" />
+		<personAccount uid="nludlow" cn="Noreen Ludlow" sn="Ludlow" />
+		<personAccount uid="pclemmons" cn="Paul Clemmons" sn="Clemmons" />
+		<personAccount uid="pazhou" cn="Paul Zhou" sn="Zhou" />
+		<personAccount uid="pstarky" cn="Paula Starky" sn="Starky" />
+		<personAccount uid="pdumont" cn="Pierre Dumont" sn="Dumont" />
+		<personAccount uid="rgestner" cn="Rebecca Gestner" sn="Gestner" />
+		<personAccount uid="rwashington" cn="Renata Washington"
+			sn="Washington" />
+		<personAccount uid="rferrar" cn="Rita Ferrar" sn="Ferrar" />
+		<personAccount uid="rlasky" cn="Roberta Lasky" sn="Lasky" />
+		<personAccount uid="rsegal" cn="Ron Segal" sn="Segal" />
+		<personAccount uid="rbooth" cn="Roy Booth" sn="Booth" />
+		<personAccount uid="smazar" cn="Sabra Mazar" sn="Mazar" />
+		<personAccount uid="samcurman" cn="Sam Curman" sn="Curman" />
+		<personAccount uid="sdurgan" cn="Sheila Durgan" sn="Durgan" />
+		<personAccount uid="siduma" cn="Silena Duma" sn="Duma" />
+		<personAccount uid="stevecho" cn="Steve Cho" sn="Cho" />
+		<personAccount uid="smaiti" cn="Sunil Maiti" sn="Maiti" />
+		<personAccount uid="tfrankel" cn="Thom Frankel" sn="Frankel" />
+		<personAccount uid="vclare" cn="Vaughn Clare" sn="Clare" />
+		<personAccount uid="vnehru" cn="Vijay Nehru" sn="Nehru" />
+		<personAccount uid="gachao" cn="Gail Chao" sn="Chao" />
+		<personAccount uid="kmacgyver" cn="Kristin MacGyver" sn="MacGyver" />
+		<personAccount uid="lsuarez" cn="Lucille Suarez" sn="Suarez" />
+		<personAccount uid="sdaryn" cn="Samantha Daryn" sn="Daryn" />
+		<personAccount uid="simdray" cn="Simone Dray" sn="Dray" />
+		<personAccount uid="tamado" cn="Ted Amado" sn="Amado" />
+		<personAccount uid="vhanley" cn="Vivian Hanley" sn="Hanley" />
+		<personAccount uid="mshani" cn="Monifa Shani" sn="Shani" />
+		<personAccount uid="niall_ward" cn="Niall Ward" sn="Ward" />
+		<personAccount uid="gustav" cn="GÃ¼stav Smith" sn="Smith" />
+		<personAccount uid="bob smith" cn="Bob Smith" sn="Smith" />
+		<personAccount uid="joemoderator" cn="Joe" sn="Moderator" />
+	</personAccountPool>
+</input>

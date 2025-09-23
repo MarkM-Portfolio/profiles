@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: IBM Connections Profiles Web Resources Test
+Bundle-SymbolicName: com.ibm.lconn.profiles.web.resources.test;singleton:=true
+Bundle-Version: 5.5.0.qualifier
+Bundle-Vendor: IBM
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy

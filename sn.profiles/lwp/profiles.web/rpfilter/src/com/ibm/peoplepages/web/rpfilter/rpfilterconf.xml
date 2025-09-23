@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<ReverseProxyConfig
+	xmlns="http://www.ibm.com/ventura/kareoke/rpfilter/1.0">
+	<!-- 
+		Attributes:
+			responseSetter - see below
+			invalidator	- see below
+			responseSetterClass - A custom class to use for the response setter.
+			invalidatorClass - A class to use for the invalidator.
+		
+		Valid response setters (responseSetter):
+			time2Live - Uses the RPFilterTime2LiveRSIVD as the response setter.
+				Options: {days,hours,minutes,seconds}
+			indefinite
+				Options:
+					lastModParameter - (REQUIRED) The request parameter that should contain the last modified time.
+					time2live - (OPTIONAL, default: 36000) The time in seconds to use for the cache control life span.
+			custom
+		
+		Valid invalidators (invalidator)
+			null	  - Always invalidate conditional gets.
+			time2Live - Uses the RPFilterTime2LiveRSIVD as the response setter.
+				Options: {days,hours,minutes,seconds}
+			indefinite
+				Options:
+					lastModParameter - (REQUIRED) The request parameter that should contain the last modified time.
+					time2live - (OPTIONAL, default: 36000) The time in seconds to use for the cache control life span.
+			custom			
+		
+		Sub-Elements		
+			<options> - This contains a map of attributes that will be passed to both the <code>RPFilterInvalidator</code> and the <code>RPFilterResponseSetter</code>.  May not be used with <rsopts>
+			<rsopts>  - Same as options, but only passed to the <code>RPFilterResponseSetter</code>.
+			<ivdopts> - Same as options, but only passed to the<code>RPFilterInvalidator</code>.
+	-->		
+</ReverseProxyConfig>

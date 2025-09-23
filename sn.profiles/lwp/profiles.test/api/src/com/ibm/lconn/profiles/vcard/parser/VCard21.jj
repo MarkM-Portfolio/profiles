@@ -1,0 +1,49 @@
+options{  IGNORE_CASE = true;  DEBUG_TOKEN_MANAGER = false;  STATIC = false;  DEBUG_PARSER = false;  UNICODE_INPUT = true;}PARSER_BEGIN(VCard21Parser)package com.ibm.lconn.profiles.vcard.parser;import java.io.InputStream;public class VCard21Parser{  private VCardParserListener listener;  public void setListener(VCardParserListener listener)  {    this.listener = listener;  }    public void parse() throws ParseException  {	readVCard();  }}PARSER_END(VCard21Parser)< DEFAULT, CONTENTSTATE, CONTENTSTATE_QUOTED_PRINTABLE >TOKEN :{  < EOL : ("\r\n" | "\n")+ > : DEFAULT}< CONTENTSTATE >TOKEN :{  < SEOL : ( ("\r\n" | "\n")+ [" ", "\t"] ) > : CONTENTSTATE  }< CONTENTSTATE_QUOTED_PRINTABLE >TOKEN :{  < SEOL_QUOTED_PRINTABLE : ("=\r\n" | "=\n") > : CONTENTSTATE_QUOTED_PRINTABLE	}< PARAMSTATE, DEFAULT >TOKEN : {  < COLON : ":" > : CONTENTSTATE}< PARAMSTATE_QUOTED_PRINTABLE >TOKEN :{  < COLON_QUOTED_PRINTABLE : ":" > : CONTENTSTATE_QUOTED_PRINTABLE}< DEFAULT, PARAMSTATE >TOKEN :{  < SEMICOLON : ";" > : PARAMSTATE}< PARAMSTATE_QUOTED_PRINTABLE >TOKEN :{  < SEMICOLON_QUOTED_PRINTABLE : ";" >}< DEFAULT, PARAMSTATE, PARAMSTATE_QUOTED_PRINTABLE >TOKEN :{  < EQUAL : "=" >}< DEFAULT >TOKEN :{  < VCBEGIN : "BEGIN" (< WS >)? ":" (< WS >)? "VCARD" >| < VCEND : "END" (< WS >)? ":" (< WS >)? "VCARD" >| < EXTENSION : ["X", "x"] ["-","_"] (~["\r", "\n",":", ";"])+ >| < WS : (" " | "\t")+ >| < IDENTIFIER : ["a"-"z", "A"-"Z"] (["-", "_", "a"-"z", "A"-"Z", "0"-"9"])* >   }< CONTENTSTATE >TOKEN :{  < CONTENTSTRING : (~["\r","\n"])+ >}< CONTENTSTATE_QUOTED_PRINTABLE >TOKEN :{  < CONTENTSTRING_QUOTED_PRINTABLE : (~["\r","\n","="])+ >| < NONBREAKINGEQUALS : "=" >}<PARAMSTATE, PARAMSTATE_QUOTED_PRINTABLE, DEFAULT>TOKEN :{  <QUOTED_PRINTABLE : (";ENCODING=QUOTED-PRINTABLE" | ";QUOTED-PRINTABLE") > : PARAMSTATE_QUOTED_PRINTABLE    }<PARAMSTATE, PARAMSTATE_QUOTED_PRINTABLE>TOKEN :{  <PARAMSTRING : (~[ ":" , "\r" , "\n" , ";" , "\t" , "=" , "[" , "]" ])+ >}void readVCard() : {}{  ( < EOL > | < WS > )*  < VCBEGIN >  ( < EOL > | < WS > )*  ( content() )+  < VCEND >  ( < EOL > | < WS > )*  < EOF >}void content() :{  Token group = null;}{  LOOKAHEAD(2)    [group=< IDENTIFIER > "."] specialProperty(group)| standardProperty()}void specialProperty(Token group) : {}{  extension(group)}void standardProperty() :{  Token identifier;    PropertyParameters params;  String content; 		}{   identifier = < IDENTIFIER >  params = params()  colon()  content= text()  < EOL >  {	listener.setProperty(identifier.image, params, content);      }}void extension(Token group) :{  PropertyParameters params;  String content;  Token extensionName;}{  extensionName = < EXTENSION >  params = params()  colon()  content=text()  < EOL >  {	listener.setExtension(extensionName.image, params, content);      }}	
+PropertyParameters params() :
+{
+    PropertyParameters params = new PropertyParameters();
+    Token paramName = null, paramValue = null;
+}
+{
+    (
+        (
+          <SEMICOLON>        |        < SEMICOLON_QUOTED_PRINTABLE >        
+        )
+        paramName=<PARAMSTRING> (<EQUAL> paramValue=<PARAMSTRING>)?
+        {          params.getValues().put(paramName.image, paramValue == null ? null : paramValue.image);
+        }      | < QUOTED_PRINTABLE >      {      }
+    )*
+    {
+        return params;
+    }
+}
+String text() :
+{
+    Token t = null;
+    StringBuffer sb = new StringBuffer();
+}
+{
+  (
+    (      <SEOL>
+     |
+      t = <CONTENTSTRING> { sb.append(t.image); }
+    )+
+   |
+    (
+      <SEOL_QUOTED_PRINTABLE>
+     |
+       t = <CONTENTSTRING_QUOTED_PRINTABLE> { sb.append(t.image); }
+     |
+       t = <NONBREAKINGEQUALS> { sb.append(t.image); }
+    )+
+  )?
+  {
+         return sb.toString();
+  }
+}
+
+void colon() :
+{
+}
+{  ( <COLON> | < COLON_QUOTED_PRINTABLE >)
+}

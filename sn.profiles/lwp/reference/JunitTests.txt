@@ -1,0 +1,133 @@
+Eclipse JUnit test environment
+------------------------------
+
+These instructions assume a full mantis environment with all prereqs loaded so that appropriate config files can be copied.
+
+The unit tests use a mock directory service provider that is designed to support multitenant test cases. In order to initialize
+both config files and Waltz, the paths must be added to the unit test JVM arguments. Both Ventura config and Waltz will key
+off these parameters during their initialization.
+
+cd to
+    > ...\sn.profiles\lwp\profiles.test\bvt
+
+Run
+    > bld copy-config-files
+
+This command will copy config files into
+
+    \sn.profiles\lwp\profiles.test\bvt\testconf
+and
+    \sn.profiles\lwp\profiles.test\bvt\testconftdi
+
+in your source (yes, source) directory. RTC jazzignore files should be in place to igore these. This command also flips directory.services.xml
+to use the mock service provider used in our tests.
+
+Set up DB connetcion information. Copy
+ 
+    \sn.profiles\lwp\profiles.test\test.properties
+to 
+    \sn.profiles\lwp\profiles.test\bvt\test.properties
+
+and configure with your db connection information. Note: You may find this file exists in the target directory because someone checked it in.
+
+To run the BVT tests in Eclipse, create a JUnit Run Configuration. E.g.
+
+First, click on the profiles.test.bvt project and then on the menu Run \ Run Configurations.  In the dialog, double-click on JUnit
+and change the name field from bvt to something of your chosing.
+
+ E.g.
+    Name   : testSuiteBVT
+
+Choose 'Run a single test'. [ 'Run all tests in the select project,...'  fails since there are tests that are partially disabled and will not run properly ]
+
+    Project: profiles.test.bvt
+    Test class: com.ibm.lconn.profiles.test.TestSuiteBVT
+    Test method: (all methods)
+
+Add JVM arguments pointing to your test environment configuration files.
+
+    In the (x)=Arguments tab enter the VM arguments
+
+        -Dtest.config.files=C:\mypath\sn.profiles\lwp\profiles.test\bvt\testconf -Dwaltz.config.file.path=C:\mypath\sn.profiles\lwp\profiles.test\bvt\testconf\directory.services.xml
+
+Add the necessary db driver jars to the profiles.test.bvt project and run testSuiteBVT as a Junit test.
+
+To add the db driver dependencies :
+Add the db2 drivers to your profiles.test.bvt dependencies. Add the libraries to the project's Java Build Path.
+
+Right-click the profiles.test.bvt package, click Build Path > Configure Build Path, click the Libraries Tab.
+Click 'Add External JARS...', you will want to add db2jcc_license_cu.jar and db2jcc.jar from your local DB2 installation (e.g., C:\IBM\SQLLIB\java).
+
+For running unit tests on Oracle    : detach the oajdbc6.jar file and add it.
+For running unit tests or SQLServer : detach the sqljdbc.4.jar file and add it.
+
+After this, click the Order and Export tab, move the added jars to the top. The reason for this is that the environment may be picking up a different
+reference which might cause connections issues to db2.  (It may be that another project included prereqs.sn/db2 which has the 8.2. libraries)
+
+
+                          ------------------------------------------------------------
+
+To run the API tests in Eclipse, you will need to create a separate but similar JUnit Run Configuration like the above. 
+
+Create a new one for the API tests (NOT a duplicate / copy of the above one).
+Caveat : if you try to shortcut this by right-clicking the JUnit Run Configuration created above and choose 'Duplicate' and then edit the new copy,
+it likely will not work since RTC embeds the wrong project (profiles.test.bvt) into the launch config and then gets confused when you try to run.
+
+    Name   : testSuiteAPI
+    Project: profiles.test.api
+
+For the API, you can choose to either run all the tests or pick an individual test to run
+
+ E.g.
+    Test class : com.ibm.lconn.profiles.test.rest.junit.AdminProfileApiTest
+    Test method: testGetServiceDocument
+
+Not all test Suites run, so to run 'all' the tests select
+
+    Test class : com.ibm.lconn.profiles.test.rest.junit.TestSuiteApi
+    Test method: (all methods)
+
+As you did for the BVT tests (above), add JVM arguments pointing to your test environment configuration files.  
+
+Add the necessary db driver jars to the profiles.test.api project and run testSuiteAPI as a Junit test.
+
+
+                          ------------------------------------------------------------
+
+Your launch configs wil be saved in your Eclipse workspace as text files
+
+    c:\<your-WorkSpace>\.metadata\.plugins\org.eclipse.debug.core\.launches
+
+    09/17/2013  11:24 AM             1,631 testSuiteAPI.launch
+    09/17/2013  11:14 AM             2,857 testSuiteBVT.launch
+
+You may want to back up a copy of any working launches, since RTC will remove them from your workspace if you ever clean out the Profiles FE to renew it.
+I have been successful in copying the .launches directory between different workspaces.
+
+                          ------------------------------------------------------------
+
+Enabling trace debugg logging while running tests in Eclipse
+------------------------------------------------------------
+
+Find the JVM that is being used in the Eclipse environment - Window / Preferences / Java / Installed JREs.  The JRE in use 'should' be the same one that
+is in the version of the Mantis tools that you are using for command line builds eg. C:\LC_TOOLS\TLS72\Java60
+
+Ensure the JRE is set appropriately and then find the location on your disk and edit the logging.properties file found there
+
+To enable iBatis logging, set these on the JRE used to run the tests in Eclipse
+
+#com.ibatis.level=FINEST
+com.ibatis.common.jdbc.SimpleDataSource.level=FINEST
+#com.ibatis.common.jdbc.ScriptRunner.level=FINEST
+com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate.level=FINEST
+java.sql.Connection.level=FINEST
+java.sql.Statement.level=FINEST
+java.sql.PreparedStatement.level=FINEST
+##java.sql.ResultSet.level=FINEST
+#com.ibm.openactivities.ExecutionContext.level=FINEST
+com.ibatis.dao.client.DaoManager.level=FINEST
+com.ibatis.dao.engine.level=FINEST
+#com.ibm.directory.*=FINEST
+#com.ibm.openactivities.ExecutionContext.level=FINEST
+#Enable the console to show the FINEST level of tracing. In the logging.properties file be sure you have
+java.util.logging.ConsoleHandler.level = FINEST

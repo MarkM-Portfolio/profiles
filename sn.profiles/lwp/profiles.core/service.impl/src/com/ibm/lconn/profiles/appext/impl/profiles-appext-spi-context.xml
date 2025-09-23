@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  	   xmlns:context="http://www.springframework.org/schema/context"
+  	   xmlns:jee="http://www.springframework.org/schema/jee"
+  	   xsi:schemaLocation="
+  	   		http://www.springframework.org/schema/beans 
+  	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+  	   		http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd
+            http://www.springframework.org/schema/jee
+            http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+
+	<bean id="com.ibm.lconn.core.appext.spi.SNAXDaoProperties"
+     	  class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+     	<property name="propertiesArray">
+     		<list>
+     			<props>
+	     			<prop key="schemaName">EMPINST</prop>
+	     			<prop key="cacheModelsEnabled">true</prop>
+	     			<prop key="maxRequests">800</prop>
+	     			<prop key="maxSessions">600</prop>
+	     			<prop key="maxTransactions">250</prop>
+	     			<prop key="statementCachingEnabled">false</prop>
+	     			<prop key="com.ibm.lconn.core.appex.msgvector.spi.RelatedEntriesXML">com/ibm/lconn/profiles/internal/service/store/sqlmapdao/sql/MVRelated.xml</prop>
+	     		</props>
+	     		<!-- Utility class which sets various DAO properties -->
+	     		<bean class="com.ibm.lconn.profiles.appext.impl.ProfilesDaoProperties"/>
+     		</list> 		
+     	</property>			  
+	</bean>
+	
+	<!-- 
+		For SNAX work
+	  -->
+	<bean id="com.ibm.lconn.core.appext.spi.SNAXWorkManagerName"
+		  class="java.lang.String">
+		<constructor-arg><value>java:comp/env/wm/ProfilesWorkManager</value></constructor-arg>
+	</bean>
+	
+	<bean id="com.ibm.lconn.core.appext.spi.SNAXPersonSpi"
+		  class="com.ibm.lconn.profiles.appext.impl.ProfilesSNAXPersonSpiImpl">
+		  <constructor-arg ref="com.ibm.peoplepages.service.PeoplePagesService"/>
+	</bean>
+		
+	<!-- 
+		For message Vector, still required in 4.5 but the contents of the XML look like it might be unused
+	-->
+	<bean id="com.ibm.lconn.core.appext.msgvector.spi.ConfigIds"
+		  class="java.util.ArrayList">
+		  <constructor-arg>
+		  	<list>
+		  		<value>profiles-theboard-config.xml</value>
+		  	</list>
+		  </constructor-arg>
+	</bean>
+	
+	<bean id="com.ibm.lconn.core.appext.msgvector.spi.ConfigProps"
+		  class="com.ibm.lconn.profiles.appext.msgvector.impl.EmptyBoardConfigProps"
+		  factory-method="getBoardProps"/>
+
+	<bean id="com.ibm.lconn.core.appext.msgvector.spi.AccessControlSpi"
+		class="com.ibm.lconn.profiles.appext.msgvector.impl.ProfilesAccessControlSpiImpl">
+	</bean>
+			
+	<bean id="com.ibm.lconn.core.appext.msgvector.spi.EventRecorderSpi"
+		class="com.ibm.lconn.profiles.appext.msgvector.impl.ProfilesEventRecorderSpi"/>
+	
+</beans>

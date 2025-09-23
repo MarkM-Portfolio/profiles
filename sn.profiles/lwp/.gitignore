@@ -1,0 +1,14 @@
+.project
+.classpath
+.apt_generated
+.factorypath
+build
+NWaysResults.txt
+default.rpxconfig
+classes
+/_lastcomp.gen
+/_orderdata.gen
+/build
+/logs
+bld.log
+build.log

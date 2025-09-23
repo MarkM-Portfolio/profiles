@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 20016                                         -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- cloud example policy file -->
+
+<config id="profiles-policy" xmlns="http://www.ibm.com/profiles-policy">
+    <!-- EXAMPLE: must provide orgId -->
+	<features orgId="NN">
+	    <!-- EXAMPLE: photos are visible, but only alt users can update them
+			default/regular user cannot update photo
+		<feature name="profile.photo">
+			<profileType enabled="true">
+				<acl name="profile.photo.view" scope="reader" />
+				<acl name="profile.photo.update" scope="none" />
+			</profileType>
+			<profileType type="alt" enabled="true">
+				<acl name="profile.photo.view" scope="reader" />
+				<acl name="profile.photo.update" scope="self" />
+			</profileType>			
+		</feature>
+	      -->
+	    <!-- EXAMPLE: alt users can initiate networks among themselves and with default users
+			  default users can initiate networks, but not with alt users
+		<feature name="profile.colleague">
+			<profileType actorType="alt" type="alt" enabled="true">
+				<acl name="profile.colleague.connect" scope="person_not_self" />
+			</profileType>
+			<profileType type="alt" enabled="false">
+			</profileType>
+		</feature>
+	      -->
+	</features>
+</config>

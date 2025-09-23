@@ -1,0 +1,25 @@
+${head}
+
+<script>
+	var ibmConfig = { // Required for MM to be loaded
+		proxyURL: "" // Required by lconn.core.url.ProxyUrlHelper, should remove
+	}; 
+	var profilesData = { // Required by Profiles code
+		config: {
+		}
+	};
+	var xsltPath = ""; // Profiles feed parsing code is requiring this to be set
+	var applicationContext = ""; // Used from lconn.profiles.CommonTags, should be changed
+</script>
+
+${script:lconn.profiles.profilesApp} <!-- This is 950k minified -->
+
+${endhead}
+
+<div class="lotusMain">
+<div class="lotusContent">
+Test
+</div>
+</div>
+</body>
+${end}

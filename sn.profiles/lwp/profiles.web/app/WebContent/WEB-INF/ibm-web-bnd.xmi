@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<webappbnd:WebAppBinding xmi:version="2.0"
+	xmlns:xmi="http://www.omg.org/XMI" xmlns:webappbnd="webappbnd.xmi"
+	xmi:id="WebAppBinding_1159287311818" virtualHostName="default_host">
+	<webapp href="WEB-INF/web.xml#ProfilesWebApp" />
+	<resRefBindings xmi:id="ResourceRefBinding_1174664816423"
+		jndiName="jdbc/profiles">
+		<bindingResourceRef href="WEB-INF/web.xml#ResourceRef_1174664816423" />
+	</resRefBindings>
+	<resourceEnvRefBindings xmi:id="ResourceEnvRefBinding_1198196055442"
+		jndiName="services/cache/profile_cache">
+		<bindingResourceEnvRef href="WEB-INF/web.xml#ResourceEnvRef_1172250969498" />
+	</resourceEnvRefBindings>
+
+<!-- 
+	<resRefBindings xmi:id="ResourceRefBinding_3214179869313"
+		jndiName="jms/connections/profiles/command/tcf"
+		loginConfigurationName="DefaultPrincipalMapping">
+		<bindingResourceRef href="META-INF/web.xml#ResourceRef_3214179869313" />
+		<properties xmi:id="Property_1234179869329" name="com.ibm.mapping.authDataAlias"
+			value="connectionsAdmin" description="container-managed auth alias from resource-ref" />
+	</resRefBindings>
+	<resRefBindings xmi:id="ResourceRefBinding_3454179869329"
+		jndiName="jms/connections/profiles/command/consumer/topic">
+		<bindingResourceRef href="META-INF/web.xml#ResourceRef_3454179869329" />
+	</resRefBindings> -->
+  <resRefBindings xmi:id="ResourceRefBinding_1265200420640" jndiName="mail/notification">
+    <bindingResourceRef href="WEB-INF/web.xml#ResourceRef_1201900596491"/>
+  </resRefBindings>
+</webappbnd:WebAppBinding>

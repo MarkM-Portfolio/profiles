@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- 
+	@author sberajaw
+-->
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XML Schema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+	
+	<description>
+		Tag library for Profiles 
+	</description>
+	<jsp-version>2.0</jsp-version>
+	<tlib-version>1.0</tlib-version>
+	<short-name>profiles</short-name>
+	<uri>http://www.ibm.com/profiles</uri>
+	<function>
+		<name>getTenantName</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.lang.String getTenantName(java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
+		<name>getCurrentUserTenantName</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.lang.String getTenantName()
+		</function-signature>
+	</function>	
+	<function>
+		<name>convertToMap</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.util.Map convertToMap(java.util.Map)
+		</function-signature>
+	</function>
+	<function>
+		<name>findAdvancedSearchLabel</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			com.ibm.lconn.core.web.util.resourcebundle.UILabelConfig findAdvancedSearchLabel(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<name>removeTagString</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.lang.String removeTagString (java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<name>replaceParam</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.util.Map replaceParam(java.util.Map, java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<name>filter</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.lang.String filter(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<name>escapeUnwiseURLChars</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.lang.String escapeUnwiseURLChars(java.lang.String)
+		</function-signature>
+	</function>
+	<function>	
+		<name>encodeForJsonString</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.lang.String encodeForJsonString(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<description>
+			Checks to see if jsonp is allowed for 3rd party integration of json feeds
+		</description>
+		<name>allowJsonp</name>
+		<function-class>com.ibm.peoplepages.functions.Functions</function-class>
+		<function-signature>
+			java.lang.boolean allowJsonp()
+		</function-signature>
+	</function>
+	<function>	
+		<name>getResourceString</name>
+		<function-class>com.ibm.peoplepages.webui.resources.ResourceManager</function-class>
+		<function-signature>
+			java.lang.String getString(java.util.Locale, java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+	<tag>
+		<name>getString</name>
+		<tag-class>com.ibm.peoplepages.taglib.ResourceStringTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>bundle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>freemarker</name>
+		<tag-class>com.ibm.lconn.profiles.web.taglib.FreemarkerTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description>A simple tag that can render a freemarker template</description>
+		<attribute>
+			<name>dataModel</name>
+			<required>true</required>
+			<type>com.ibm.lconn.profiles.config.templates.TemplateDataModel</type>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>template</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>mixinMap</name>
+			<required>false</required>
+			<type>java.util.Map</type>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+	<tag>
+		<name>appLang</name>
+		<tag-class>com.ibm.peoplepages.taglib.AppLangTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>htmlLang</name>
+		<tag-class>com.ibm.peoplepages.taglib.HtmlLangTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>lcConfig</name>
+		<tag-class>com.ibm.peoplepages.taglib.LCConfigTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>property</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>gatekeeperName</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>default</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>checkPermission</name>
+		<tag-class>com.ibm.peoplepages.taglib.CheckPermissionTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>feature</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>permission</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>checkTarget</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>	
+	<tag>
+		<name>tagListDelimiter</name>
+		<tag-class>com.ibm.peoplepages.taglib.TagListDelimiterTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>	
+	<tag>
+		<name>isLotusLive</name>
+		<tag-class>com.ibm.peoplepages.taglib.IsLotusLiveTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>	
+	<tag>
+		<name>isMultiTenant</name>
+		<tag-class>com.ibm.peoplepages.taglib.IsMultiTenantTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>	
+	<tag>
+		<name>isAdvancedSearchEnabled</name>
+		<tag-class>com.ibm.peoplepages.taglib.IsAdvancedSearchEnabledTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>	
+	<tag>
+		<name>isSametimeAwarenessEnabled</name>
+		<tag-class>com.ibm.peoplepages.taglib.IsSametimeAwarenessEnabledTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>		
+	<tag>
+		<name>helpLang</name>
+		<tag-class>com.ibm.peoplepages.taglib.HelpLangTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>serviceLink</name>
+		<tag-class>com.ibm.lconn.core.web.util.taglib.ServiceLinkTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>serviceName</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>helpLink</name>
+		<tag-class>com.ibm.peoplepages.taglib.HelpLinkTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>href</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleId</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>outputSearchResults</name>
+		<tag-class>com.ibm.lconn.profiles.web.taglib.OutputSearchResultsTag</tag-class>
+		<body-content>empty</body-content>
+		<description></description>
+		<attribute>
+			<name>results</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>section</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>advancedSearchConfig</name>
+		<tag-class>com.ibm.lconn.profiles.web.taglib.AdvancedSearchConfigTag</tag-class>
+		<body-content>empty</body-content>
+		<description></description>
+	</tag>
+	
+	<tag>
+		<name>activityStreamConfig</name>
+		<tag-class>com.ibm.peoplepages.taglib.ActivityStreamConfigTag</tag-class>
+		<body-content>empty</body-content>
+		<description></description>
+		<attribute>
+			<name>userId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>currentUserId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>currentUserDisplayName</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>entryId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>locale</name>
+			<type>java.util.Locale</type>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>currentUser</name>
+		<tag-class>com.ibm.peoplepages.taglib.CurrentUserTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>outputLMTime</name>
+		<tag-class>com.ibm.peoplepages.taglib.OutputLMTimeTag</tag-class>
+		<body-content>scriptless</body-content>
+		<description></description>
+		<attribute>
+			<name>time</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>dangerousUrlInputField</name>
+		<tag-class>
+			com.ibm.peoplepages.taglib.DangerousUrlInputFieldTag
+		</tag-class>
+		<body-content>scriptless</body-content>
+	</tag>
+	
+	<tag>
+		<name>dangerousUrlLink</name>
+		<tag-class>com.ibm.peoplepages.taglib.DangerousUrlLinkTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>url</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>advancedSearchNormalizer</name>
+		<tag-class>com.ibm.peoplepages.taglib.AdvancedSearchPropertyNormalizeTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>propertyName</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+	
+	<tag>
+		<name>profileSearchPageHelper</name>
+		<tag-class>com.ibm.lconn.profiles.web.taglib.PagingHelperTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>numPagesAroundCurrent</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>currentPage</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>numPages</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+
+	<tag>
+		<name>searchResultsFeed</name>
+		<tag-class>com.ibm.peoplepages.taglib.SearchResultsFeedTag</tag-class>
+		<body-content>empty</body-content>
+		<description></description>
+	</tag>
+	
+	<function>
+		<description>
+			Get resourced strings
+		</description>
+		<name>getResourceStr</name>
+		<function-class>
+			com.ibm.peoplepages.internal.service.cache.MetricsCollector
+		</function-class>
+		<function-signature>
+			java.lang.String getResourceStrC( java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Get token for copy of metrics hashmap
+		</description>
+		<name>getMetricHashMapToken</name>
+		<function-class>
+			com.ibm.peoplepages.internal.service.cache.MetricsCollector
+		</function-class>
+		<function-signature>
+			java.lang.String getMetricHashMapTokenC()
+		</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Destroy (null) hashmap related to token
+		</description>
+		<name>destroyMetricHashMap</name>
+		<function-class>
+			com.ibm.peoplepages.internal.service.cache.MetricsCollector
+		</function-class>
+		<function-signature>
+			java.lang.String destroyMetricHashMapC(java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Looks up metric values
+		</description>
+		<name>getMetricValueForKey</name>
+		<function-class>
+			com.ibm.peoplepages.internal.service.cache.MetricsCollector
+		</function-class>
+		<function-signature>
+			java.lang.Long getMetricValueForKeyC( java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Get date.
+		</description>
+		<name>getMetricDate</name>
+		<function-class>
+			com.ibm.peoplepages.internal.service.cache.MetricsCollector
+		</function-class>
+		<function-signature>
+			java.util.Date getMetricDateC( java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Looks up metric values description
+		</description>
+		<name>getMetricDescriptionForKey</name>
+		<function-class>
+			com.ibm.peoplepages.internal.service.cache.MetricsCollector
+		</function-class>
+		<function-signature>
+			java.lang.String getMetricDescriptionForKeyC( java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Looks up metric values description
+		</description>
+		<name>getMetricKeyArrayStatic</name>
+		<function-class>
+			com.ibm.peoplepages.internal.service.cache.MetricsCollector
+		</function-class>
+		<function-signature>
+			java.lang.String[] getMetricKeyArrayStaticC( )
+		</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Checks if a feature is enabled
+		</description>
+		<name>featureEnabled</name>
+		<function-class>
+			com.ibm.peoplepages.functions.AclFunctions
+		</function-class>
+		<function-signature>
+			java.lang.boolean featureEnabled(java.lang.String, java.lang.Object)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Checks if the current user has access to a function in relation to a feature
+		</description>
+		<name>getAllEnabledFeatures</name>
+		<function-class>
+			com.ibm.peoplepages.functions.AclFunctions
+		</function-class>
+		<function-signature>
+			java.lang.String getAllEnabledFeatures(com.ibm.peoplepages.data.Employee)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Checks if the current user has access to a function in relation to a feature
+		</description>
+		<name>getAllEnabledPermissions</name>
+		<function-class>
+			com.ibm.peoplepages.functions.AclFunctions
+		</function-class>
+		<function-signature>
+			java.lang.String getAllEnabledPermissions(java.lang.Object)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Checks if the current user has access to a function in relation to a feature
+		</description>
+		<name>getAllEnabledPermissionsForFeatures</name>
+		<function-class>
+			com.ibm.peoplepages.functions.AclFunctions
+		</function-class>
+		<function-signature>
+			java.lang.String getAllEnabledPermissions(java.lang.Object, java.lang.String)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Checks if the current user has access to a function in relation to a feature
+		</description>
+		<name>checkAcl</name>
+		<function-class>
+			com.ibm.peoplepages.functions.AclFunctions
+		</function-class>
+		<function-signature>
+			java.lang.boolean checkAcl(java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Checks if the current user has access to a function in relation to a feature
+		</description>
+		<name>checkAclForProfile</name>
+		<function-class>
+			com.ibm.peoplepages.functions.AclFunctions
+		</function-class>
+		<function-signature>
+			java.lang.boolean checkAcl(java.lang.String, java.lang.String, java.lang.Object)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Checks if the current user has access to a function in relation to a feature
+		</description>
+		<name>aclAvailable</name>
+		<function-class>
+			com.ibm.peoplepages.functions.AclFunctions
+		</function-class>
+		<function-signature>
+			java.lang.boolean aclAvailable(java.lang.String, java.lang.String, java.lang.Object, java.lang.String)
+		</function-signature>
+	</function>
+
+</taglib>

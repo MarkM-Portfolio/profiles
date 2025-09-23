@@ -1,0 +1,19 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<tns:profileLinks xmlns="http://www.ibm.com/xmlns/prod/sn/profiles/ext/profile-links" xmlns:tns="http://www.ibm.com/xmlns/prod/sn/profiles/ext/profile-links">
+	<link name="My Facebook profile" href="http://www.facebook.com"/>
+	<tns:link name="My Flickr photos" href="http://www.ibm.com"/>
+	<tns:link name="Dimitri's Digest" href="http://www.ibm.com"/>
+</tns:profileLinks>

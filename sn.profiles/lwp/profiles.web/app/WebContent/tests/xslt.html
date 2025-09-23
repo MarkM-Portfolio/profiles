@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<head>
+	<title>Simple IWidget demo</title>
+	<script type="text/javascript">
+	
+		ibmConfig = {
+			isDebug: true,
+			portalURI: "/mashupmaker/enabler",
+            proxyURL: "/mashupmaker/proxy/"
+		};
+		
+	  	djConfig={
+	  		isDebug:false,
+	  		baseUrl:'/mashupmaker/js/dojo1.0.1/dojo/',
+	  		parseOnLoad:true
+	  	};
+	  	
+		var applicationContext = "/profiles";
+	</script>
+
+	<script type="text/javascript" src='/profiles/mashupmaker/js/dojo1.0.1/dojo/dojo.js'></script>
+	<script type="text/javascript" src="/profiles/javascript/lconn.core.xslt.js"></script>
+	<script type="text/javascript" src="/profiles/javascript/xmldom.js"></script> 
+	<script type="text/javascript" src="/profiles/javascript/profiles.js"></script>
+	<!--  
+	<script type="text/javascript" src="/profiles/javascript/browser.js"></script> 
+	<script type="text/javascript" src="/profiles/javascript/xmldom.js"></script> 
+	<script type="text/javascript" src="/profiles/javascript/xslt.js"></script> 
+	<script type="text/javascript" src="/profiles/javascript/xpath.js"></script> 
+	 -->
+</head>
+<body class="tundra">
+
+report to:
+<span id="tempdlkdfd">
+</span>
+<br/>
+
+tags:
+<span id="tempdlkdfd2">
+</span>
+<br/>
+
+recent-colleagues:
+<span id="tempdlkdfd3">
+</span>
+<br/>
+
+linkroll:
+<span id="tempdlkdfd4">
+</span>
+<br/>
+
+	<script type="text/javascript">
+		
+		dojo.require("dojox.data.dom");
+		var dataUrl = "/profiles/atom/reportingChain.do?uid=688635897&time=" + new Date().getTime();
+		var XSLViewURL= "/profiles/xslt/reportChain/report-chain.xsl";
+		var container = "tempdlkdfd";
+		
+		var dataUrl2 = "/profiles/atom/profile.do?uid=688635897&format=full&lastMod=1203098063587&time=" + new Date().getTime();
+		var XSLViewURL2= "/profiles/xslt/tags/tags.xsl";
+		var container2 = "tempdlkdfd2";
+		
+		var dataUrl3 = "/profiles/atom2/recentfriends.xml?uid=688635897&lastMod=1203098218981&time=" + new Date().getTime();
+		var XSLViewURL3= "/profiles/xslt/friends/recent-friends.xsl";
+		var container3 = "tempdlkdfd3";
+		
+		var dataUrl4 = "/profiles/xml/linkroll.xml?uid=688635897&lastMod=1203098218981&time=" + new Date().getTime();
+		var XSLViewURL4= "/profiles/xslt/linkroll/linkroll.xsl";
+		var container4 = "tempdlkdfd4";
+		
+		xslt_debug = false;
+		var params = profiles_getGeneralXslParams();//[['name','value'],['name1','value1'],['name2','value2']];
+		
+		lconn.core.xslt.transformAndRender(dataUrl3, XSLViewURL3, container3, params);
+		lconn.core.xslt.transformAndRender(dataUrl2, XSLViewURL2, container2, params);
+		lconn.core.xslt.transformAndRender(dataUrl, XSLViewURL, container, params);
+		lconn.core.xslt.transformAndRender(dataUrl4, XSLViewURL4, container4, params);
+			
+	</script>
+	hello33
+</body>
+</html>

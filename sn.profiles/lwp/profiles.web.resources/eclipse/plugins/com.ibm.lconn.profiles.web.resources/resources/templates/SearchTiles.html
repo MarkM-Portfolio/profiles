@@ -1,0 +1,52 @@
+<div class="lotusChunk lotusViewControl" role="region" aria-label="${messages.noResultsText}">
+	<span id="${_styleNodeId}" aria-live="polite" aria-relevant="text">
+		<style>
+			#${_styleNodeId} ul {
+				width:99%;
+				list-style:none outside none;
+				display:inline-table;
+			}
+			
+			#${_styleNodeId} ul li {
+				clear: none;
+			}
+			
+			#${_styleNodeId} ul li div {
+				display:block;
+				overflow:hidden; 
+				float:inherit; 
+				width:300px; 
+				height:59px; 
+				padding-bottom:5px; 
+				padding-left:5px; 
+				margin-right:5px;
+			}
+			
+			#${_styleNodeId} ul li div span.lotusContentColOne {
+				width: 55px;
+				height: 55px;
+				margin-top: 3px;
+			}
+			
+			#${_styleNodeId} ul li div span.lotusContentColOne img {
+				width:55px;
+				height:55px;
+				position:absolute;
+				z-index:0;
+			}
+			
+			#${_styleNodeId} ul li div span.lotusContentColTwo, #${_styleNodeId} ul li div span.lotusContentColTwo span {
+				margin-top: 1px;
+			}
+			
+			#${_styleNodeId}_infoNode {
+				position: absolute;
+				left: 0;
+				top: -100px;
+			}
+			
+		</style>
+		<span id="${_styleNodeId}_infoNode" dojoAttachPoint="infoNode"></span>
+		<ul class="lotusList lotusLeft" dojoAttachPoint="baseNode"></ul>
+	</span>
+</div>

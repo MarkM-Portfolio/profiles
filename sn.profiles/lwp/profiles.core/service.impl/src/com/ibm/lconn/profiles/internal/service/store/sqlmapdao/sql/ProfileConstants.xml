@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="ProfileConstants">
+
+	<select id="getValue" parameterClass="string" resultClass="string">
+		select PROF_PROPERTY_VALUE
+		from EMPINST.PROF_CONSTANTS
+		where PROF_PROPERTY_KEY = #key#
+	</select>
+
+	<update id="setValue" parameterClass="map">
+		update EMPINST.PROF_CONSTANTS
+		set PROF_PROPERTY_VALUE = #value#
+		where PROF_PROPERTY_KEY = #key#
+	</update>
+
+	<update id="insertValue" parameterClass="map">
+		insert into EMPINST.PROF_CONSTANTS
+		(PROF_PROPERTY_KEY,PROF_PROPERTY_VALUE)
+		values
+		(#key#,#value#)
+	</update>
+
+</sqlMap>

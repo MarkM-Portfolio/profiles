@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="ProfileTag">
+
+	<typeAlias alias="tag" type="com.ibm.lconn.profiles.data.Tag"/>
+	
+	<typeAlias alias="profiletag"
+		type="com.ibm.peoplepages.data.ProfileTag" />
+
+	<resultMap id="TagResult" class="tag">
+		<result property="tag" column="PROF_TAG"/>
+		<result property="type" column="PROF_TYPE"/>
+	</resultMap>
+	
+	<resultMap id="ProfileTagResult" class="profiletag">
+		<result property="tagId" column="PROF_TAG_ID" />
+		<result property="sourceKey" column="PROF_SOURCE_KEY" />
+		<result property="targetKey" column="PROF_TARGET_KEY" />
+		<result property="tag" column="PROF_TAG" />
+		<result property="lastUpdate" column="PROF_LAST_UPDATE" javaType="date"/>
+		<result property="tenantKey" column="TENANT_KEY" />
+		<result property="type" column="PROF_TYPE"/>
+	</resultMap>
+	
+	<resultMap id="ProfileTagCountResult" class="profiletag">
+		<result property="targetKey" column="PROF_TARGET_KEY" />
+		<result property="tag" column="PROF_TAG" />
+		<result property="type" column="PROF_TYPE"/>
+		<result property="frequency" column="PROF_FREQUENCY" javaType="int"/>
+		<result property="lastUpdate" column="PROF_LAST_UPDATE" javaType="date"/>
+		<result property="tenantKey" column="TENANT_KEY"/>
+	</resultMap>
+	
+	<resultMap id="AggProfileTagCountResult" class="profiletag">
+		<result property="tag" column="PROF_TAG" />
+		<result property="frequency" column="PROF_FREQUENCY" javaType="int"/>
+		<!-- tenantKey not included to avoid group by -->
+	</resultMap>
+
+	<resultMap id="AggProfileTagCountResult2" class="profiletag">
+		<result property="tag" column="PROF_TAG" />
+		<result property="targetKey" column="PROF_TARGET_KEY" />
+		<!-- tenantKey not included to avoid group by -->
+	</resultMap>
+
+	<sql id="sql_selectProfileTag">
+		PT.PROF_TAG_ID as PROF_TAG_ID,
+		PT.PROF_SOURCE_KEY as PROF_SOURCE_KEY,
+		PT.PROF_TARGET_KEY as PROF_TARGET_KEY,
+		PT.PROF_TAG as PROF_TAG,
+		PT.PROF_TYPE as PROF_TYPE,
+		1 as PROF_FREQUENCY,
+		0 as PROF_FLAGGED,
+		TE.PROF_LAST_UPDATE as PROF_LAST_UPDATE,
+		TE.TENANT_KEY as TENANT_KEY
+	</sql>
+
+	<sql id="sql_selectAggProfileTagResult">
+		PT.PROF_TAG as PROF_TAG,
+		count(*) as PROF_FREQUENCY
+	</sql>
+
+	<sql id="sql_selectAggProfileTagResult2">
+		PT.PROF_TAG as PROF_TAG,
+		PT.PROF_TARGET_KEY as PROF_TARGET_KEY
+	</sql>
+	
+	<sql id="sql_selectProfileTagForCloud">
+		'' as PROF_TAG_ID,
+		'' as PROF_SOURCE_KEY,
+		PT.PROF_TARGET_KEY as PROF_TARGET_KEY,
+		PT.PROF_TAG as PROF_TAG,
+		PT.PROF_TYPE as PROF_TYPE,		
+		count(*) as PROF_FREQUENCY,
+		0 as PROF_FLAGGED,
+		TE.PROF_LAST_UPDATE as PROF_LAST_UPDATE,
+		TE.TENANT_KEY as TENANT_KEY
+	</sql>
+		
+	<sql id="sql_WhereBySourceLookupKey">
+		<isNotNull property="sourceLookupType">
+			<isEqual property="sourceLookupType" compareValue="KEY">
+				SE.PROF_KEY = #sourceLookupValue# and
+			</isEqual>
+			<isEqual property="sourceLookupType" compareValue="EMAIL">
+				SE.PROF_MAIL_LOWER = #sourceLookupValue# and
+			</isEqual>
+			<isEqual property="sourceLookupType" compareValue="UID">
+				SE.PROF_UID_LOWER = #sourceLookupValue# and
+			</isEqual>
+			<isEqual property="sourceLookupType" compareValue="GUID">
+				SE.PROF_GUID = #sourceLookupValue# and
+			</isEqual>
+		</isNotNull>
+	</sql>
+	
+	<sql id="sql_WhereByTargetLookupKey">
+		<isEqual property="targetLookupType" compareValue="KEY">
+			TE.PROF_KEY = #targetLookupValue#
+		</isEqual>
+		<isEqual property="targetLookupType" compareValue="EMAIL">
+			TE.PROF_MAIL_LOWER = #targetLookupValue#
+		</isEqual>
+		<isEqual property="targetLookupType" compareValue="UID">
+			TE.PROF_UID_LOWER = #targetLookupValue#
+		</isEqual>
+		<isEqual property="targetLookupType" compareValue="GUID">
+			TE.PROF_GUID = #targetLookupValue#
+		</isEqual>	
+	</sql>
+
+	<sql id="sql_InclLastUpdateTag">
+		select
+			'lastupdate' as PROF_TAG_ID,
+			'' as PROF_SOURCE_KEY,
+			TE.PROF_KEY as PROF_TARGET_KEY,
+			'' as PROF_TAG,
+			'' as PROF_TYPE,
+			0 as PROF_FREQUENCY,
+			0 as PROF_FLAGGED,
+			TE.PROF_LAST_UPDATE as PROF_LAST_UPDATE,
+			TE.TENANT_KEY as TENANT_KEY
+		from
+			EMPINST.EMPLOYEE TE
+		where
+			<include refid="sql_WhereByTargetLookupKey"/>
+			<include refid="Tenant.sql_WhereByTenantKeyTE"/>
+	</sql>
+	
+	<select id="SelectTagsByEmployeeKey" resultMap="TagResult" parameterClass="map">
+		select PROF_TAG, PROF_TYPE from EMPINST.PEOPLE_TAG where PROF_TARGET_KEY=#key# and PROF_SOURCE_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+
+	<select id="SelectTagsBySourceAndTargetKeys" resultMap="ProfileTagResult" parameterClass="map">
+		(
+			<include refid="sql_InclLastUpdateTag"/>
+		)
+		union all
+		(
+			select
+				<include refid="sql_selectProfileTag"/>
+			from
+				EMPINST.PEOPLE_TAG PT,
+				EMPINST.EMPLOYEE SE,
+				EMPINST.EMPLOYEE TE
+			where
+				PT.PROF_SOURCE_KEY = SE.PROF_KEY and
+				PT.PROF_TARGET_KEY = TE.PROF_KEY and
+				<include refid="sql_WhereBySourceLookupKey"/>
+	 			<include refid="sql_WhereByTargetLookupKey"/>
+	 			<include refid="Tenant.sql_WhereByTenantKeyPT"/>
+ 		)
+	</select>
+	
+	<select id="SelectTagCloud" resultMap="ProfileTagCountResult" parameterClass="map">
+		(
+			<include refid="sql_InclLastUpdateTag"/>
+		)
+		union all
+		(
+			select
+				<include refid="sql_selectProfileTagForCloud"/>
+			from
+				EMPINST.PEOPLE_TAG PT,
+				EMPINST.EMPLOYEE TE
+			where
+				PT.PROF_TARGET_KEY = TE.PROF_KEY and
+				<include refid="sql_WhereByTargetLookupKey"/>
+				<include refid="Tenant.sql_WhereByTenantKeyPT"/>
+			group by 
+				 TE.TENANT_KEY, PT.PROF_TYPE, PT.PROF_TAG, PT.PROF_TARGET_KEY, TE.PROF_LAST_UPDATE
+		)
+	</select>
+	
+	<select id="SelectProfileTagsByTargetKey" resultMap="ProfileTagResult" parameterClass="map">
+		(
+			<include refid="sql_InclLastUpdateTag"/>
+		)
+		union all
+		(
+			select
+				<include refid="sql_selectProfileTag"/>
+			from
+				EMPINST.PEOPLE_TAG PT,
+				EMPINST.EMPLOYEE TE
+			where
+				PT.PROF_TARGET_KEY = TE.PROF_KEY and
+				<include refid="sql_WhereByTargetLookupKey"/>
+				<include refid="Tenant.sql_WhereByTenantKeyPT"/>
+		)
+	</select>
+	
+	<select id="FindTags" resultMap="TagResult" parameterClass="map">
+		select DISTINCT PT.PROF_TAG, PT.PROF_TYPE from EMPINST.PEOPLE_TAG PT
+		where PT.PROF_TAG LIKE #tag#
+		<isNotNull property="type">
+		AND PT.PROF_TYPE = #type#
+		</isNotNull>		
+		<include refid="Tenant.sql_WhereByTenantKeyPT"/>
+	</select>
+
+	<insert id="insertTag" parameterClass="java.util.Map">
+		insert into EMPINST.PEOPLE_TAG 
+			(PROF_TAG_ID, 
+			 PROF_SOURCE_KEY,
+			 PROF_TARGET_KEY, 
+			 PROF_TAG,
+			 PROF_TYPE,
+			 TENANT_KEY) 
+		VALUES
+		(#tagId#, 
+		 #sourceKey#,
+		 #targetKey#, 
+		 #tag#,
+		 #type#,
+		 #dbTenantKey#)
+	</insert>
+<!--todo: not used in 4.0?-->
+	<delete id="removeTag" parameterClass="string">
+		delete FROM EMPINST.PEOPLE_TAG WHERE PROF_TAG_ID=#id#
+	</delete>
+	
+	<delete id="removeTags" parameterClass="map">
+		delete 
+			FROM EMPINST.PEOPLE_TAG 
+		WHERE PROF_TAG_ID in 
+			<iterate property="tagIds" open="(" close=")" conjunction=",">#tagIds[]#</iterate>
+			<include refid="Tenant.sql_WhereByTenantKey"/>	
+	</delete>
+	
+	<delete id="DeleteTagForTargetKey" parameterClass="map">
+		delete 
+			FROM EMPINST.PEOPLE_TAG 
+			WHERE PROF_TARGET_KEY = #targetKey#
+			AND PROF_TAG = #tag#
+			AND PROF_TYPE = #type#
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+	
+	<select id="SelectWhereTargetKeyIn" resultMap="AggProfileTagCountResult2" parameterClass="java.util.Map">
+	   	select
+	   		<include refid="sql_selectAggProfileTagResult2" />
+		from
+			EMPINST.PEOPLE_TAG PT
+		where
+			PT.PROF_TARGET_KEY IN
+				<iterate property="tagKeys" open="(" close=")" conjunction=",">#tagKeys[]#</iterate>
+		<include refid="Tenant.sql_WhereByTenantKeyPT" />
+		order by
+			PT.PROF_TAG
+	</select>
+
+	<select id="SelectForConnections" resultMap="AggProfileTagCountResult" parameterClass="java.util.Map">
+	   	select
+	   		<include refid="sql_selectAggProfileTagResult" />
+		from
+			EMPINST.PEOPLE_TAG PT
+		where
+			 <!-- tenant id constraint in Related.sql_SelectConnectionIds  -->
+			PT.PROF_TARGET_KEY IN (<include refid="MVRelated.sql_SelectConnectionIds" />)
+		group by 
+			PT.PROF_TAG
+		order by
+			PT.PROF_TAG
+	</select>
+	
+	<delete id="deleteLinkedTaggers" parameterClass="map">
+		delete from 
+			EMPINST.PEOPLE_TAG
+		where ( PROF_SOURCE_KEY = #profileKey# or PROF_TARGET_KEY = #profileKey#)
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</delete>
+	
+	<update id="touchLinkedTaggers" parameterClass="map">
+		update EMPINST.EMPLOYEE
+		set PROF_KEY = PROF_KEY
+		where PROF_KEY
+		in
+		(
+			select PROF_SOURCE_KEY 
+			from EMPINST.PEOPLE_TAG
+			where PROF_TARGET_KEY = #profileKey#
+			<include refid="Tenant.sql_WhereByTenantKey" />
+			union
+			select PROF_TARGET_KEY 
+			from EMPINST.PEOPLE_TAG
+			where PROF_SOURCE_KEY = #profileKey#
+			<include refid="Tenant.sql_WhereByTenantKey" />
+		)
+	</update>
+	
+	<select id="MetricsProfilesWithTags" parameterClass="map" resultClass="java.lang.Integer" >
+		select count(distinct PROF_TARGET_KEY) 
+		from EMPINST.PEOPLE_TAG
+		where 1=1
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+	
+	<select id="MetricsUniqueTags" parameterClass="map" resultClass="java.lang.Integer" >
+		select count(distinct PROF_TAG) 
+		from EMPINST.PEOPLE_TAG
+		where 1=1
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+	
+	<select id="MetricsTotalTags" parameterClass="map" resultClass="java.lang.Integer">
+		select count(*) 
+		from EMPINST.PEOPLE_TAG
+		where 1=1
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+	
+	<select id="MetricsTopFiveTags" parameterClass="map" resultMap="AggProfileTagCountResult">
+	   	select <include refid="sql_selectAggProfileTagResult" />
+		from EMPINST.PEOPLE_TAG PT
+		where 1=1
+		<include refid="Tenant.sql_WhereByTenantKeyPT" />
+		group by PT.PROF_TAG
+		order by PROF_FREQUENCY desc
+	</select>
+
+</sqlMap>

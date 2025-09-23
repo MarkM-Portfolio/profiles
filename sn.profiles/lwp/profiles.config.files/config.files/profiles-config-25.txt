@@ -1,0 +1,14 @@
+/config/profileDataModels
+/config/layoutConfiguration/businessCardLayout
+/config/layoutConfiguration/profileLayout
+/config/layoutConfiguration/searchLayout
+/config/layoutConfiguration/searchResultsLayout
+/config/layoutConfiguration/vcardExport
+/config/apiConfiguration
+/config/caches
+/config/dataAccess
+/config/statistics
+/config/acf
+/config/sametimeAwareness
+/config/tagOthers
+/config/javelinGWMailSearch

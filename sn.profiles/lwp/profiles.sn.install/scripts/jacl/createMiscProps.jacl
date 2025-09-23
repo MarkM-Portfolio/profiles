@@ -1,0 +1,106 @@
+# ***************************************************************** 
+#                                                                   
+# IBM Confidential                                                  
+#                                                                   
+# OCO Source Materials                                              
+#                                                                   
+# Copyright IBM Corp. 2007, 2010                                    
+#                                                                   
+# The source code for this program is not published or otherwise    
+# divested of its trade secrets, irrespective of what has been      
+# deposited with the U.S. Copyright Office.                         
+#                                                                   
+# ***************************************************************** 
+
+# 5724-L21                                                          
+set FileName "createMiscProps.jacl"
+
+set FlagDebug "True"
+
+#----------------------------------------------------------------------
+# Main
+#----------------------------------------------------------------------
+if {$FlagDebug == "True"} {
+    puts stdout " "
+    puts stdout "--------------------------------"
+    puts stdout "---- Start $FileName"
+    puts stdout "--------------------------------"
+}
+
+set TmpCompName        "@componentName@"
+set TmpOsType          "@OSTYPE@"
+set TmpDbType          "@DBTYPE@"
+set TmpDSLibrary       "@DSLibrary@"
+set TmpPropFilePath    "@PROPERTYFILEPATH@"
+set TmpPropFileName    "${TmpPropFilePath}/miscProps.properties"
+
+if {$FlagDebug == "True"} {
+    puts stdout " "
+    puts stdout "--------------------------------"
+    puts stdout "---- Input args:"
+    puts stdout "---- componentName = $TmpCompName"
+    puts stdout "---- OsType        = $TmpOsType"
+    puts stdout "---- PropFile      = $TmpPropFileName"
+    puts stdout "--------------------------------"
+}
+
+java::import java.io.FileOutputStream
+java::import java.io.PrintWriter
+	
+set fileOPStream [java::new FileOutputStream $TmpPropFileName]
+set pwobj [java::new PrintWriter $fileOPStream]
+
+switch -exact -- $TmpOsType {
+	WINDOWS {
+          if {[string match "db2" $TmpDbType]} {
+               set TmpDSLibrary1  [string range $TmpDSLibrary 0 [expr [string first ";" $TmpDSLibrary]-1]]
+               set TmpDSLibrary2  [string range $TmpDSLibrary [expr [string first ";" $TmpDSLibrary]+1] [string length $TmpDSLibrary]]
+          }	
+	}
+        UNIX {
+          if {[string match "db2" $TmpDbType]} {
+               set TmpDSLibrary1  [string range $TmpDSLibrary 0 [expr [string first ":" $TmpDSLibrary]-1]]
+               set TmpDSLibrary2  [string range $TmpDSLibrary [expr [string first ":" $TmpDSLibrary]+1] [string length $TmpDSLibrary]]
+          } 
+	}
+	default {
+	 #exit 1
+	}
+}
+
+switch -exact -- $TmpDbType {
+	db2 {
+          if {[string match "db2" $TmpDbType]} {
+               set TmpDSLibrary1  [string range $TmpDSLibrary 0 [expr [string first ";" $TmpDSLibrary]-1]]
+               set TmpDSLibrary2  [string range $TmpDSLibrary [expr [string first ";" $TmpDSLibrary]+1] [string length $TmpDSLibrary]]
+          }	
+          set TmpDSLibraryHome  [string range $TmpDSLibrary1 0 [expr [string last "/" $TmpDSLibrary1]-1]]
+
+          $pwobj println "# Datasource Library Home"
+          $pwobj println "${TmpCompName}.DataSourceLibraryHome=${TmpDSLibraryHome}"
+          $pwobj println ""
+
+          $pwobj println "# Datasource Library1"
+          $pwobj println "${TmpCompName}.DataSourceLibrary1=${TmpDSLibrary1}"
+          $pwobj println ""
+
+          $pwobj println "# Datasource Library2"
+          $pwobj println "${TmpCompName}.DataSourceLibrary2=${TmpDSLibrary2}"
+          $pwobj println ""
+	}
+        oracle {
+         # To do
+	}
+	default {
+	 #exit 1
+	}
+}
+
+$pwobj close
+
+    if {$FlagDebug == "True"} {
+    	puts stdout " "
+        puts stdout "--------------------------------"
+    	puts stdout "---- End $FileName"
+    	puts stdout "--------------------------------"
+    }

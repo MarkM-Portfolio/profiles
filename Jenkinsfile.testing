@@ -1,0 +1,27 @@
+@Library('quickstart') _
+def param = [
+  "SERVER_POOL":"Pipeline",
+  "dbFileName":"test.properties",
+  "global_ENABLE_CODE_COVERAGE":true,
+  "UT":["Stage":["UTStages":[
+                   "Profiles":[
+		     "JUnitResultLoc":"src/sn.profiles/lwp/build/profiles.test/bvt/logs/TESTS-TestSuites.xml",
+		     "JaCoCoExePath":"src/sn.profiles/lwp/profiles.test/bvt/jacoco.exec",
+		     "utArchiveArtifactsInclude":"create_db.log,jacoco_report*"]]]
+       ],
+  "DB":["Stage":["DBStages":["Profiles":[]]]],
+  "BVT":["Admin_Test":["bvtADMStages":["Profiles":[]]],
+  	 "Admin_API_Test":["bvtAPIStages":["Profiles":["bvtAPIParam":"profilesadmin"]]],
+  	 "API&GUI_Test":["bvtAPIStages":["Profiles":["bvtAPIParam":"profiles"]],
+  			  "bvtGUIStages":[
+			    "Profiles":[
+			      "CI_PREBVT_TEST_NAME":"Profiles ",
+			      "CI_PREBVT_TEST_CLASS":"com.ibm.conn.auto.tests.profiles.BVT_Level_2_Profiles"]
+			  ],
+  			  "bvtJSStages":["Profiles":["NodeLable":"devsub2"]]
+		         ],
+  	 "Collect_Coverage":["bvtCoverageStages":["Profiles":["bvtCoverageParam":"Profiles"]]]
+       ],
+  "PTI":["Promote_Build":["PTIStages":["Profiles":["NodeLable":"write_BVTBuildLabel"]]]]
+]
+JenkinsBlue(param)

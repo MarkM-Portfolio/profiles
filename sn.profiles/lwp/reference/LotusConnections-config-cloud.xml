@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Copyright IBM Corp. 2001, 2013  All Rights Reserved.              --><config buildlevel="LC4.5_20130819_1030" id="LotusConnections" xmlns="http://www.ibm.com/LotusConnections-config" xmlns:sloc="http://www.ibm.com/service-location" xmlns:tns="http://www.ibm.com/LotusConnections-config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ibm.com/LotusConnections-config LotusConnections-config.xsd">
+    <!-- Unique deployment ID that will not change if servers are migrated to another address. 
+         Default is "com.ibm.sn:random-id".  Suggested value is reversed domain name of the 
+         Connections installation, for example: "com.example.social-intranet"
+    -->
+    <deployment deployment_id="com.ibm.lc.80628a8e-d946-48ed-8eaa-f5dd91885989"/>
+    <sloc:serviceReference acf_config_file="acf-config-nf.xml" bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterA" enabled="true" person_card_service_name_js_eval="generalrs.label_personcard_activitieslink" person_card_service_url_pattern="/service/html/mainpage#dashboard%2Cmyactivities%2Cuserid%3D{userid}%2Cname%3D{displayName}" serviceName="activities" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/activities</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9082"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference clusterName="clusterS" enabled="true" serviceName="bookmarklet" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/connections/bookmarklet</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference acf_config_file="acf-config-nf-flash.xml" bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterC" enabled="true" person_card_service_name_js_eval="generalrs.label_personcard_blogslink" person_card_service_url_pattern="/roller-ui/allblogs?userid={userid}" serviceName="blogs" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/blogs</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9083"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference acf_config_file="acf-config-nf.xml" bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterC" enabled="true" person_card_service_name_js_eval="generalrs.label_personcard_communitieslink" person_card_service_url_pattern="/service/html/allcommunities?userid={userid}" serviceName="communities" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/communities</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9083"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference profiles_directory_service_extension_enabled="true" serviceName="directory"/>
+    <sloc:serviceReference acf_config_file="acf-config-nf.xml" bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="" enabled="false" person_card_service_name_js_eval="generalrs.label_personcard_dogearlink" person_card_service_url_pattern="/html?userid={userid}" serviceName="dogear" ssl_enabled="false">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/dogear</sloc:hrefPathPrefix>
+            <sloc:static href="admin_replace" ssl_href="admin_replace"/>
+            <sloc:interService href="admin_replace"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference clusterName="clusterA" enabled="true" serviceName="personTag" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/profiles/ibm_semanticTagServlet</sloc:hrefPathPrefix>
+            <sloc:static href="http://acnode1.mikidev.swg.usma.ibm.com:9082" ssl_href="https://acnode1.mikidev.swg.usma.ibm.com:9445"/>
+            <sloc:interService href="https://acnode1.mikidev.swg.usma.ibm.com:9445"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterA" enabled="true" person_card_service_name_js_eval="generalrs.label_personcard_profilelink" person_card_service_url_pattern="/html/simpleSearch.do?searchFor={userid}&amp;searchBy=userid" serviceName="profiles" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/profiles</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9082"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference enabled="false" person_card_service_name_js_eval="generalrs.label_personcard_quickrlink" person_card_service_url_pattern="/allfiles/people/{email}" serviceName="quickr" ssl_enabled="false">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/quickr</sloc:hrefPathPrefix>
+            <sloc:static href="admin_replace" ssl_href="admin_replace"/>
+            <sloc:interService href="admin_replace"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterS" enabled="true" serviceName="homepage" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/homepage</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterS" enabled="true" serviceName="search" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/search</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference acf_config_file="acf-config-nf-flash.xml" bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterC" enabled="true" person_card_service_name_js_eval="generalrs.label.personcard.wikislink" person_card_service_url_pattern="/home/search?uid={userid}&amp;name={displayName}" serviceName="wikis" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/wikis</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9083"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="Engage_Cluster" enabled="true" person_card_service_name_js_eval="generalrs.label_personcard_fileslink" person_card_service_url_pattern="/app/person/{userid}" serviceName="files" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/files</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9081"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterS" enabled="true" serviceName="news" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/news</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterS" enabled="true" serviceName="opensocial" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/connections/opensocial</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="" enabled="false" serviceName="opensocialLocked" ssl_enabled="false">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/connections/opensocial</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference enabled="true" serviceName="connectionsmail" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/connections/resources/socmail-client</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference enabled="false" isConnectClient="false" serviceName="sametimeProxy" ssl_enabled="false">
+        <sloc:href>
+            <sloc:hrefPathPrefix/>
+            <sloc:static href="admin_replace" ssl_href="admin_replace"/>
+            <sloc:interService href="admin_replace"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterA" enabled="true" serviceName="mobile" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/mobile</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9082"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference acf_config_file="acf-config-nf-flash.xml" bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterC" enabled="true" person_card_service_name_js_eval="generalrs.label_personcard_forumlink" person_card_service_url_pattern="/html/search?userid={userid}&amp;name={displayName}" serviceName="forums" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/forums</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9083"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="" enabled="false" serviceName="moderation" ssl_enabled="false">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/moderation</sloc:hrefPathPrefix>
+            <sloc:static href="admin_replace" ssl_href="admin_replace"/>
+            <sloc:interService href="admin_replace"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="" enabled="false" serviceName="metrics" ssl_enabled="false">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/metrics</sloc:hrefPathPrefix>
+            <sloc:static href="admin_replace" ssl_href="admin_replace"/>
+            <sloc:interService href="admin_replace"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="" enabled="false" serviceName="cognos" ssl_enabled="false">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/cognos</sloc:hrefPathPrefix>
+            <sloc:static href="admin_replace" ssl_href="admin_replace"/>
+            <sloc:interService href="admin_replace"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference clusterName="clusterS" enabled="false" serviceName="sand" ssl_enabled="false"/>
+    <sloc:serviceReference clusterName="clusterS" enabled="true" serviceName="webresources" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/connections/resources</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference clusterName="clusterS" enabled="true" serviceName="oauth" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/connections/oauth</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference clusterName="Engage_Cluster" enabled="true" serviceName="help" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/help</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9081"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterS" enabled="true" serviceName="mediaGallery" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/news/widgets/lw</sloc:hrefPathPrefix>
+            <sloc:static href="http://acnode1.mikidev.swg.usma.ibm.com:9084" ssl_href="https://acnode1.mikidev.swg.usma.ibm.com:9447"/>
+            <sloc:interService href="https://acnode1.mikidev.swg.usma.ibm.com:9447"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="" enabled="true" serviceName="bss" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/manage</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://192.168.33.170:9080"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference enabled="true" serviceName="scprofiles" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/contacts/profiles</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://192.168.33.167"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterS" enabled="true" serviceName="microblogging" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/connections/opensocial</sloc:hrefPathPrefix>
+            <sloc:static href="https://apps.mikidev.swg.usma.ibm.com" ssl_href="https://apps.mikidev.swg.usma.ibm.com"/>
+            <sloc:interService href="http://localhost:9084"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterS" enabled="true" serviceName="deploymentConfig" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/connections</sloc:hrefPathPrefix>
+            <sloc:static href="http://acnode1.mikidev.swg.usma.ibm.com:9084" ssl_href="https://acnode1.mikidev.swg.usma.ibm.com:9447"/>
+            <sloc:interService href="https://acnode1.mikidev.swg.usma.ibm.com:9447"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="clusterS" enabled="true" serviceName="oauthprovider" ssl_enabled="true">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/oauth2</sloc:hrefPathPrefix>
+            <sloc:static href="http://acnode1.mikidev.swg.usma.ibm.com:9084" ssl_href="https://acnode1.mikidev.swg.usma.ibm.com:9447"/>
+            <sloc:interService href="https://acnode1.mikidev.swg.usma.ibm.com:9447"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <sloc:serviceReference bootstrapHost="admin_replace" bootstrapPort="admin_replace" clusterName="" enabled="false" serviceName="ecm_files" ssl_enabled="false">
+        <sloc:href>
+            <sloc:hrefPathPrefix>/dm</sloc:hrefPathPrefix>
+            <sloc:static href="admin_replace" ssl_href="admin_replace"/>
+            <sloc:interService href="admin_replace"/>
+        </sloc:href>
+    </sloc:serviceReference>
+    <customAuthenticator className="com.ibm.lotus.lotuslive.connections.authenticator.LotusLiveAuthenticator" name="LotusLiveAuthenticator"/>
+    <allowedContent>
+        <contentType enabled="true" name="FLASH"/>
+    </allowedContent>
+    <!-- 
+         To enable virus scanning, first delete the empty avFilter element below.
+         Then, uncomment the avFilter in the comment and replace hostname as appropriate
+         Replace myScannerService with the appropriate name for your scanner (eg
+         AVSCAN for Symantec, RESPMOD for McAfee)
+     -->
+    <avFilter/>
+    <!-- <avFilter class="AVScannerICAP">
+        <property>av.scanner.servers=myscanner.host.com</property>
+        <property>exception.on.virus=yes</property>
+        <property>av.scanner.service=myScannerService</property>
+        </avFilter>
+    -->
+    <forceConfidentialCommunications enabled="false"/>
+    <exposeEmail enabled="false"/>
+    <!-- 
+    When enabling the language selector by setting enabled to true, there are
+    options to consider:
+
+    You can use the defaultLanguage attribute to define a fallback language in which to 
+    display the user interface if the language specified by the browser is not included 
+    in the language elements list. It there are no language elements specified, 
+    the language specified in this attribute is the only language in which Lotus 
+    Connections is displayed.
+
+    Set the cookieName attribute if you want to use a specific, defined name for
+    the cookie used to track the selected language. Default is lcLang.
+
+    Set the cookieDomain if you use multiple host names for Connections features
+    and want to ensure this setting works across all features. For example if your
+    servers are profiles.acme.com and dogear.acme.com set the cookie domain to ".acme.com"
+    (Note the leading period!)
+
+    Set usePermanentCookie to true if you wish to have the user language choice persist
+    across multiple web sessions.
+
+    If you wish to enforce a single language for all users then set the 
+    defaultLanguage attribute and do not specify any child language elements, or
+    just the defaultLanguage.
+
+    Specify a language element for each language you want in the selector dropdown. 
+    Chose the lang= value from the list below - do not use any other values. 
+    As you can see, there is a value for each language supported by Connections. 
+    The element value is the name of the language. The name of the language will be displayed 
+    in the UI and non-latin characters must be specified in javascript escaped unicode format
+    (as shown below).  At the end of each language element either delete the English name of the 
+    language and the surrounding characters, or replace a single dash with a double dash in all instances.
+
+        <language lang="en">English</language>                                           <!-English->
+        <language lang="zh">\u4e2d\u6587 (\u200f\u7b80\u4f53)</language>                 <!-Chinese, Simplified->
+        <language lang="zh_tw">\u4e2d\u6587 (\u200f\u7e41\u9ad4)</language>              <!-Chinese, Traditional->
+        <language lang="ja">\u65e5\u672c\u8a9e</language>                                <!-Japanese->
+        <language lang="ko">\ud55c\uad6d\uc5b4</language>                                <!-Korean->
+        <language lang="fr">Fran\u00e7ais</language>                                     <!-French->
+        <language lang="de">Deutsch</language>                                           <!-German->
+        <language lang="it">Italiano</language>                                          <!-Italian->
+        <language lang="es">Espa\u00f1ol</language>                                      <!-Spanish->
+        <language lang="pt_br">Portugu\u00eas (\u200fBrasil)</language>                  <!-Portuguese, Brazilian->
+        <language lang="cs">\u010ce\u0161tina</language>                                 <!-Czech->
+        <language lang="da">Dansk</language>                                             <!-Danish->
+        <language lang="nl">Nederlands</language>                                        <!-Dutch->
+        <language lang="fi">suomi</language>                                             <!-Finnish->
+        <language lang="el">\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac</language>  <!-Greek->
+        <language lang="hu">Magyar</language>                                            <!-Hungarian->
+        <language lang="no">Norsk (\u200fBokm\u00e5l)</language>                         <!-Norwegian->
+        <language lang="pl">polski</language>                                            <!-Polish->
+        <language lang="pt">Portugu\u00eas (\u200fPortugal)</language>                   <!-Portuguese->
+        <language lang="ru">\u0420\u0443\u0441\u0441\u043a\u0438\u0439</language>        <!-Russian->
+        <language lang="sv">Svenska</language>                                           <!-Swedish->
+        <language lang="sl">sloven\u0161\u010dina</language>                             <!-Slovenian->
+        <language lang="tr">T\u00fcrk\u00e7e</language>                                  <!-Turkish->
+        <language lang="iw">\u05e2\u05d1\u05e8\u05d9\u05ea</language>                    <!-Hebrew->
+        <language lang="ar">\u200f\u0627\u0644\u0639\u0631\u0628\u064a\u0629\u200f</language>  <!-Arabic->
+        <language lang="ca">Catal\u00e0</language>                                       <!-Catalan->
+        <language lang="kk">\u049a\u0430\u0437\u0430\u049b\u0448\u0430</language>        <!-Kazakh->
+        <language lang="th">\u0e44\u0e17\u0e22</language>                                <!-Thai->
+     -->
+    <languageSelector cookieDomain="" cookieName="" defaultLanguage="" enabled="false" usePermanentCookie="false">
+        <language lang="en">English</language>
+        <!--English-->
+        <language lang="zh">\u4e2d\u6587 (\u200f\u7b80\u4f53)</language>
+        <!--Chinese, Simplified-->
+        <language lang="fr">Fran\u00e7ais</language>
+        <!--French-->
+        <language lang="ar">\u200f\u0627\u0644\u0639\u0631\u0628\u064a\u0629\u200f</language>
+        <!--Arabic-->
+    </languageSelector>
+    <!-- Search settings -->
+    <languageSensitive enabled="true"/>
+    <ignorePunctuation enabled="false"/>
+    <transactionSetting>
+        <attribute key="Transaction_Max" value="20"/>
+        <attribute key="Queue_Max" value="10"/>
+    </transactionSetting>
+    <seedlistSettings allowUnsecuredTransfer="false">
+        <attribute key="maximumPageSize" value="1000"/>
+        <attribute key="maximumIncrementalQuerySpanInDays" value="30"/>
+    </seedlistSettings>
+    <useRichTextEditorInBookmarklet enabled="false"/>
+    <!-- Support for 1 to 2 mapping. This is a search config setting that controls composition of unicode characters
+         from decomposed forms like the base character and its accents or other modifiers. -->
+    <oneToTwoMapping enabled="false"/>
+    <dynamicHosts enabled="false">
+        <host href="admin_replace" ssl_href="admin_replace"/>
+    </dynamicHosts>
+    <resources/>
+    <sessionCookies>
+        <cookieName key="JSESSIONID"/>
+    </sessionCookies>
+    <versionStamp value="20130819.143053"/>
+    <properties>
+        <genericProperty name="people.typeahead">disabled</genericProperty>
+        <genericProperty name="LotusLive">true</genericProperty>
+        <genericProperty name="com.ibm.lconn.core.web.request.HttpRequestFilter.IECompatMode">false</genericProperty>
+        <genericProperty name="shindig.config.container.overrides">{"gadgets.sso" : {"cookieDomain" : "apps.mikidev.swg.usma.ibm.com","cookieNames" : "LtpaToken,LtpaToken2","samlSpDomain" : "mail.notes.lotuslivedaily.swg.usma.ibm.com", "samlIdpCookieNames" : "LtpaToken,LtpaToken2,iwaSSL,iwaSSL2,Shimmer,BSSUISESSIONID,token,user_dc,user_lang,LLN2Failover,LLN2Cookie,BIGipServerDailyA-BSSUI-9080-fe,BIGipServerDailyA-WebSEAL-80-fe,BIGipServerDailyB-BSSUI-9080-fe,BIGipServerDailyB-WebSEAL-80-fe"},"iwidget.sso" : {"handlers" : "com.ibm.cre.gadgets.sso.SAMLSSOHANDLER"}}</genericProperty>
+        <genericProperty name="shindig.properties.override.shindig.cache.cacheTTLwithoutVersion">2592000</genericProperty>
+        <genericProperty name="com.ibm.lconn.communities.catalog.enabled">true</genericProperty>
+        <genericProperty name="connections.blogs.feed.return401_fornopermission_toviewblog">true</genericProperty>
+        <genericProperty name="com.ibm.lconn.homepage.noCustomize">true</genericProperty>
+        <genericProperty name="com.ibm.social.as.noNetwork">true</genericProperty>
+        <genericProperty name="com.ibm.lconn.core.web.styles.theme.default">default</genericProperty>
+    </properties>
+    <configEngine configProvider="ConfigEngineSCS"/>
+</config>

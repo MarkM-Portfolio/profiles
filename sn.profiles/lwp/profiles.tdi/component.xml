@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ************************************************************** -->
+<!--                                                                -->
+<!-- Licensed Materials - Property of HCL                           -->
+<!--                                                                -->
+<!-- Copyright HCL Technologies Limited 2006, 2022                  -->
+<!--                                                                -->
+<!-- US Government Users Restricted Rights                          -->
+<!--                                                                -->
+<!-- ************************************************************** -->
+<component name="profiles.tdi" description="Profiles TDI Files" spec-version="1.0" type="source">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/profiles_tdi.jar" preferredInstallLocation="tmp" />
+		<output type="file" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/tdisol.zip" preferredInstallLocation="tmp" />
+		<output type="file" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/tdisol.tar" preferredInstallLocation="tmp" />
+		<output type="file" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/tdisol.OS400.zip" preferredInstallLocation="tmp" />
+<!-- 
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.events.spi.jar" preferredInstallLocation="tmp" />
+ -->
+ 	</output-group>
+	
+	<dependency name="directory.services" type="jar" version="1.0" />
+	<dependency name="lc.customauthclient" type="jar" version="0.1" />
+	<dependency name="lc.util/jse" type="jar" version="1.0" />
+	<dependency name="lc.util/base" type="jar" version="1.0" />
+	<dependency name="lc.util/cache" type="jar" version="1.0" />
+	<dependency name="lc.util/web" type="jar" version="1.0" />
+	<dependency name="lc.config.svc" type="jar" version="1.1.0" />
+	<dependency name="lc.appext/core/api" type="jar" version="2.5" />
+	<dependency name="lc.appext/core/impl" type="jar" version="2.5" />
+	<dependency name="lc.appext/msgvector/api" type="jar" version="2.5" />
+	<dependency name="lc.appext/msgvector/impl" type="jar" version="2.5" />
+	<dependency name="notify/client" type="jar" version="1.0" />
+	<dependency name="av/api" type="jar" version="3.0" />
+	<dependency name="av/admin" type="jar" version="3.0" />
+	<dependency name="av/pojo" type="jar" version="3.0" />
+	<dependency name="lc.search/ejbInterface" type="jar" version="1.0" />
+
+	<dependency name="prereqs.sn/abdera040patch0509" type="jar" version="0.4.0" />
+	<dependency name="prereqs.sn/acf.2.2.0-5" type="jar" version="2.2.0-5" />
+	<dependency name="prereqs.sn/mybatis-2-spring" type="jar" version="1.0.1"/>	
+	<dependency name="prereqs.sn/mybatis" type="jar" version="2.3.5" />
+	<dependency name="prereqs.sn/icu4j-55.1" type="jar" version="55.1" />
+	<dependency name="prereqs.sn/jakarta.commons" type="jar" version="1.1" />
+	<dependency name="prereqs.sn/spring-4.3.0" type="jar" version="4.3.0" />
+	<dependency name="prereqs.sn/tdi7" type="jar" version="7.1" />
+	<dependency name="prereqs.sn/was7.0" type="jar" version="7.0" />
+	<dependency name="prereqs.sn/slf4j" type="jar" />
+	<dependency name="prereqs.sn/log4j2" type="jar"/>
+	
+	<dependency name="profiles.core/service.api" type="jar" version="3.0" />
+	<dependency name="profiles.core/service.impl" type="jar" version="3.0" />
+	<dependency name="prereqs.sn/json4j" type="jar" version="1.0.0.1 "/>
+	<dependency name="lc.events.30/internal" type="jar" version="3.0"/>
+	<dependency name="lc.events.30/spi" type="jar" version="3.0"/>
+	<dependency name="lc.following/internal" type="jar" version="3.0"/>
+	<dependency name="lc.component.integration/profiles" type="jar" version="3.0" />
+	<dependency name="lc.admin/userLifeCycle/spi" type="jar" version="3.0" />
+	
+	<!-- see ProfileTDIDRUCServiceImpl.init() it shouldn't need msgvector libs -->
+	<!-- the spring init is to broad: remove lconn-service-profiles-msgvector-impl  -->
+	<dependency name="lc.component.integration/news" type="jar" />
+	<dependency name="tk.rproxysvc/client" type="jar" />
+	<!--dependency name="prereqs.sn/hystrix" type="jar" /-->
+	
+</component>

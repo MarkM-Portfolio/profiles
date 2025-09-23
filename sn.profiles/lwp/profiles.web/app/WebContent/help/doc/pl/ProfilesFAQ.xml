@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Profile" topic="frame.html">
+   <topic label="Profile - przegląd, jak to zrobić, najczęściej zadawane pytania"
+          href="frame.html">
+      <topic label="Często zadawane pytania (FAQ)" href="c_pers_faq.html"/>
+      <topic label="Witamy w Profilach" href="c_persona_welcome.html"/>
+      <topic label="Co nowego w tej wersji?" href="c_whats_new.html"/>
+      <topic label="Wyświetlanie profili" href="c_pers_profiles.html"/>
+      <topic label="Opcje ułatwień dostępu" href="pDojo_accessibility.html"/>
+      <topic label="Wyszukiwanie profili" href="c_pers_search_options.html"/>
+      <topic label="Szybkie wyszukiwanie" href="t_pers_find_people.html"/>
+      <topic label="Wyszukiwanie zaawansowane" href="t_pers_search_profiles.html"/>
+      <topic label="Wyświetlanie wyników wyszukiwania" href="t_pers_search_results.html"/>
+      <topic label="Korzystanie z wizytówki w programie Profile"
+             href="t_pers_use_biz_card.html"/>
+      <topic label="Eksportowanie informacji kontaktowych" href="t_pers_export_details.html"/>
+      <topic label="Usuwanie znajomego" href="t_pers_delete_colleague.html"/>
+      <topic label="Edycja profilu" href="t_pers_edit_profiles.html"/>
+      <topic label="Aktualizacja informacji kontaktowych"
+             href="t_pers_update_contact_info.html"/>
+      <topic label="Zmiana informacji o wykształceniu i doświadczeniu"
+             href="t_pers_change_bgd_info.html"/>
+      <topic label="Zmiana obrazu w profilu" href="t_pers_edit_photo.html"/>
+      <topic label="Przesyłanie pliku audio" href="t_pers_audiofile_upload.html"/>
+      <topic label="Używanie znaczników" href="c_pers_tags.html"/>
+      <topic label="Oznaczanie profilu" href="t_pers_tag_your_profile.html"/>
+      <topic label="Dodawanie zewnętrznych odsyłaczy do profilu"
+             href="t_add_external_links.html"/>
+      <topic label="Dodawanie znajomych" href="t_pers_add_colleagues.html"/>
+      <topic label="Wyświetlanie znajomego" href="t_pers_view_colleagues.html"/>
+      <topic label="Akceptowanie zaproszeń od znajomych"
+             href="t_pers_accept_invitations.html"/>
+      <topic label="Oznaczanie osób" href="t_pers_tag_people.html"/>
+   </topic>
+   <topic label="Tworzenie pliku audio" href="t_pers_audiofile_create.html"/>
+</toc>

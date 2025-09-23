@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2011                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<ValidPaths>
+	<exclude>
+		<FileDirSubStr value="lwp/build" />
+		<FileDirSubStr value="test" />
+		<FileDirSubStr value="prereqs" />
+		<FileDirSubStr value="lwp04.tools" />
+		<FileDirSubStr value="wsbld_tools" />
+		<FileDirSubStr value="includes" />
+	</exclude>
+
+	<accept>
+		<FileDirSubStr value="/src/com/ibm/peoplepages/internal/resources" />
+		<FileDirSubStr value="/src/com/ibm/peoplepages/webui/resources" />
+		<FileDirSubStr value="/src/com/ibm/peoplepages/web/rpfilter" />
+		<FileDirSubStr value="/src/com/ibm/lconn/profiles/resources" />
+		<FileDirSubStr value="/src" />
+	</accept>
+</ValidPaths>

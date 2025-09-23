@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC 
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+	
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<struts-config>
+
+	<!-- Global Exceptions -->
+	<global-exceptions>
+	</global-exceptions>
+
+	<!-- Global Forwards -->
+	<global-forwards>
+	</global-forwards>
+	
+	<!-- Action Mappings -->
+	<action-mappings>
+		<action path="/dsx/search" scope="request" type="com.ibm.lconn.profiles.dsx.actions.ProfileSearchAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/jsps/atom/error.jsp"/>	
+			<exception key="error.atomDatabase" type="com.ibm.peoplepages.service.DataAccessRetrieveException" path="/WEB-INF/jsps/atom/error.jsp"/>
+		</action>	
+		<action path="/dsx/instance" scope="request" type="com.ibm.lconn.profiles.dsx.actions.ProfileAction">
+			<exception key="error.atomGeneral" type="java.lang.Exception" path="/WEB-INF/jsps/atom/error.jsp"/>	
+			<exception key="error.atomDatabase" type="com.ibm.peoplepages.service.DataAccessRetrieveException" path="/WEB-INF/jsps/atom/error.jsp"/>	
+		</action>
+	</action-mappings>
+</struts-config>

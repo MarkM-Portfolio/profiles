@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2011, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- DO NOT EDIT. reserved runtime file. see profiles-typesEXAMPLE.xml for a sample file -->
+
+<config xmlns="http://www.ibm.com/profiles-types" xmlns:pt="http://www.ibm.com/profiles-types"
+	xmlns:tns="http://www.ibm.com/profiles-config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	id="profiles-types" xsi:schemaLocation="http://www.ibm.com/profiles-types profiles-types.xsd">
+	<type>
+		<parentId>snx:person</parentId>
+		<id>snx:mtperson</id>
+		
+		<property>
+			<ref>email</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+			<mapToNameTable>surname</mapToNameTable>
+		</property>
+		<property>
+			<ref>description</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<richText>true</richText>
+		</property>
+		<property>
+			<ref>experience</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<richText>true</richText>
+		</property>
+		<property>
+			<ref>timezone</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>preferredLanguage</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>jobResp</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>telephoneNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>mobileNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>faxNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>phone1</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<label updatability="readwrite"></label>
+		</property>
+		<property>
+			<ref>phone2</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<label updatability="readwrite"></label>
+		</property>
+		<property>
+			<ref>phone3</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<label updatability="readwrite"></label>
+		</property>
+		<property>
+			<ref>address1</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>address2</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>address3</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>address4</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>profileLinks</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>bldgId</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>deptNumber</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>countryCode</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+	</type>
+	
+	<type>
+		<parentId>snx:mtperson</parentId>
+		<id>default</id>
+	</type>
+</config>

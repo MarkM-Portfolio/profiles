@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2016
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.config.files" description="Profiles Configuration Files" spec-version="3.0" project-type="dir">  
+    <output-group name="to_connections_kit">
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-config.xml"
+            preferredInstallLocation="LotusConnections-config"/>
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-config-cloud.xml"
+            preferredInstallLocation="LotusConnections-config.mt"/>
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-config.xsd"
+            preferredInstallLocation="LotusConnections-config"/>
+        <!--  -->
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-configEXAMPLE.xml"
+            preferredInstallLocation="LotusConnections-config"/>
+        <output type="file" visibility="public" platform="all" location="config.files/tdi-profiles-configEXAMPLE.xml"
+            preferredInstallLocation="LotusConnections-config"/>
+            
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-policy.xml"
+            preferredInstallLocation="LotusConnections-config"/>
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-policy-cloud.xml"
+            preferredInstallLocation="LotusConnections-config.mt"/>
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-policy.xsd"
+            preferredInstallLocation="LotusConnections-config"/>
+        <!--  -->
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-policyEXAMPLE.xml"
+            preferredInstallLocation="LotusConnections-config"/>
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-policyEXAMPLE-cloud.xml"
+            preferredInstallLocation="LotusConnections-config.mt"/>
+        
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-types.xml"
+            preferredInstallLocation="LotusConnections-config"/>
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-types-cloud.xml"
+            preferredInstallLocation="LotusConnections-config.mt"/>
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-types.xsd"
+            preferredInstallLocation="LotusConnections-config"/>  
+        <!--  -->
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-typesEXAMPLE-cloud.xml"
+            preferredInstallLocation="LotusConnections-config.mt"/>
+
+        <output type="dir" visibility="public" platform="all" location="config.files/profiles"
+            preferredInstallLocation="LotusConnections-config/profiles"/>
+        <output type="dir" visibility="public" platform="all" location="config.files/profiles-extensions"
+            preferredInstallLocation="LotusConnections-config/profiles-extensions"/>
+
+        <output type="file" visibility="public" platform="all"
+            location="config.files/profiles-config-update-40-45.xsl"
+            preferredInstallLocation="migration"/>
+
+        <output type="file" visibility="public" platform="all"
+            location="config.files/profiles-config-update-45-50.xsl"
+            preferredInstallLocation="migration"/>
+
+        <output type="file" visibility="public" platform="all"
+            location="config.files/profiles-config-update-55-55CR1.xsl"
+            preferredInstallLocation="migration"/>
+        
+        <output type="file" visibility="public" platform="all"
+            location="config.files/profiles-config-update-55CR1-60.xsl"
+            preferredInstallLocation="migration"/>
+        
+        <output type="file" visibility="public" platform="all"
+            location="config.files/profiles-config-update-60CR6-65.xsl"
+            preferredInstallLocation="migration"/>
+        
+        <output type="file" visibility="public" platform="all"
+            location="config.files/profiles-types-update-60CR6-65.xsl"
+            preferredInstallLocation="migration"/>
+    </output-group>
+    
+    <output-group name="ut_test">
+    	<output type="file" visibility="public" platform="all" location="internal/internal-profiles-policy.xml"/>
+    	<output type="file" visibility="public" platform="all" location="internal/internal-profiles-policy.xsd"/>
+    	<output type="file" visibility="public" platform="all" location="internal/internal-profiles-policy-mt.xml"/>
+    </output-group>
+    
+    <output-group name="mt">
+        <output type="file" visibility="public" platform="all" location="config.files/profiles-types.mt.xml"
+            preferredInstallLocation="LotusConnections-config.mt"/>
+        <output type="file" visibility="public" platform="all" location="config.files/profiles/templates/profileDetails.mt.ftl"
+            preferredInstallLocation="LotusConnections-config.mt/profiles/templates"/>
+            <output type="file" visibility="public" platform="all" location="config.files/profiles/templates/profileEdit.mt.ftl"
+            preferredInstallLocation="LotusConnections-config.mt/profiles/templates"/>
+    </output-group>
+</component>

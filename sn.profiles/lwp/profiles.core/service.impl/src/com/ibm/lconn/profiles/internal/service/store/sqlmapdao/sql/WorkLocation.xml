@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="WorkLocation">
+
+	<typeAlias alias="worklocation"
+		type="com.ibm.lconn.profiles.data.codes.WorkLocation" />
+		
+	<resultMap id="WorkLocationResult" class="java.util.HashMap">
+		<result property="codeId" column="PROF_WORK_LOC" />
+		<result property="address1" column="PROF_ADDRESS1" />
+		<result property="address2" column="PROF_ADDRESS2" />
+		<result property="city" column="PROF_CITY" />
+		<result property="state" column="PROF_STATE" />
+		<result property="postalCode" column="PROF_POSTAL_CODE" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+
+	<select id="get" resultMap="WorkLocationResult" parameterClass="map">
+		select PROF_WORK_LOC, PROF_ADDRESS1, PROF_ADDRESS2, PROF_CITY, PROF_STATE, PROF_POSTAL_CODE, TENANT_KEY
+		from EMPINST.WORKLOC
+		where PROF_WORK_LOC=#codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+
+	<select id="getAll" resultMap="WorkLocationResult" parameterClass="map">
+		select PROF_WORK_LOC, PROF_ADDRESS1, PROF_ADDRESS2, PROF_CITY, PROF_STATE, PROF_POSTAL_CODE, TENANT_KEY
+		from EMPINST.WORKLOC
+		where 1=1
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<insert id="create" parameterClass="worklocation">
+		insert into EMPINST.WORKLOC 
+		(
+			PROF_WORK_LOC,
+			TENANT_KEY
+			<isNotNull prepend="," property="address1">PROF_ADDRESS1</isNotNull>
+			<isNotNull prepend="," property="address2">PROF_ADDRESS2</isNotNull>
+			<isNotNull prepend="," property="city">PROF_CITY</isNotNull>
+			<isNotNull prepend="," property="state">PROF_STATE</isNotNull>
+			<isNotNull prepend="," property="postalCode">PROF_POSTAL_CODE</isNotNull>
+		)
+		values
+		(
+			#codeId#,
+			#dbTenantKey#
+			<isNotNull prepend="," property="address1">#address1#</isNotNull>
+			<isNotNull prepend="," property="address2">#address2#</isNotNull>
+			<isNotNull prepend="," property="city">#city#</isNotNull>
+			<isNotNull prepend="," property="state">#state#</isNotNull>
+			<isNotNull prepend="," property="postalCode">#postalCode#</isNotNull>
+		)
+	</insert>
+	
+	<update id="update" parameterClass="map">
+		update EMPINST.WORKLOC 
+		<dynamic prepend="SET">
+		<isNotNull prepend="," property="code.address1">
+ 			PROF_ADDRESS1 = #code.address1#
+		</isNotNull>
+		<isNotNull prepend="," property="code.address2">
+			PROF_ADDRESS2 = #code.address2#
+		</isNotNull>
+		<isNotNull prepend="," property="code.city">
+			PROF_CITY = #code.city#
+		</isNotNull>
+		<isNotNull prepend="," property="code.state">
+			PROF_STATE = #code.state#
+		</isNotNull>
+		<isNotNull prepend="," property="code.postalCode">
+			PROF_POSTAL_CODE = #code.postalCode#
+		</isNotNull>
+		</dynamic>
+		where PROF_WORK_LOC = #code.codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<delete id="delete" parameterClass="map">
+		delete from EMPINST.WORKLOC 
+		where PROF_WORK_LOC=#codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+
+</sqlMap>
+

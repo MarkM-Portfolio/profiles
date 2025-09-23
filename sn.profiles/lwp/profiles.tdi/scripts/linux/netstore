@@ -1,0 +1,64 @@
+#!/bin/sh
+# *****************************************************************
+#
+# HCL Confidential
+#
+# OCO Source Materials
+#
+# Copyright HCL Technologies Limited 2009, 2021
+#
+# The source code for this program is not published or otherwise
+# divested of its trade secrets, irrespective of what has been
+# deposited with the U.S. Copyright Office.
+#
+# *****************************************************************
+
+cd `dirname $0`
+
+
+function display_syntax {
+	echo "syntax is netstore start | stop | ping"
+}
+#get TDI variables
+. ./tdienv.sh
+
+if [[ $#  == "1" ]]; then
+	arg1=$1
+	case "$arg1" in
+		start)
+				cmd="start"
+				;;
+		stop)
+				cmd="shutdown"
+				;;
+		shutdown)	
+				cmd="shutdown"
+				;;
+		ping)	
+				cmd="ping"
+				;;
+		help)	
+				cmd="help"
+				;;
+		-h)	
+				cmd="help"
+				;;
+		*)
+				cmd=""
+				;;
+	esac
+	if [[ "${cmd}"  == "" ]]; then
+		echo "unrecognized argument: $1"
+		display_syntax
+	elif [[ "${cmd}"  == "help" ]]; then
+		display_syntax
+	else
+		if [[ "${cmd}"  == "start" ]]; then
+			./derby.sh ${cmd} -h ${TDI_CS_HOST} -p ${TDI_CS_PORT} >logs/netstore.out 2>logs/netstore.err &
+		else
+			./derby.sh ${cmd} -h ${TDI_CS_HOST} -p ${TDI_CS_PORT}
+		fi
+	fi
+else
+	display_syntax
+fi 

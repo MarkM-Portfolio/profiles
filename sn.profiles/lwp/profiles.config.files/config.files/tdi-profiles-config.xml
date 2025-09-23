@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- HCL Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright HCL Technologies Limited 2001, 2021                     -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<tdiConfig id="tdi-profiles"
+	xmlns="http://www.ibm.com/profiles-config"
+	xmlns:tns="http://www.ibm.com/profiles-config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ibm.com/profiles-config profiles-config.xsd">
+	<profileExtensionAttributes>
+		<!-- 
+			This extension attribute is required by the 'MyLinks' profile widget
+		-->
+		<xmlFileAttribute 
+			extensionId="profileLinks" 
+			schemaFile="profile-links.xsd" 
+			indexBindingExpr="/linkroll/link/@name | /linkroll/link/@url">
+			<indexFields>
+			    <indexField fieldName="linkName" fieldExpr="/linkroll/link/@name" />
+			</indexFields> 
+		</xmlFileAttribute>
+			
+		<!-- 
+			These extension attributes are required to support customer chat and meeting systems
+		-->
+		<simpleAttribute extensionId="chatIdentity" length="256" sourceKey="chatIdentity" />
+		<simpleAttribute extensionId="meetingIdentity" length="256" sourceKey="meetingIdentity" />	
+			
+		<!-- 
+			These extension attributes are required by the 'Touchpoint' component
+		-->
+		<simpleAttribute extensionId="recommendedTags" length="256" sourceKey="recommendedTags" />
+		<simpleAttribute extensionId="departmentKey" length="256" sourceKey="departmentKey" />
+		<simpleAttribute extensionId="privacyAndGuidelines" length="256" sourceKey="privacyAndGuidelines" />
+		<simpleAttribute extensionId="touchpointState" length="256" sourceKey="touchpointState" />
+		<richtextAttribute extensionId="touchpointSession" maxBytes="1000000" sourceKey="touchpointSession" />
+		
+	</profileExtensionAttributes>
+</tdiConfig>

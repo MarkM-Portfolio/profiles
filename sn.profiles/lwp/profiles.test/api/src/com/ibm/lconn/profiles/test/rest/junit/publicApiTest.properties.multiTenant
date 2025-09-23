@@ -1,0 +1,108 @@
+# ***************************************************************** 
+#                                                                   
+# IBM Confidential                                                  
+#                                                                   
+# OCO Source Materials                                              
+#                                                                   
+# Copyright IBM Corp. 2011                                   
+#                                                                   
+# The source code for this program is not published or otherwise    
+# divested of its trade secrets, irrespective of what has been      
+# deposited with the U.S. Copyright Office.                         
+#                                                                   
+# ***************************************************************** 
+
+# "true" for multi-tenant mode, "false" for on-prem
+multiTenantMode = true
+
+# number of orgs
+# each org requires baseUrl, baseUrlHttp and username/password/email for "user", "other", "tertiary" and "orgAdmin" users
+numOrgs = 2
+
+# The URL for the Profiles server
+# mtMode: org0 base url
+#baseUrl=https://eed00.rtp.raleigh.ibm.com:9443
+baseUrl=https://org.0.host.com:9443
+
+# The non-SSL URL for the Profiles server - if SSL is required in the deployment, this value should be the same as baseUrl
+# mtMode org0 http base url
+#baseUrlHttp=https://eed00.rtp.raleigh.ibm.com:9443
+baseUrlHttp=https://org.0.host.com:9443
+
+# The user and password for the primary user to use when exercising tests
+# mtMode: non-admin, non-orgAdmin user in org0
+username=aalain.0.1
+password=wasadmin
+email=aalain.0.1@org.0.host.com
+
+# The other user and password to use when exercising tests
+# mtMode: non-admin, non-orgAdmin user in org0
+otherUsername=ablanks.0.1
+otherPassword=wasadmin
+otherEmail=ablanks.0.1@org.0.host.com
+
+# Third user for tests
+# mtMode: non-admin, non-orgAdmin user in org0
+tertiaryUserName=asingh.0.1
+tertiaryPassword=wasadmin
+tertiaryEmail=asingh.0.1@org.0.host.com
+
+# mtMode: org0 org-admin
+orgAdminUsername=aberzat.0.1
+orgAdminPassword=wasadmin
+orgAdminEmail=
+
+# The user and password for the admin user (must be in "admin" role for the application)
+# mtMode: global admin
+adminUsername=wasadmin
+adminPassword=wasadmin
+
+# The user and password for the admin user with no profile (must be in "admin" role for the application)
+# mtMode: global admin
+adminNoProfileUsername=noprofileadmin
+adminNoProfilePassword=noprofileadmin
+
+# The user and password for the search-admin user (must be in the "search-admin" role for the application
+searchUsername=wasadmin
+searchPassword=wasadmin
+
+# The URL for the Profiles server
+# mtMode: org1 base url
+#baseUrl=https://eed00.rtp.raleigh.ibm.com:9443
+org1.baseUrl=https://org.1.host.com:9443
+
+# The non-SSL URL for the Profiles server - if SSL is required in the deployment, this value should be the same as baseUrl
+# mtMode org1 http base url
+#baseUrlHttp=https://eed00.rtp.raleigh.ibm.com:9443
+org1.baseUrlHttp=https://org.1.host.com:9443
+
+# The user and password for the primary user to use when exercising tests
+# mtMode: non-admin, non-orgAdmin user in org1
+org1.username=aalain.1.1
+org1.password=wasadmin
+org1.email=aalain.1.1@org.1.host.com
+
+# The other user and password to use when exercising tests
+# mtMode: non-admin, non-orgAdmin user in org1
+org1.otherUsername=ablanks.1.1
+org1.otherPassword=wasadmin
+org1.otherEmail=ablanks.1.1@org.1.host.com
+
+# Third user for tests
+# mtMode: non-admin, non-orgAdmin user in org1
+org1.tertiaryUserName=asingh.1.1
+org1.tertiaryPassword=wasadmin
+org1.tertiaryEmail=asingh.1.1@org.1.host.com
+
+# mtMode: org1 org-admin
+org1.orgAdminUsername=aberzat.1.1
+org1.orgAdminPassword=wasadmin
+org1.orgAdminEmail=aberzat.1.1@org.1.host.com
+
+# Set this value to true if you need to test against 3.0 legacy API for board now moved to news so it must be deployed in your environment
+testMessageBoard=false
+
+# Set this value to true if you want to test variable indexing of search
+testVariableSearchIndexing=false
+# Set this value to a profile-type id whose definition explicitly identifies the surname as not included in the fullTextIndex
+testVariableSearchIndexingProfileType=surnameNotIndexed

@@ -1,0 +1,56 @@
+This document describes the organization of the Profiles directory structure:
+
+===========================================
+'Roughly Final': Directory Layout
+===========================================
+
+profiles.sn.install		- Install related files
+
+profiles.core			- COMPONENT: Internal Core services/apis/data/config
+				/service.api	- Internal service APIs
+				/service.impl	- Internal service IMPL
+
+profiles.db				- COMPONENT: DB Schema related files 
+				/schemas		- Profiles DB schema
+
+profiles.seedlist		- COMPONENT: Seedlist related code
+				/retriever
+				
+profiles.test			- COMPONENT: Test code
+				/bvt			- Base core JUNITs
+
+profiles.web			- COMPONENT: Web level components
+				/core			- Shared web level code
+				/rpfilter		- A set of caching utilities
+						- TODO: Most of this to sn.infra
+				/javelin		- Javelin card code
+						- TODO: Most of this has been moved to sn.infra; we can basically eliminate this project
+				/app			- ***** Profiles UI and API
+
+-------------------------------------------
+Notes:
+-------------------------------------------
+
+For the most part 3 Projects dominate the application:
+- profiles.core/*: 		Main Profiles service functionality
+- profiles.web/app: 	Profiles web UI, ATOM API, and Javelin backend
+
+
+===========================================
+'Future' Directories
+===========================================
+profiles.components		- COMPONENT: SPI/API for adding code that plugs-in to Profiles
+						- EXAMPLE: name.expander
+							- IMPL: profiles.migrate
+
+===========================================
+TO-REFACTOR: 'Stuff that will be moved around at some point'
+===========================================
+
+profiles.admin.scripts			- Profiles jython scripts
+		- PLAN: Create 'profiles.admin' component
+profiles.migrate				- version migration related files
+		- PLAN: Move under 'profiles.db'
+profiles.nicknames				- Code for creating name fuzzification library
+		- PLAN: Move under 'profiles.components'
+

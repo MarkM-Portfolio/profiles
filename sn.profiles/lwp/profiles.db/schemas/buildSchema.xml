@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2008, 2014
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="profiles.db.schemaBld" basedir="."> 
+	
+	<locateComponent component="lc.appext/core/db" locateBuildDir="false" property="lc.appext.core.db.dir" />
+	<property name="schemaMacrosPath" value="${lc.appext.core.db.dir}${file.separator}"/>
+	<import file="${schemaMacrosPath}schemaProcMacros.xml"/>
+	
+	<property name="schema.bld.dir" value="${basedir}/_schema.bld"/>
+	<property name="temp.schema.dir" value="${schema.bld.dir}/temp.schemas"/>
+	<property name="gen.schema.dir" value="${schema.bld.dir}/gen.schemas"/>
+	
+	<property name="schema.legacy.dir" value="${basedir}/legacy"/>
+
+	<target name="clean-gen-schema">
+		<delete dir="${schema.bld.dir}" quiet="true"/>
+		<delete dir="${temp.schema.dir}" quiet="true"/>
+		<delete dir="${gen.schema.dir}" quiet="true"/>
+	</target>
+
+	<!-- ==========================================================
+		 Method for generating final schemas
+		 ========================================================== -->
+	<macrodef name="bldSchema">
+		<attribute name="dbvar" description="Database variant"/>
+		
+		<sequential>
+			<antcall target="bldSchema-target">
+				<param name="dbvar" value="@{dbvar}"/>
+			</antcall>
+		</sequential>
+	</macrodef>
+	
+	<target name="bldSchema-target">	
+		<!-- Load message vector resources -->
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/createMsgVectorSchema.sql" property="include.createMsgVectorSchema.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/createMsgVectorSchema250.sql" property="include.createMsgVectorSchema250.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-appGrants.sql" property="include.msgVector-appGrants.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-postdbxfer25.sql" property="include.msgVector-postdbxfer25.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-predbxfer25.sql" property="include.msgVector-predbxfer25.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-postdbxfer30.sql" property="include.msgVector-postdbxfer30.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-predbxfer30.sql" property="include.msgVector-predbxfer30.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-postdbxfer301.sql" property="include.msgVector-postdbxfer301.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-predbxfer301.sql" property="include.msgVector-predbxfer301.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-reorg.sql" property="include.msgVector-reorg.sql"/>
+	 	<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-runstats.sql" property="include.msgVector-runstats.sql"/>
+		
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-fixup1.sql" property="include.msgVector-fixup1.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-fixup2.sql" property="include.msgVector-fixup2.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-fixup3.sql" property="include.msgVector-fixup3.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-fixup4.sql" property="include.msgVector-fixup4.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-fixup5.sql" property="include.msgVector-fixup5.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-fixup6.sql" property="include.msgVector-fixup6.sql"/>
+		
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-deleteAllRows.sql" property="include.msgVector-deleteAllRows.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-integOn.sql" property="include.msgVector-integOn.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-integOff.sql" property="include.msgVector-integOff.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/msgVector-setInteg.sql" property="include.msgVector-setInteg.sql"/>
+		
+		<!-- Load dynattr resources -->
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/createDynaDefs.sql" property="include.createDynaDefs.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-appGrants.sql" property="include.dynattr-appGrants.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-postdbxfer30.sql" property="include.dynattr-postdbxfer30.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-predbxfer30.sql" property="include.dynattr-predbxfer30.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-reorg.sql" property="include.dynattr-reorg.sql"/>
+	 	<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-runstats.sql" property="include.dynattr-runstats.sql"/>
+		
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-deleteAllRows.sql" property="include.dynattr-deleteAllRows.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-integOn.sql" property="include.dynattr-integOn.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-integOff.sql" property="include.dynattr-integOff.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynattr-setInteg.sql" property="include.dynattr-setInteg.sql"/>
+		
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynaDefsFixUp01.sql" property="include.dynaDefsFixUp01.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynaDefsFixUp02.sql" property="include.dynaDefsFixUp02.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynaDefsFixUp03.sql" property="include.dynaDefsFixUp03.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynaDefsFixUp04.sql" property="include.dynaDefsFixUp04.sql"/>
+		<loadfile quiet="true" srcFile="${temp.schema.dir}/${dbvar}/dynaDefsFixUp05.sql" property="include.dynaDefsFixUp05.sql"/>
+		
+		<!-- Build output director -->
+	 	<mkdir dir="${gen.schema.dir}/${dbvar}"/>
+	 	
+	 	<copy todir="${gen.schema.dir}/${dbvar}" overwrite="true">
+	 		<filterset begintoken="{" endtoken="}">
+	 			<filter token="include.createMsgVectorSchema.sql" value="${include.createMsgVectorSchema.sql}"/>
+	 			<filter token="include.createMsgVectorSchema250.sql" value="${include.createMsgVectorSchema250.sql}"/>
+	 			<filter token="include.msgVector-appGrants.sql" value="${include.msgVector-appGrants.sql}"/>
+	 			<filter token="include.msgVector-reorg.sql" value="${include.msgVector-reorg.sql}"/>
+	 			<filter token="include.msgVector-runstats.sql" value="${include.msgVector-runstats.sql}"/>
+	 			<filter token="include.msgVector-appGrants.sql" value="${include.msgVector-appGrants.sql}"/>
+	 			<filter token="include.msgVector-postdbxfer25.sql" value="${include.msgVector-postdbxfer25.sql}"/>
+	 			<filter token="include.msgVector-predbxfer25.sql" value="${include.msgVector-predbxfer25.sql}"/>
+	 			<filter token="include.msgVector-postdbxfer30.sql" value="${include.msgVector-postdbxfer30.sql}"/>
+	 			<filter token="include.msgVector-predbxfer30.sql" value="${include.msgVector-predbxfer30.sql}"/>
+	 			<filter token="include.msgVector-postdbxfer301.sql" value="${include.msgVector-postdbxfer301.sql}"/>
+	 			<filter token="include.msgVector-predbxfer301.sql" value="${include.msgVector-predbxfer301.sql}"/>
+	 			<filter token="include.msgVector-reorg.sql" value="${include.msgVector-reorg.sql}"/>
+	 			<filter token="include.msgVector-runstats.sql" value="${include.msgVector-runstats.sql}"/>
+	 			
+	 			<filter token="include.msgVector-fixup1.sql" value="${include.msgVector-fixup1.sql}"/>
+	 			<filter token="include.msgVector-fixup2.sql" value="${include.msgVector-fixup2.sql}"/>
+	 			<filter token="include.msgVector-fixup3.sql" value="${include.msgVector-fixup3.sql}"/>
+	 			<filter token="include.msgVector-fixup4.sql" value="${include.msgVector-fixup4.sql}"/>
+	 			<filter token="include.msgVector-fixup5.sql" value="${include.msgVector-fixup5.sql}"/>
+	 			<filter token="include.msgVector-fixup6.sql" value="${include.msgVector-fixup6.sql}"/>
+	 					
+	 			<filter token="include.msgVector-deleteAllRows.sql" value="${include.msgVector-deleteAllRows.sql}"/>
+	 			<filter token="include.msgVector-integOn.sql" value="${include.msgVector-integOn.sql}"/>
+	 			<filter token="include.msgVector-integOff.sql" value="${include.msgVector-integOff.sql}"/>
+	 			<filter token="include.msgVector-setInteg.sql" value="${include.msgVector-setInteg.sql}"/>
+
+				<filter token="include.createDynaDefs.sql" value="${include.createDynaDefs.sql}"/>
+	 			<filter token="include.dynattr-appGrants.sql" value="${include.dynattr-appGrants.sql}"/>
+	 			<filter token="include.dynattr-reorg.sql" value="${include.dynattr-reorg.sql}"/>
+	 			<filter token="include.dynattr-runstats.sql" value="${include.dynattr-runstats.sql}"/>
+	 			<filter token="include.dynattr-appGrants.sql" value="${include.dynattr-appGrants.sql}"/>
+	 			<filter token="include.dynattr-postdbxfer30.sql" value="${include.dynattr-postdbxfer30.sql}"/>
+	 			<filter token="include.dynattr-predbxfer30.sql" value="${include.dynattr-predbxfer30.sql}"/>
+	 			<filter token="include.dynattr-reorg.sql" value="${include.dynattr-reorg.sql}"/>
+	 			<filter token="include.dynattr-runstats.sql" value="${include.dynattr-runstats.sql}"/>
+	 			
+	 			<filter token="include.dynattr-deleteAllRows.sql" value="${include.dynattr-deleteAllRows.sql}"/>
+	 			<filter token="include.dynattr-integOn.sql" value="${include.dynattr-integOn.sql}"/>
+	 			<filter token="include.dynattr-integOff.sql" value="${include.dynattr-integOff.sql}"/>
+	 			<filter token="include.dynattr-setInteg.sql" value="${include.dynattr-setInteg.sql}"/>
+	 			
+	 			<filter token="include.dynaDefsFixUp01.sql" value="${include.dynaDefsFixUp01.sql}"/>
+	 			<filter token="include.dynaDefsFixUp02.sql" value="${include.dynaDefsFixUp02.sql}"/>
+	 			<filter token="include.dynaDefsFixUp03.sql" value="${include.dynaDefsFixUp03.sql}"/>
+	 			<filter token="include.dynaDefsFixUp04.sql" value="${include.dynaDefsFixUp04.sql}"/>
+	 			<filter token="include.dynaDefsFixUp05.sql" value="${include.dynaDefsFixUp05.sql}"/>
+	 		</filterset>
+
+	 		<fileset dir="${basedir}/${dbvar}">
+	 			<include name="**/*.sql"/>
+	 			<!-- export fixup50j.sh migration script per RTC 137860, 137632 -->
+	 			<include name="**/fixup*.sh"/>
+	 		</fileset>
+	 	</copy>
+		
+		<!-- originally added as per rtc 106005, 105997. removed as per 112462. leave until things are settled.
+		<antcall target="commentOutConnect${dbvar}" />
+		-->
+		
+	</target>
+	
+	<target name="bld-schemas" depends="clean-gen-schema">
+		<copyTemplateSchemas 
+			srcComponent="profiles.db/schemas/legacy/msgvector" 
+			srcSchemaId="Wall Schema"
+			schemaSubstFile="${basedir}/schema_subst.properties"
+			outputDir="${temp.schema.dir}"/>
+			
+		<copyTemplateSchemas 
+			srcComponent="profiles.db/schemas/legacy/dynattr" 
+			srcSchemaId="Dynattr Schema"
+			schemaSubstFile="${basedir}/schema_subst.properties"
+			outputDir="${temp.schema.dir}"/>
+		
+		<bldSchema dbvar="db2"/>
+		<bldSchema dbvar="oracle"/>
+		<bldSchema dbvar="sqlserver"/>
+		<bldSchema dbvar="as400"/>
+	</target>
+	
+	<target name="commentOutConnectdb2">
+		<echo message="enter commentOutConnectdb2"/>
+		<replaceregexp match="CONNECT TO" replace="-- CONNECT TO">
+		    <fileset dir="${gen.schema.dir}/${dbvar}" includes="**/fixup*.sql"/>
+		</replaceregexp>
+		<replaceregexp match="CONNECT RESET" replace="-- CONNECT RESET">
+			<fileset dir="${gen.schema.dir}/${dbvar}" includes="**/fixup*.sql"/>
+		</replaceregexp>
+	</target>
+	
+	<target name="commentOutConnectoracle">
+		<echo message="enter commentOutConnectoracle"/>
+		<replaceregexp match="QUIT;" replace="-- QUIT;">
+			<fileset dir="${gen.schema.dir}/${dbvar}" includes="**/fixup*.sql"/>
+		</replaceregexp>
+	</target>
+		
+	<target name="commentOutConnectsqlserver">
+		<echo message="enter commentOutConnectsqlserver"/>
+		<replaceregexp match="USE PEOPLEDB" replace="-- USE PEOPLEDB">
+			<fileset dir="${gen.schema.dir}/${dbvar}" includes="**/fixup*.sql"/>
+		</replaceregexp>
+	</target>
+	
+	<target name="commentOutConnectas400">
+		<echo message="enter commentOutConnectas400"/>
+		<!-- no replacementto date -->
+	</target>
+	
+</project>

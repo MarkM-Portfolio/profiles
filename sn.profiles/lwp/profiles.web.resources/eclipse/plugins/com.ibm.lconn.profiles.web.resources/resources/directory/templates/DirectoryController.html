@@ -1,0 +1,35 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2014                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<div class="lconn_directoryPage">
+	<div dojoAttachPoint="containerNode"></div>
+	<div dojoAttachPoint="searchPlaceholder" style="visibility: hidden" class="lotusHidden"></div>
+	<div dojoAttachPoint="searchNode" class="lconn_searchNode">
+		<div dojoType="lconn.profiles.directory.SearchBoxWidget" dojoAttachPoint="searchTextNode" dojoAttachEvent="onQueryChanged: _startQuery" style="margin-bottom: 10px;">
+			<div dojoAttachPoint="loadingIcon" class="lotusHidden">
+				<img class="lotusLoading" src="${blankGif}" role="presentation">
+			</div>
+		</div>
+		<div style="margin-bottom: 20px;">
+			<a dojoAttachPoint="advancedSearchLinkNode" href="javascript:;" role="button" dojoAttachEvent="onclick: showAdvancedUI">${DISPLAY_FULL_OPTIONS}</a>
+		</div>
+	</div>
+	<div dojoAttachPoint="content" class="lconn_content lotusHidden">
+		<div dojoType="lconn.profiles.directory.ResultsWidget" dojoAttachPoint="searchResultsNode" dojoAttachEvent="onScrollToUpdate: _requestNextQueryPage, onResultSet: _showContent, onFullSearchClicked: showAdvancedUI, onTagClicked: _tagClicked" allowAdvancedSearch="${allowAdvancedSearch}"></div>
+	</div>
+	<div dojoAttachPoint="resultCountNode" class="lconn_resultCount lotusHidden">
+		<span dojoAttachPoint="totalResults"></span>
+		<span dojoAttachPoint="allResults" style="display: none;"></span>
+	</div>
+</div>

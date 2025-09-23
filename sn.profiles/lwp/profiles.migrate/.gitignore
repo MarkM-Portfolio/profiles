@@ -1,0 +1,7 @@
+MANIFEST.MF
+/.project
+/.classpath
+/.factorypath
+/.settings
+/*.rpxconfig
+/build

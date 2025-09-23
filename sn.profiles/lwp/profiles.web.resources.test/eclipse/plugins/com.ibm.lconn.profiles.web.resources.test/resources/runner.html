@@ -1,0 +1,83 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2015                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+${head}
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Jasmine Spec Runner v2.0.0</title>
+
+<link rel="shortcut icon" type="image/png" href="lib/jasmine-2.0.0/jasmine_favicon.png">
+<link rel="stylesheet" type="text/css" href="lib/jasmine-2.0.0/jasmine.css">
+
+<script src="lib/jasmine-2.0.0/jasmine.js"></script>
+<script src="lib/jasmine-2.0.0/jasmine-html.js"></script>
+
+    ${script:lconn.profiles.test.specRunner}
+    ${script:net.jazz.ajax.xdloader}
+
+        <script type="text/javascript">
+        (function(){
+            window.dojoConfig.ibmStartupApp = false;
+            // Define require()
+/*          window.require = function(module, callback) {
+                var loader = net.jazz.ajax.xdloader;
+                if (!dojo.isArray(module))
+                    module = [module];
+                loader.batch_load_async(module, callback);
+            } */
+        })();
+        </script>
+
+        <script type="text/javascript">
+        (function(){
+            window.testUrl = "";
+            window.testModule = "";
+
+            // parse out our test URL and our Dojo URL from the query string
+            var qstr = window.location.search.substr(1);
+            if(qstr.length){
+                var qparts = qstr.split("&");
+                for(var x=0; x<qparts.length; x++){
+                    var tp = qparts[x].split("="), name=tp[0], value=tp[1].replace(/[<>"':\(\)]/g, ""); // replace() to avoid XSS attack
+                    //Avoid URLs that use the same protocol but on other domains, for security reasons.
+                    if (value.indexOf(" ") === 0) {
+                        throw "Unsupported URL";
+                    }
+                    if (value.indexOf("//") === 0) {
+                        throw "Unsupported URL";
+                    }
+                    switch(name){
+                        case "testUrl":
+                        case "testModule":
+                            window[name] = value;
+                            break;
+                        case "registerModulePath":
+                            var modules = value.split(";");
+                            window.registerModulePath=[];
+                            for (var i=0; i<modules.length;i++){
+                                window.registerModulePath.push(modules[i].split(","));
+                            }
+                        break;
+                    }
+                }
+            }
+            
+            if (window.testModule && window.testModule.length > 0) {
+                require(window.testModule.split(","), function() {
+                    launchJasmine();
+                });
+            }
+        })();
+        </script>
+${endhead}
+${end}

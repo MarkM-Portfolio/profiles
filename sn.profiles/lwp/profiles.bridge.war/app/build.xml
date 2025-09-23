@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2017
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="profiles.bridge.war/app" default="development" basedir="."> 
+
+  <import file="${env.WPLC_IMPORT}/std_props.xml"/>
+  <import file="${env.WPLC_IMPORT}/std_dirs.xml"/>
+    
+  <property name="output.jar" value="${dir.lib}/lc.profiles.bridge.jar"/>
+  <property name="output.war" value="${dir.lib}/lc.profiles.bridge.war"/>
+  <property name="override.websrc.dir" value="${basedir}/WebContent" />
+  <property name="web.xml" value="${basedir}/WebContent/WEB-INF/web.xml" />
+  <property name="tld.dependency.component" value="profiles.bridge.war/app" />
+  <property name="war.exclude.pattern" value="WEB-INF/debug.props/**,tests/**,**/.jazzignore"/>
+  <property name="cr.excludes.list" value="WEB-INF${file.separator}tlds${file.separator}*" />
+
+  <property name="cache.props1" value="${dir.build}/WebContent/WEB-INF/classes/" />
+  <property name="cache.props2" value="${dir.build}/tmp/war/WEB-INF/classes/" />
+
+  <import file="${env.WPLC_IMPORT}/check.xml"/>
+  <import file="${env.WPLC_IMPORT}/compile.xml"/>
+  <import file="${env.WPLC_IMPORT}/rmic.xml"/>
+  <import file="${env.WPLC_IMPORT}/package_extra.xml"/>
+  <import file="${env.WPLC_IMPORT}/javadoc.xml"/>
+  <import file="${env.WPLC_IMPORT}/jdepend.xml"/>
+  <import file="${env.WPLC_IMPORT}/clean.xml"/>
+  <import file="${env.WPLC_IMPORT}/comp_zip.xml"/>
+  <import file="${env.WPLC_IMPORT}/std_targets.xml"/>
+  <import file="${env.WPLC_IMPORT}/process_nls.xml"/>
+  <import file="${env.WPLC_IMPORT}/performance.xml"/>
+
+  <property name="postcompile.override" value="postcompilework" />
+  <property name="war_package.optional" value="${postcompile.override}" />
+
+  <property name="prejar.override" value="pre_jar_copy" />
+
+	<target name="pre_jar_copy" >
+		<echo>Executing pre_jar_copy </echo>
+		<copy todir="${cache.props1}" verbose="true" overwrite="true">
+			<fileset dir="${basedir}${file.separator}src" casesensitive="yes">
+				<include name="cacheinstances.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${cache.props2}" verbose="true" overwrite="true">
+			<fileset dir="${basedir}${file.separator}src" casesensitive="yes">
+				<include name="cacheinstances.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="postcompilework">
+		<antcall target="echovariables"/>
+		<antcall target="copypropfiles1"/>
+		<antcall target="copypropfiles2"/>
+	</target>
+
+	<target name="echovariables">
+		<echo> base dir="${basedir}" </echo>
+		<echo> dir.build="${dir.build}" </echo>
+		<echo> cache props1="${cache.props1}" </echo>
+		<echo> cache props2="${cache.props2}" </echo>
+		<echo> war_package.optional="${war_package.optional}" </echo>
+	</target>
+
+	<target name="copypropfiles1">
+		<echo>Executing copypropfiles1 </echo>
+		<copy todir="${cache.props1}" verbose="true" overwrite="true">
+			<fileset dir="${basedir}${file.separator}src" casesensitive="yes">
+				<include name="cacheinstances.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copypropfiles2">
+		<echo>Executing copypropfiles2 </echo>
+		<copy todir="${cache.props2}" verbose="true" overwrite="true">
+			<fileset dir="${basedir}${file.separator}src" casesensitive="yes">
+				<include name="cacheinstances.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!--Build process copies in war artifacts (e.g. from common resources, extreacted tlds, etc). -->
+	<!--bld clean will remove some content via infra components (see lc.common.web) but not all. -->
+	<!--These local targets are used to clean other remnants. -->
+	<property name="local.clean" value="localClean" />
+	<target name="localClean">
+		<delete failonerror="false">
+			<fileset dir="${override.websrc.dir}/WEB-INF/tlds" includes="**/*.tld" />
+		</delete> 
+		<delete failonerror="false" dir="${override.websrc.dir}/nav" />
+	</target>
+
+	<target name="war_package_cleanup">
+		<delete failonerror="false">
+			<fileset dir="${override.websrc.dir}/WEB-INF/tlds" includes="**/*.tld" />
+		</delete> 
+	</target>
+
+</project>

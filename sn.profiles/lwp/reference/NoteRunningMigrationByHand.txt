@@ -1,0 +1,54 @@
+
+Note on runnign MigrateHashEmail via command line
+=================================================
+
+tested with developer's mantis java and DB2 10.5
+
+java -version
+-------------
+java version "1.6.0"
+Java(TM) SE Runtime Environment (build pwi3260sr16fp2-20141026_01(SR16 FP2))
+IBM J9 VM (build 2.4, JRE 1.6.0 IBM J9 2.4 Windows 7 x86-32 jvmwi3260sr16-201410
+10_216764 (JIT enabled, AOT enabled)
+J9VM - 20141010_216764
+JIT  - r9_20140523_64469ifx2
+GC   - GA24_Java6_SR16_20141010_1202_B216764)
+JCL  - 20141005_01
+
+
+DB2 level
+---------
+[db2inst1@lcauto68 ~]$ db2level
+DB21085I  This instance or install (instance name, where applicable:
+"db2inst1") uses "64" bits and DB2 code release "SQL10054" with level
+identifier "0605010E".
+Informational tokens are "DB2 v10.5.0.4", "s140813", "IP23623", and Fix Pack
+"4".
+Product is installed at "/opt/ibm/db2/V10.5".
+
+Collocate (these are packaged in the profile.migrate component)
+  db2jcc.jar,
+  db2jcc_license_cu.jar,
+  profiles.migrate.jar,
+  commons-logging-1.0.4.jar,
+  lc.util.web-30.jar,
+  commons-lang-2.4.jar,
+  commons-codec-1.3-minus-mp.jar
+E.g., on Windows, I used C://a
+
+c:\a>java -Dfile.encoding=UTF-8 -cp "C://a/*" com.ibm.profiles.migrate.MigrateHashEmail jdbc:db2://lcauto68.swg.usma.ibm.com:50000/PEOPLEDB db2inst1 password
+MigrateHashEmail : Populate EMPLOYEE.PROF_IDHASH field
+MigrateHashEmail : Processed 100 entries in this batch.  Total updates 100.
+MigrateHashEmail : Processed 100 entries in this batch.  Total updates 200.
+MigrateHashEmail : Processed 50 entries in this batch.  Total updates 250.
+MigrateHashEmail : Processed 100 entries in this batch.  Total updates 350.
+MigrateHashEmail : Processed 100 entries in this batch.  Total updates 450.
+MigrateHashEmail : Processed 50 entries in this batch.  Total updates 500.
+MigrateHashEmail : Processed 100 entries in this batch.  Total updates 600.
+MigrateHashEmail : Processed 100 entries in this batch.  Total updates 700.
+MigrateHashEmail : Processed 50 entries in this batch.  Total updates 750.
+MigrateHashEmail : Processed 100 entries in this batch.  Total updates 850.
+MigrateHashEmail : Processed 100 entries in this batch.  Total updates 950.
+MigrateHashEmail : Processed 50 entries in this batch.  Total updates 1000.
+MigrateHashEmail : Processed total updates 1000.
+

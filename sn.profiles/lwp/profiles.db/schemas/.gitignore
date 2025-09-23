@@ -1,0 +1,8 @@
+MANIFEST.MF
+/.apt_generated
+/.project
+/.classpath
+/.settings
+/*.rpxconfig
+/build
+/_schema.bld

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2015
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.core/service.impl" description="Profiles Core Service Impl" spec-version="3.0" project-type="java">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.core.service.impl.jar" preferredInstallLocation="tmp" />
+	</output-group>
+	
+	<output-group name="to_war">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.core.service.impl.jar" preferredInstallLocation="WEB-INF/lib" />
+	</output-group>
+	
+	<output-group name="to_ear">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.core.service.impl.jar" preferredInstallLocation="" />
+	</output-group>
+
+	<dependency name="profiles.core/service.api" type="jar" version="3.0" />
+	<dependency name="prereqs.sn/was7.0" type="jar" version="7.0" />
+	<dependency name="prereqs.sn/mybatis" type="jar" version="2.3.5" />
+	<dependency name="prereqs.sn/icu4j-55.1" type="jar" version="55.1" />
+	<dependency name="prereqs.sn/jakarta.commons" type="jar" version="1.1" />
+	<dependency name="prereqs.sn/spring256" type="jar" version="2.5" />
+	<dependency name="prereqs.sn/json4j" type="jar" version="1.0.0.1" />
+	<dependency name="lc.config.svc" type="jar" version="1.1.0" />
+	<dependency name="lc.util/base" type="jar" version="1.0" />
+	<dependency name="lc.util/web" type="jar" version="1.0" />
+	<dependency name="lc.appext/core/api" type="jar" version="2.5" />
+	<dependency name="av/api" type="jar" version="3.0" />
+	<dependency name="av/admin" type="jar" version="3.0" />
+	<dependency name="notify/client" type="jar" version="3.0" />
+	<dependency name="lc.search/ejbInterface" type="jar" version="1.0" />
+	<dependency name="lc.admin/lc.admin" type="jar" version="2.5" />
+	<dependency name="lc.admin/userLifeCycle/spi" type="jar" version="3.0" />
+	<dependency name="lc.events.30/internal" type="jar" version="3.0"/>
+	<dependency name="lc.following/internal" type="jar" version="3.0"/>
+	<dependency name="lc.following/ejbClient" type="jar" version="3.0"/>
+	<dependency name="lc.sched.v2/core" type="jar" version="3.0"/>
+	<!-- dependency for ll bss integration -->
+	<dependency name="lc.admin/lc.admin" type="jar" version="2.5"/>
+    <dependency name="lc.component.integration/profiles" type="jar" version="3.0" />
+	<dependency name="lc.component.integration/news" type="jar" />
+	<!-- -->
+
+	<dependency name="highway/client" type="jar" version="1.0" />
+
+	<!--  4.5 multitenant -->
+   <dependency name="directory.services" type="jar" version="2.0"/>
+
+   <dependency name="prereqs.sn/hystrix" type="jar" />
+	
+</component>

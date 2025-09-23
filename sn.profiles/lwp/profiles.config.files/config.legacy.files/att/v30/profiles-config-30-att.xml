@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- 5724_S68                                                          -->
+<config id="profiles"
+	xmlns="http://www.ibm.com/profiles-config"
+	xmlns:tns="http://www.ibm.com/profiles-config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ibm.com/profiles-config profiles-config.xsd">
+
+
+	<!-- START PROFILES DATA MODELS SECTION -->
+	<profileDataModels>	
+		<profileExtensionAttributes>
+			<!-- 
+				This extension attribute is required by the 'MyLinks' profile widget
+			-->
+			<xmlFileAttribute 
+				extensionId="profileLinks" 
+				schemaFile="profile-links.xsd" 
+				indexBindingExpr="/linkroll/link/@name | /linkroll/link/@url">
+				<indexFields>
+				    <indexField fieldName="linkName" fieldExpr="/linkroll/link/@name" />
+				</indexFields>
+			</xmlFileAttribute>
+			<!-- begin TSPC-763: Migrate profile extensions from 2.5 -> 3.0  -->
+			<simpleAttribute extensionId="skills" length="64" />
+			<!-- simpleAttribute extensionId="jobInformation.skills" length="64" / -->
+			<simpleAttribute extensionId="certifications" length="64" />
+			<simpleAttribute extensionId="patents" length="64" />
+			<simpleAttribute extensionId="reachMe" length="64" />
+			<simpleAttribute extensionId="interests" length="64" />
+
+			<simpleAttribute extensionId="activities" length="64" />
+			<simpleAttribute extensionId="favoriteBooks" length="64" />
+			<simpleAttribute extensionId="favoriteMovies" length="64" />
+			<simpleAttribute extensionId="favoriteTVShows" length="64" />
+			<simpleAttribute extensionId="highSchool" length="64" />
+			<simpleAttribute extensionId="colleges" length="64" />
+			<simpleAttribute extensionId="degrees" length="64" />
+
+			<simpleAttribute extensionId="orgs" length="64" />
+			<simpleAttribute extensionId="gradSchool" length="64" />
+			<simpleAttribute extensionId="dummyField" length="64" />
+			
+			<simpleAttribute extensionId="projects" length="64" />
+			<simpleAttribute extensionId="favoriteMusic" length="64" />
+			<simpleAttribute extensionId="favoriteSports" length="64" />
+			<simpleAttribute extensionId="favoriteQuote" length="64" />
+			<simpleAttribute extensionId="twitterId" length="64" />
+			<simpleAttribute extensionId="linkedInId" length="64" />
+			<simpleAttribute extensionId="languages" length="64" />
+			
+			<!-- TSPC-457 add address and business unit extension vars 20101006 -->
+			<simpleAttribute extensionId="Address" length="64" />
+			<simpleAttribute extensionId="City" length="64" />
+			<simpleAttribute extensionId="State" length="64" />
+			<simpleAttribute extensionId="PostalCode" length="64" />
+			<simpleAttribute extensionId="BusGroupId" length="64" />
+			<simpleAttribute extensionId="BusUnitName" length="64" />
+			<simpleAttribute extensionId="ConsCompany" length="64" />
+			<!-- end TSPC-763 -->
+
+		</profileExtensionAttributes>
+	
+		<profileDataModel>
+			<!-- =================================================================================== -->
+			<!-- This section is used to define attributes that are updated via the drafting process -->
+			<!--   In most deployments you should never edit the config for this section.			 -->
+			<!-- Example: <draftableAttribute>displayName</draftableAttribute>                  	 -->
+			<!-- Example: Example: <draftableExtensionAttribute extensionIdRef="tieline"/>			 -->
+			<!-- =================================================================================== -->
+		</profileDataModel>	
+	</profileDataModels>
+	<!-- END PROFILES DATA MODELS SECTION -->
+
+
+	<!-- START LAYOUT CONFIGURATION SECTION-->
+	<layoutConfiguration>
+ 
+ 		<!-- 
+ 			UI configuration for vcard export feature.
+ 			
+ 			The first charset defined is the default.
+ 		 -->
+ 		<vcardExport>
+			<charset name="UTF-8">
+				<label labelKey="label.vcard.encoding.utf8"/>
+			</charset>
+			<charset name="ISO-8859-1">
+				<label labelKey="label.vcard.encoding.iso88591"/>
+			</charset>
+			<charset name="Cp943c">
+				<label labelKey="label.vcard.encoding.cp943c"/>
+			</charset>
+		</vcardExport>
+ 
+		<searchLayout>
+			<!-- begin TSPC-763: Migrate profile extensions from 2.5 -> 3.0  -->
+		    	<!-- <attribute showLabel="true">displayName</attribute> -->
+		    	<attribute showLabel="false">preferredFirstName</attribute>
+		    	<attribute showLabel="false">preferredLastName</attribute>
+		    	<attribute showLabel="true">profileTags</attribute>
+		    	<attribute showLabel="true">jobResp</attribute>
+		    	<attribute showLabel="false">experience</attribute>
+		    	<attribute showLabel="false">background</attribute>
+			<!-- 
+		    	<attribute showLabel="true">organizationTitle</attribute>
+		      	<attribute showLabel="false">workLocation.city</attribute>
+		    	<attribute showLabel="false">workLocation.state</attribute>
+		    	<attribute showLabel="false">countryDisplayValue</attribute>
+		    	<attribute showLabel="false">email</attribute>
+		    	<attribute showLabel="false">telephoneNumber</attribute>
+			-->
+			<!-- begin TSPC-763: Migrate profile extensions from 2.5 -> 3.0  -->
+			<extensionAttribute showLabel="true" extensionIdRef="skills" labelKey="label.noBC.jobInformation.extattr.skills" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="patents" labelKey="label.noBC.jobInformation.extattr.patents" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="orgs" labelKey="label.noBC.jobInformation.extattr.orgs" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="projects" labelKey="label.noBC.jobInformation.extattr.projects" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="languages" labelKey="label.noBC.jobInformation.extattr.languages" bundleIdRef="tSpace" />
+
+			<extensionAttribute showLabel="true" extensionIdRef="reachMe" labelKey="label.contactInformation.extattr.reachMe" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="twitterId" labelKey="label.aboutMe.extattr.twitterId" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="linkedInId" labelKey="label.aboutMe.extattr.linkedInId" bundleIdRef="tSpace" />
+
+			<extensionAttribute showLabel="true" extensionIdRef="highSchool" labelKey="label.noBC.educationInformation.extattr.highSchool" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="colleges" labelKey="label.noBC.educationInformation.extattr.colleges" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="degrees" labelKey="label.noBC.educationInformation.extattr.degrees" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="gradSchool" labelKey="label.noBC.educationInformation.extattr.gradSchool" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="certifications" labelKey="label.noBC.educationInformation.extattr.certifications" bundleIdRef="tSpace" />
+
+			<extensionAttribute showLabel="true" extensionIdRef="interests" labelKey="label.aboutMe.extattr.interests" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="activities" labelKey="label.aboutMe.extattr.activities" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="favoriteBooks" labelKey="label.aboutMe.extattr.favoriteBooks" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="favoriteMovies" labelKey="label.aboutMe.extattr.favoriteMovies" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="favoriteTVShows" labelKey="label.aboutMe.extattr.favoriteTVShows" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="favoriteMusic" labelKey="label.aboutMe.extattr.favoriteMusic" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="favoriteSports" labelKey="label.aboutMe.extattr.favoriteSports" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="favoriteQuote" labelKey="label.aboutMe.extattr.favoriteQuote" bundleIdRef="tSpace" />
+
+			<extensionAttribute showLabel="true" extensionIdRef="Address" labelKey="label.workInformation.extattr.Address" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="City" labelKey="label.workInformation.extattr.City" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="State" labelKey="label.workInformation.extattr.State" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="PostalCode" labelKey="label.workInformation.extattr.PostalCode" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="BusGroupId" labelKey="label.workInformation.extattr.BusGroupId" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="BusUnitName" labelKey="label.workInformation.extattr.BusUnitName" bundleIdRef="tSpace" />
+			<extensionAttribute showLabel="true" extensionIdRef="ConsCompany" labelKey="label.workInformation.extattr.ConsCompany" bundleIdRef="tSpace" />
+			<!-- end TSPC-763 -->
+		</searchLayout>
+ 
+		<searchResultsLayout profileType="default">
+			<column>
+				<attribute hideIfEmpty="true" photo="true" uid="key" showLabel="false">profilePicture</attribute>
+			</column>
+			<column>
+				<attribute showLabel="false" hideIfEmpty="true" hcard="true" uid="key" userid="userid">displayName</attribute>
+				<attribute showLabel="false" prependHtml="" appendHtml="" hideIfEmpty="true">jobResp</attribute>
+				<attribute showLabel="false" prependHtml="" appendHtml="" hideIfEmpty="true">organizationTitle</attribute>
+				<attribute showLabel="false" prependHtml="" appendHtml="" hideIfEmpty="true">workLocation.city</attribute>
+				<attribute showLabel="false" prependHtml="" appendHtml="" hideIfEmpty="true">workLocation.state</attribute>
+				<attribute showLabel="false" prependHtml="" appendHtml="" hideIfEmpty="true">countryDisplayValue</attribute>
+			</column>
+			
+			<column>
+				<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">telephoneNumber</attribute>
+				<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true" email="true">email</attribute>
+				<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true" email="true">groupwareEmail</attribute>
+			</column>			
+		</searchResultsLayout>
+		
+		<businessCardLayout profileType="default">
+			<attributes>
+			<!-- begin TSPC-763: Migrate profile extensions from 2.5 -> 3.0  -->
+				<attribute showLabel="false" prependHtml="&lt;h2 id='%displayNameId%' class='fn'&gt;">displayName</attribute>
+				<attribute showLabel="false" prependHtml="&lt;span class='attuid'&gt; (" appendHtml=")&lt;/span&gt;&lt;/h2&gt;">uid</attribute>
+
+				<attribute showLabel="false" prependHtml="&lt;div class='empstat'&gt;">employeeTypeDesc</attribute>
+				<extensionAttribute showLabel="false" extensionIdRef="ConsCompany" hideIfEmpty="true" prependHtml="/" />
+				<attribute showLabel="false" prependHtml="&lt;/div&gt;&lt;div class='jobResp'&gt;&lt;b&gt;" appendHtml="&lt;/b&gt;&lt;/div&gt;">jobResp</attribute>
+				<extensionAttribute showLabel="false" extensionIdRef="BusGroupId" 
+				                    prependHtml="&lt;div class='ext-BusGroupId'&gt;&lt;b&gt;" appendHtml="&lt;/b&gt;&lt;/div&gt;" />
+				<extensionAttribute showLabel="false" extensionIdRef="BusUnitName" hideIfEmpty="true" 
+				                    prependHtml="&lt;div class='ext-BusUnitName'&gt;&lt;b&gt;" appendHtml="&lt;/b&gt;&lt;/div&gt;" />
+
+				<extensionAttribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;div class='extended-address'&gt;" appendHtml=",&amp;nbsp;" extensionIdRef="Address" />
+				<attribute showLabel="false" hideIfEmpty="true" appendHtml=",&amp;nbsp;">officeName</attribute>
+				<extensionAttribute showLabel="false" appendHtml=",&amp;nbsp;" extensionIdRef="City" />
+				<extensionAttribute showLabel="false" hideIfEmpty="true" appendHtml="&amp;nbsp;" extensionIdRef="State" />
+				<extensionAttribute showLabel="false" hideIfEmpty="true" appendHtml="&amp;nbsp;" extensionIdRef="PostalCode" />
+				<attribute showLabel="false" appendHtml="&lt;/div&gt;&lt;div class='tel'&gt;">countryCode</attribute>
+				<extensionAttribute showLabel="false" hideIfEmpty="true" 
+					prependHtml="&lt;div class='reachme'&gt;Reach Me:&amp;nbsp;" appendHtml="&lt;/div&gt;" extensionIdRef="reachMe" />
+				<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;span class='office'&gt; O:" appendHtml="&lt;/span&gt;">telephoneNumber</attribute>
+				<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;span class='cell'&gt; C:" appendHtml="&lt;/span&gt;">mobileNumber</attribute>
+			<!-- end TSPC-763 -->
+				<html prependHtml="&lt;div id='qbcinfo'"/>
+					<attribute showLabel="false" hideIfEmpty="true" prependHtml=" attuid='" appendHtml="'&gt;">uid</attribute>
+					<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;a href='qto://talk/" appendHtml="'&gt;">uid</attribute>
+					<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;img src='http://presence.q.att.com/PresenceService/status?qid=" 
+						appendHtml="'&gt;&lt;span&gt;Q Me!&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;">uid</attribute>
+				<html prependHtml="&lt;/div&gt;"/>
+			
+
+			</attributes>
+			<actions>
+				<action urlPattern="mailto:{email}" emailEnabledRequired="true" liClass="lotusSendMail">
+					<label labelKey="personCardSendMail"/>
+					<icon href="{profilesSvcRef}/nav/common/styles/images/iconSendMail.gif">
+						<alt labelKey="personCardSendMail"/>
+					</icon>
+				</action>
+				<action urlPattern="javascript:lconn.profiles.bizCard.bizCardUI.openNetworkInviteDialog('{key}', window.X_loggedInUserKey, ((window.dojo &amp;&amp; typeof(dojo.getObject) == 'function' &amp;&amp; dojo.getObject('lconn.profiles.Friending.currentViewDomNode')) || (document.getElementById('lotusSearchResultsContent') || new Object()).id || (document.getElementById('contentArea') || new Object()).id || (document.getElementById('lotusMain') || new Object()).id || null))" liClass="lotusMenuSeparator"
+					    requireAcl="profile.colleague$profile.colleague.connect">
+					<label labelKey="personCardAddAsColleagues"/>
+				</action>
+				<action urlPattern="javascript:lconn.profiles.bizCard.bizCardUI.openVCardDialog('{key}','{lastMod}')" liClass="lotusMenuSeparator">
+					<label labelKey="personCardDownloadVCard"/>
+				</action>
+                <action urlPattern="http://webphone.att.com/cgi-bin/webphones.pl?id={uid}" liClass="lotusMenuSeparator">
+                    <label bundleIdRef="tSpace" labelKey="personCardWebphoneLink"/>
+                </action>
+                <action urlPattern="qto://talk/{uid}" liClass="lotusMenuSeparator">
+                    <label bundleIdRef="tSpace" labelKey="personCardQActionLink"/>
+                </action>
+			</actions>
+		</businessCardLayout>
+		
+		<profileLayout profileType="default">
+			<jobInformation>
+			<!-- begin TSPC-763: Migrate profile extensions from 2.5 -> 3.0  -->
+				<attribute showLabel="false" prependHtml="&lt;div class='empstat'&gt;">employeeTypeDesc</attribute>
+				<extensionAttribute showLabel="false" extensionIdRef="ConsCompany" hideIfEmpty="true" prependHtml="/" />
+				<attribute showLabel="false" prependHtml="&lt;/div&gt;&lt;div class='jobResp'&gt;&lt;b&gt;" appendHtml="&lt;/b&gt;&lt;/div&gt;">jobResp</attribute>
+				<extensionAttribute showLabel="false" extensionIdRef="BusGroupId" 
+						    prependHtml="&lt;div class='ext-BusGroupId'&gt;&lt;b&gt;" appendHtml="&lt;/b&gt;&lt;/div&gt;" />
+				<extensionAttribute showLabel="false" extensionIdRef="BusUnitName" hideIfEmpty="true" 
+						    prependHtml="&lt;div class='ext-BusUnitName'&gt;&lt;b&gt;" appendHtml="&lt;/b&gt;&lt;/div&gt;" />
+
+				<extensionAttribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;div class='extended-address'&gt;" appendHtml=", " extensionIdRef="Address" />
+				<attribute showLabel="false" hideIfEmpty="true" appendHtml=", ">officeName</attribute>
+				<extensionAttribute showLabel="false" appendHtml=", " extensionIdRef="City" />
+				<extensionAttribute showLabel="false" hideIfEmpty="true" extensionIdRef="State" />
+				<extensionAttribute showLabel="false" hideIfEmpty="true" extensionIdRef="PostalCode" />
+				<attribute showLabel="false" appendHtml="&lt;/div&gt;&lt;div class='tel'&gt;">countryCode</attribute>
+				<extensionAttribute showLabel="false" hideIfEmpty="true" 
+					prependHtml="&lt;div class='reachme'&gt;Reach Me:&amp;nbsp;" appendHtml="&lt;/div&gt;" extensionIdRef="reachMe" />
+
+				<!-- The opening DIV is started above, incase they don't ahve a office phone -->
+				<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;span class='office'&gt; O:&amp;nbsp;" appendHtml="&lt;/span&gt;">telephoneNumber</attribute>
+				<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;span class='cell'&gt; C:&amp;nbsp;" appendHtml="&lt;/span&gt;">mobileNumber</attribute>
+				<!-- This attribute starts by closing the previous DIV. -->
+				<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;/div&gt;&lt;div id='qinfo'&gt;&lt;a href='qto://talk/" appendHtml="'&gt;">uid</attribute>
+
+                                <attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;img src='http://presence.q.att.com/PresenceService/status?qid="
+                                        appendHtml="'&gt;&lt;span&gt;Q Me!&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;">uid</attribute>
+			<!-- end TSPC-763 -->
+
+			<!-- begin TSPC-763: Migrate profile extensions from 2.5 -> 3.0  -->
+				<!-- Work Info -->
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="skills" labelKey="label.noBC.jobInformation.extattr.skills" bundleIdRef="tSpace"/>	
+				<!-- extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="jobInformation.skills" labelKey="label.noBC.jobInformation.extattr.skills" bundleIdRef="tSpace"/ -->	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="orgs" labelKey="label.noBC.jobInformation.extattr.orgs" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="patents" labelKey="label.noBC.jobInformation.extattr.patents" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="languages" labelKey="label.noBC.jobInformation.extattr.languages" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="projects" labelKey="label.noBC.jobInformation.extattr.projects" bundleIdRef="tSpace"/>	
+
+				<!-- Education Info -->
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="degrees" labelKey="label.noBC.educationInformation.extattr.degrees" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="certifications" labelKey="label.noBC.educationInformation.extattr.certifications" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="colleges" labelKey="label.noBC.educationInformation.extattr.colleges" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="gradSchool" labelKey="label.noBC.educationInformation.extattr.gradSchool" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="highSchool" labelKey="label.noBC.educationInformation.extattr.highSchool" bundleIdRef="tSpace"/>				
+			<!-- end TSPC-763 -->
+				<editableAttribute showLabel="true" richtext="true" hideIfEmpty="true" displayRules="false">experience</editableAttribute>
+
+			</jobInformation>
+			<contactInformation>
+				<!-- <editableAttribute hideIfEmpty="true" showLabel="true">courtesyTitle</editableAttribute> -->
+				<editableAttribute showLabel="true" hideIfEmpty="true" disabled="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;&lt;br/&gt;">displayName</editableAttribute>
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">preferredFirstName</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">preferredLastName</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">alternateLastname</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">nativeFirstName</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">nativeLastName</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">preferredLanguage</editableAttribute> -->
+				<!-- 
+				<editableAttribute showLabel="true" hideIfEmpty="true">bldgId</editableAttribute>
+				<editableAttribute showLabel="true" hideIfEmpty="true">floor</editableAttribute>
+				<editableAttribute showLabel="true" hideIfEmpty="true">officeName</editableAttribute>
+				<editableAttribute showLabel="true" hideIfEmpty="true">telephoneNumber</editableAttribute>
+				<editableAttribute showLabel="true" hideIfEmpty="true">ipTelephoneNumber</editableAttribute>
+				<editableAttribute showLabel="true" hideIfEmpty="true">mobileNumber</editableAttribute>
+				<editableAttribute showLabel="true" hideIfEmpty="true">pagerNumber</editableAttribute>
+				 -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">pagerType</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">pagerId</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true">pagerServiceProvider</editableAttribute> -->
+				<!-- 
+				<editableAttribute showLabel="true" hideIfEmpty="true">faxNumber</editableAttribute>
+				<attribute showLabel="true" hideIfEmpty="true" email="true">email</attribute>
+				<editableAttribute showLabel="true" hideIfEmpty="true" email="true">groupwareEmail</editableAttribute>
+				 -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true" link="true">calendarUrl</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" hideIfEmpty="true" link="true">freeBusyUrl</editableAttribute> -->
+				<editableAttribute showLabel="true" hideIfEmpty="true" blogUrl="true">blogUrl</editableAttribute>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="reachMe" labelKey="label.contactInformation.extattr.reachMe" bundleIdRef="tSpace"/>	
+				<!-- 
+				<attribute showLabel="true" hideIfEmpty="true">jobResp</attribute>
+				<attribute showLabel="true" hideIfEmpty="true">secretaryName</attribute>	
+				 -->
+			</contactInformation>
+			<associatedInformation>
+				<!--Personal Info -->
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="interests" labelKey="label.aboutMe.extattr.interests" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="favoriteMovies" labelKey="label.aboutMe.extattr.favoriteMovies" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="favoriteMusic" labelKey="label.aboutMe.extattr.favoriteMusic" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="favoriteQuote" labelKey="label.aboutMe.extattr.favoriteQuote" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="favoriteSports" labelKey="label.aboutMe.extattr.favoriteSports" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="activities" labelKey="label.aboutMe.extattr.activities" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="favoriteTVShows" labelKey="label.aboutMe.extattr.favoriteTVShows" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="favoriteBooks" labelKey="label.aboutMe.extattr.favoriteBooks" bundleIdRef="tSpace"/>	
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="twitterId" labelKey="label.aboutMe.extattr.twitterId" bundleIdRef="tSpace"/>		
+				<extensionAttribute
+					prependHtml="&lt;span class=&quot;hidden-attribute&quot;&gt;"
+					appendHtml="&lt;/span&gt;" showLabel="false" editable="true"
+					extensionIdRef="linkedInId" labelKey="label.aboutMe.extattr.linkedInId" bundleIdRef="tSpace"/>		
+				<editableAttribute showLabel="false" richtext="true">description</editableAttribute>
+			
+			</associatedInformation>
+		</profileLayout>		
+	</layoutConfiguration>
+	<!-- END LAYOUT CONFIGURATION SECTION-->
+	
+	<apiConfiguration>
+		<apiModel profileType="default">
+			<editableApiAttribute>jobResp</editableApiAttribute>
+			<editableApiAttribute>secretaryUid</editableApiAttribute>
+			<!-- <editableApiAttribute>secretaryUid</editableApiAttribute> -->
+			<!-- <editableApiAttribute>secretaryEmail</editableApiAttribute> -->
+			<!-- <editableApiAttribute>isManager</editableApiAttribute> -->
+			<!-- <editableApiAttribute>employeeNumber</editableApiAttribute> -->
+			<!-- <editableApiAttribute>managerUid</editableApiAttribute> -->
+			<!-- <editableApiAttribute>shift</editableApiAttribute> -->
+			<!-- <editableApiAttribute>deptNumber</editableApiAttribute> -->
+			<!-- <editableApiAttribute>courtesyTitle</editableApiAttribute> -->
+			<!-- <editableApiAttribute>displayName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>preferredFirstName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>preferredLastName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>alternateLastname</editableApiAttribute> -->
+			<!-- <editableApiAttribute>nativeFirstName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>nativeLastName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>preferredLanguage</editableApiAttribute> -->
+			<editableApiAttribute>bldgId</editableApiAttribute>
+			<editableApiAttribute>floor</editableApiAttribute>
+			<editableApiAttribute>officeName</editableApiAttribute>
+			<editableApiAttribute>telephoneNumber</editableApiAttribute>
+			<editableApiAttribute>ipTelephoneNumber</editableApiAttribute>
+			<editableApiAttribute>mobileNumber</editableApiAttribute>
+			<editableApiAttribute>pagerNumber</editableApiAttribute>
+			<!-- <editableApiAttribute>pagerType</editableApiAttribute> -->
+			<!-- <editableApiAttribute>pagerId</editableApiAttribute> -->
+			<!-- <editableApiAttribute>pagerServiceProvider</editableApiAttribute> -->
+			<editableApiAttribute>faxNumber</editableApiAttribute>
+			<editableApiAttribute>groupwareEmail</editableApiAttribute>
+			<!-- <editableApiAttribute>calendarUrl</editableApiAttribute> -->
+			<!-- <editableApiAttribute>freeBusyUrl</editableApiAttribute> -->
+			<editableApiAttribute>blogUrl</editableApiAttribute>
+			<editableApiAttribute>description</editableApiAttribute>
+			<editableApiAttribute>experience</editableApiAttribute>
+			
+			<!-- This attribute is required by the profile links feature -->
+			<editableApiExtensionAttribute extensionIdRef="profileLinks"/>
+			
+			<!-- Needed to make timezone editable in UI -->
+			<editableApiAttribute>timezone</editableApiAttribute>
+		</apiModel>
+	</apiConfiguration>
+
+	<!--  CACHE CONFIG START -->
+	<caches>
+		<fullReportsToChainCache>
+			<enabled>true</enabled>
+			<size>500</size>
+			<refreshTime>23:00</refreshTime><!-- 24 hour time -->
+			<refreshInterval>20</refreshInterval>
+			<!-- minutes -->
+			<startDelay>5</startDelay><!-- minutes -->
+			<ceouid>CEO_UID</ceouid><!-- the uid of the top of the org structure pyramid-->
+		</fullReportsToChainCache>
+		<profileObjectCache>
+			<refreshTime>22:30</refreshTime> <!-- 24 hour time -->
+			<refreshInterval>15</refreshInterval> <!-- minutes -->
+			<startDelay>10</startDelay> <!-- minutes -->
+		</profileObjectCache>
+	</caches>
+	<!--  CACHE CONFIG END -->
+
+	<!--  DATA ACCESS CONFIG START -->
+	<dataAccess>
+		<!-- indicates if organizational data is available (i.e. managerUid) -->
+		<organizationalStructureEnabled enabled="true"/>
+		<!-- indicates which fields need to be resolved before being displayed -->
+		<!-- WARNING: in most deployments the resolvedCodes section should not be modified -->
+		<resolvedCodes>
+			<resolvedCode>workLocationCode</resolvedCode>
+			<resolvedCode>orgId</resolvedCode>
+			<resolvedCode>employeeTypeCode</resolvedCode>
+			<resolvedCode>countryCode</resolvedCode>
+			<resolvedCode>departmentCode</resolvedCode>
+		</resolvedCodes>
+		<!-- search preferences -->
+		<!-- WARNING: in most deployments the departmentSearchOnCode, departmentSearchOnCode, -->
+		<!-- and locationSearchOnCode should not be modified -->
+		<search>
+			<departmentSearchOnCode>false</departmentSearchOnCode>
+			<departmentField>organization</departmentField>
+			<locationSearchOnCode>false</locationSearchOnCode>
+			<maxRowsToReturn>250</maxRowsToReturn>
+			<pageSize>10</pageSize>
+			<sortNameSearchResultsBy default="displayName" />
+			<sortIndexSearchResultsBy default="relevance" />
+		</search>
+		
+		<!-- Directory integration configuration -->
+		<directory>
+			<!-- 
+				Specifies the profiles field that is used to resolve person records via WALTZ / Javelin 
+			-->
+			<lconnUserIdField>guid</lconnUserIdField>
+			
+			<!-- 
+				Lists fields that will be used to resolve user at login time
+			 -->
+			<loginAttributes>
+				<loginAttribute>uid</loginAttribute>
+				<loginAttribute>email</loginAttribute>
+				<loginAttribute>loginId</loginAttribute>
+			</loginAttributes>
+		</directory>
+		
+		<!-- 
+			Optional security setting for Profiles javelin card.  This setting is to disallow JSONP security.  
+			Older 3rd party software may will not work with this setting unless they include a reverse proxy.  
+			All of the Connections application will work with JSONP disabled.
+		-->
+		<allowJsonpJavelin enabled="true"/>
+		
+		<!-- 
+			Untested/non-'supported' feature that adds 'simple' extension attributes to javelin JS for
+			implementors that manually edit javelin card JSP.
+		-->
+		<includeExtensionsInJavelinJS enabled="false"/>
+		
+		<!-- 
+			When name ordering is enabled, names must be entered as (FirstName LastName) or (LastName, FirstName).  
+			This feature removes the ordering restriction but at a minor performance penalty.
+		 -->
+		<nameOrdering enabled="false"/>
+	</dataAccess>
+	<!--  DATA ACCESS CONFIG END -->
+
+	<!-- STATISTICS CONFIG START -->
+	<statistics enabled="true">
+		<statisticsFilePath>${PROFILES_STATS_DIR}//LC_NODE_NAME//${WAS_SERVER_NAME}</statisticsFilePath>
+		<statisticsFileName>profilesStats</statisticsFileName>
+	</statistics>
+	<!-- STATISTICS CONFIG END -->
+	
+	<acf enabled="true" />	
+    <sametimeAwareness enabled="false" href="http://localhost:59449/stwebapi/" ssl_href="http://localhost:59449/stwebapi/" sametimeInputType="uid" />
+	<javelinGWMailSearch enabled="false"/>
+
+	<!-- Additional config settings START -->
+	<properties>
+		<property name="com.ibm.lconn.profiles.config.theboard.entry.MaxChars" value="1000"/>
+		<property name="com.ibm.lconn.profiles.config.ui.theboard.entry.ViewTruncateChars" value="250"/>
+		<property name="com.ibm.lconn.profiles.config.ui.theboard.comment.ViewTruncateChars" value="250"/>
+		<property name="com.ibm.lconn.profiles.config.MakeFollowingInfoPublic" value="false"/>
+		<property name="com.ibm.lconn.profiles.ui.reportingChain.bottomUp" value="false"/> 
+		<property name="com.ibm.lconn.profiles.config.SkipSearchResultPageForOneUser" value="true"/>
+		<property name="com.ibm.lconn.profiles.config.StoreTDIEvents" value="false" />
+		<property name="com.ibm.lconn.profiles.config.PublishTDIEvents" value="false" />
+	</properties>
+	<!-- Additional config settings END -->
+
+	<!-- BOARD UI ENABLEMENT -->
+	<board enabled="true"/>
+	
+</config>

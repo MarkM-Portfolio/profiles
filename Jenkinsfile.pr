@@ -1,0 +1,7 @@
+@Library('jedi') _
+// NOTE: The underscore (_) above is not a typo!  You need this underscore if
+// the line immediately after the @Library annotation is not an import statement
+
+prefix = 'IC10.0_Profiles'
+env.prefix = prefix
+runBluePipelinePR()

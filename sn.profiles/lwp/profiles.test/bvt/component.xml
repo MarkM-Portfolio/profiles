@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2014
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.test/bvt" description="Profiles BVT Test package" spec-version="1.0" type="source">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/profiles.test.bvt.jar" preferredInstallLocation="tmp" />
+		<output type="dir" visibility="public" platform="all" location="configadd" preferredInstallLocation="tmp" />
+		<output type="file" visibility="public" platform="all" location="test.properties" preferredInstallLocation="tmp" />
+	</output-group>
+
+	<dependency name="prereqs.sn/jstl" type="jar" version="1.1"/>
+    <dependency name="prereqs.sn/acf.2.2.0-5" type="jar" version="2.0"/>
+    <dependency name="prereqs.sn/junit" type="jar" version="3.8.1"/>
+	<dependency name="prereqs.sn/abdera040patch0509" type="jar" version="0.4" />
+    <dependency name="prereqs.sn/struts.minimal" type="jar" version="1.2.4" />
+	<dependency name="prereqs.sn/mybatis" type="jar" version="2.3.5" />
+    <dependency name="prereqs.sn/json4j" type="jar" version="1.0.0.1" />
+  	<dependency name="prereqs.sn/jakarta.commons" type="jar" version="1.1" />
+  	<dependency name="prereqs.sn/spring256" type="jar" version="2.5" />
+  	<dependency name="prereqs.sn/spring.test256" type="jar" version="2.5" />
+  	<dependency name="prereqs.sn/tdi7" type="jar" version="7.1"/>
+	<dependency name="prereqs.sn/stripes" type="jar" version="1.5" />  	
+	<dependency name="profiles.core/service.api" type="jar" version="3.0" />
+	<dependency name="profiles.core/service.impl" type="jar" version="3.0" />
+	<dependency name="profiles.web/app" type="jar" version="3.0" />
+	<dependency name="profiles.web/rpfilter" type="jar" version="3.0" />
+	<dependency name="profiles.tdi" type="jar" version="1.0" />
+	<dependency name="lc.util/base" type="jar" version="3.0" />
+	<dependency name="lc.util/web" type="jar" version="3.0" />
+	<dependency name="lc.util/test" type="jar" version="3.0" />
+    <dependency name="lc.config.svc" type="jar" version="1.1.0" />
+    <dependency name="lc.appext/core/api" type="jar" version="3.0" />
+    <dependency name="lc.appext/core/impl" type="jar" version="3.0" />
+    <dependency name="notify/client" type="jar" version="2.0"/>
+    <dependency name="search.seedlist/api-haifa" type="jar" version="1.1" />
+    <dependency name="lc.admin/lc.admin" type="jar" />
+    <dependency name="lc.admin/platformCommand/test.core" type="jar" />
+    <dependency name="lc.events.30/internal" type="jar" version="3.0"/>
+    <dependency name="lc.component.integration/profiles" type="jar" version="3.0" />
+    <dependency name="lc.mt.bss.provisioning/servlet" type="jar" version="1.0" />
+    <dependency name="prereqs.sn/was7.0" type="jar" version="7.0" />
+    <dependency name="prereqs.sn/hystrix" type="jar" />
+    
+    <!-- OWASP HTML Sanitizer for ACFNext -->
+    <dependency name="prereqs.sn/owasp-java-html-sanitizer" type="jar" />  
+    <dependency name="prereqs.sn/guava-16.0.1" type="jar" version="16.0.1" />          
+           
+    <!-- dependency name="prereqs.sn/cobertura-1.9.2" type="jar" version="1.9.2"/ -->    
+</component>

@@ -1,0 +1,30 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2007, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<component name="profiles.migrate" description="Profiles Migration" project-type="java" spec-version="3.0">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/profiles.migrate.jar"/>
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.util.web-3.0.jar"/>
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/commons-logging-1.0.4.jar"/>
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/commons-lang-2.4.jar"/>
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/commons-codec-1.3-minus-mp.jar"/>
+	</output-group>
+
+	<dependency name="profiles.core/service.api" type="jar" version="3.0" />
+	<dependency name="profiles.core/service.impl" type="jar" version="3.0" />
+	<dependency name="lc.util/web" type="jar" version="3.0" />
+	<dependency name="prereqs.sn/jakarta.commons" type="jar" version="1.1" />
+
+</component>

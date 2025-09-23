@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="UserPlatformEvents">
+
+	<typeAlias alias="platformEvent"
+		type="com.ibm.lconn.profiles.data.UserPlatformEvent" />
+
+	<resultMap id="platformEventResult" class="platformEvent">
+		<result property="eventKey" column="EVENT_KEY" />
+		<result property="eventType" column="EVENT_TYPE" />
+		<result property="payload" column="PAYLOAD" />
+		<result property="created" column="CREATED" javaType="java.util.Date" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+				<!-- keep in sync  - used to select batches -->
+	<sql id="sql_UPeventColumns">
+		UP.EVENT_KEY as EVENT_KEY,
+		UP.EVENT_TYPE as EVENT_TYPE,
+		UP.PAYLOAD as PAYLOAD,
+		UP.CREATED as CREATED,
+		UP.TENANT_KEY as TENANT_KEY
+	</sql>
+
+	<!-- removed in 4.0, this is an unbounded query
+	<select id="selectAll" resultMap="platformEventResult">
+		select
+		EVENT_KEY, EVENT_TYPE,
+		PAYLOAD, CREATED
+		from
+		EMPINST.USER_PLATFORM_EVENTS
+	</select>
+	-->
+
+	<!-- removed in 4.0 to use batching
+	<select id="findOldestEvent" resultMap="platformEventResult">
+		select EVENT_KEY, EVENT_TYPE, PAYLOAD, CREATED, from
+		EMPINST.USER_PLATFORM_EVENTS
+		where
+		EVENT_KEY = (select MIN(EVENT_KEY) from EMPINST.USER_PLATFORM_EVENTS)
+	</select>
+	-->
+
+	<!-- Handling pseudo-auto-inc without triggers -->
+	<insert id="insert" parameterClass="java.util.Map">
+		<dynamic>
+			<isEqual property="dbVendor" compareValue="db2">
+				insert into EMPINST.USER_PLATFORM_EVENTS
+				  (EVENT_KEY, EVENT_TYPE, PAYLOAD, CREATED,TENANT_KEY)
+				values
+				  (NEXT VALUE FOR EMPINST.USER_PLATFORM_EVENT_INDEX_SEQ,
+				     #eventType#, #payload#, #created#, #dbTenantKey#)
+			</isEqual>
+		</dynamic>
+		<dynamic>
+			<isEqual property="dbVendor" compareValue="as400">
+				insert into EMPINST.USER_PLATFORM_EVENTS
+				  (EVENT_KEY, EVENT_TYPE, PAYLOAD, CREATED,TENANT_KEY)
+				values
+				  (NEXT VALUE FOR EMPINST.USER_PLATFORM_EVENT_INDEX_SEQ,
+				     #eventType#, #payload#, #created#, #dbTenantKey#)
+			</isEqual>
+		</dynamic>
+		<dynamic>
+			<isEqual property="dbVendor" compareValue="oracle">
+				insert into EMPINST.USER_PLATFORM_EVENTS
+				  (EVENT_KEY, EVENT_TYPE, PAYLOAD, CREATED,TENANT_KEY)
+				values
+				  (EMPINST.USER_PLATFORM_EVENT_INDEX_SEQ.NEXTVAL,
+				     #eventType#, #payload#, #created#,#dbTenantKey#)
+			</isEqual>
+		</dynamic>
+		<dynamic>
+			<isEqual property="dbVendor" compareValue="sqlserver">
+				insert into EMPINST.USER_PLATFORM_EVENTS
+				  (EVENT_TYPE, PAYLOAD, CREATED, TENANT_KEY)
+				values
+				  (#eventType#, #payload#, #created#, #dbTenantKey#)
+			</isEqual>
+		</dynamic>
+	</insert>
+
+	<delete id="delete" parameterClass="java.util.Map">
+		delete FROM
+		EMPINST.USER_PLATFORM_EVENTS
+		WHERE EVENT_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+
+	<!-- added to facilitate batch processing in scheduled tasks -->
+
+	<sql id="sql_selectBatchRows">
+		<isPropertyAvailable property="dbVendor">
+			<isEqual property="dbVendor" compareValue="db2">
+					SELECT EVENT_KEY, ROW_NUMBER() OVER(ORDER BY EVENT_KEY) RN
+			</isEqual>
+			<isEqual property="dbVendor" compareValue="as400">
+					SELECT EVENT_KEY, ROW_NUMBER() OVER(ORDER BY EVENT_KEY) RN
+			</isEqual>
+			<isEqual property="dbVendor" compareValue="oracle">
+				SELECT EVENT_KEY, RN from (
+				SELECT EVENT_KEY, ROWNUM RN FROM (
+            	SELECT /*+ FIRST_ROWS($maxResults$) */ EVENT_KEY 
+			</isEqual>
+			<isEqual property="dbVendor" compareValue="sqlserver">
+				SELECT TOP $maxResults$ EVENT_KEY, ROW_NUMBER() OVER(ORDER BY EVENT_KEY) RN 
+			</isEqual>
+		</isPropertyAvailable>
+		<isNotPropertyAvailable property="dbVendor">
+			SELECT EVENT_KEY, ROW_NUMBER() OVER(ORDER BY EVENT_KEY) RN
+		</isNotPropertyAvailable>
+	</sql>
+
+	<sql id="sql_batchPagingOne">
+		<isPropertyAvailable property="dbVendor">
+			<isEqual property="dbVendor" compareValue="db2">
+				FETCH FIRST $maxResults$ ROWS ONLY 
+			</isEqual>
+			<isEqual property="dbVendor" compareValue="as400">
+				FETCH FIRST $maxResults$ ROWS ONLY 
+			</isEqual>
+			<!-- no addition for Oracle -->
+			<!-- no addition for Sql Server -->
+		</isPropertyAvailable>
+		<isNotPropertyAvailable property="dbVendor">
+			WHERE PF_NODE_ROW.RN <![CDATA[ >= ]]> #startPos# AND PF_NODE_ROW.RN <![CDATA[ <= ]]> #endPos# 
+		</isNotPropertyAvailable>
+	</sql>
+
+	<sql id="sql_batchPagingTwo">
+		<isPropertyAvailable property="dbVendor">
+			<!-- no entry for db2 -->
+			<isEqual property="dbVendor" compareValue="oracle">
+					) T1 WHERE ROWNUM <![CDATA[ <= ]]> #endPos#
+				) T2 WHERE RN <![CDATA[ >= ]]> #startPos#
+			</isEqual>
+			<!-- no entry for sqlserver -->
+		</isPropertyAvailable>
+		<!-- no entry for isNotPropertyAvailable property="dbVendor" -->
+	</sql>
+
+	<sql id="sql_batchPagingThree">
+		<isPropertyAvailable property="dbVendor">
+			<isEqual property="dbVendor" compareValue="db2">
+				WHERE PF_NODE_ROW.RN <![CDATA[ >= ]]> #startPos# AND PF_NODE_ROW.RN <![CDATA[ <= ]]> #endPos# 
+			</isEqual>
+			<isEqual property="dbVendor" compareValue="as400">
+				WHERE PF_NODE_ROW.RN <![CDATA[ >= ]]> #startPos# AND PF_NODE_ROW.RN <![CDATA[ <= ]]> #endPos# 
+			</isEqual>
+			<!-- no addition for Oracle -->
+			<isEqual property="dbVendor" compareValue="sqlserver">
+				WHERE PF_NODE_ROW.RN <![CDATA[ >= ]]> #startPos# AND PF_NODE_ROW.RN <![CDATA[ <= ]]> #endPos# 
+			</isEqual>
+		</isPropertyAvailable>
+		<isNotPropertyAvailable property="dbVendor">
+			WHERE PF_NODE_ROW.RN <![CDATA[ >= ]]> #startPos# AND PF_NODE_ROW.RN <![CDATA[ <= ]]> #endPos# 
+		</isNotPropertyAvailable>
+	</sql>
+
+	<select id="getBatchStartingAt" parameterClass="java.util.Map" resultMap="platformEventResult">
+		SELECT <include refid="sql_UPeventColumns" />
+		FROM (
+			<include refid="UserPlatformEvents.sql_selectBatchRows"/>
+			FROM EMPINST.USER_PLATFORM_EVENTS
+			WHERE EVENT_KEY > #lowEventKey#
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+			ORDER BY EVENT_KEY
+			<include refid="UserPlatformEvents.sql_batchPagingOne"/>
+			<include refid="UserPlatformEvents.sql_batchPagingTwo"/>
+		) PF_NODE_ROW
+		JOIN EMPINST.USER_PLATFORM_EVENTS UP ON UP.EVENT_KEY = PF_NODE_ROW.EVENT_KEY
+		<include refid="Tenant.sql_WhereByTenantKeyUP"/>
+		<include refid="UserPlatformEvents.sql_batchPagingThree"/>
+		ORDER BY EVENT_KEY
+	</select>
+</sqlMap>

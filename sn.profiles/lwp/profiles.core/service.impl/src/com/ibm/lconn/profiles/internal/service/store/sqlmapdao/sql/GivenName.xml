@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="GivenName">
+
+	<typeAlias alias="givenname"
+		type="com.ibm.lconn.profiles.data.GivenName" />
+
+	<resultMap id="GivenNameResult" class="givenname">
+		<result property="key" column="PROF_KEY" />
+		<result property="name" column="PROF_GIVENNAME"/>
+		<result property="source" column="PROF_NAME_SOURCE" typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.NamesourceSqlMapDao"/>
+		<result property="usrState" column="PROF_USRSTATE" typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserStateTypeHandler"/>
+		<result property="userMode" column="PROF_MODE" typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserModeHandler" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>	
+
+	<sql id="sql_SelectGivenName">
+		G.PROF_KEY as PROF_KEY, 
+		G.PROF_GIVENNAME as PROF_GIVENNAME,
+		G.PROF_NAME_SOURCE as PROF_NAME_SOURCE,
+		G.PROF_USRSTATE as PROF_USRSTATE,
+		G.PROF_MODE as PROF_MODE,
+		G.TENANT_KEY as TENANT_KEY
+	</sql>
+	
+	<insert id="create" parameterClass="java.util.Map">
+		insert into EMPINST.GIVEN_NAME
+		(
+			PROF_KEY,
+			PROF_GIVENNAME,
+			<isNotNull property="nameSource">PROF_NAME_SOURCE,</isNotNull>
+			PROF_USRSTATE,
+			PROF_MODE,
+			TENANT_KEY
+		)
+		values
+		(
+			#key#,
+			#name#,
+			<isNotNull property="nameSource">#nameSource#,</isNotNull>
+			#usrState.code#,
+			#userMode.code#,
+			#dbTenantKey#
+		)
+	</insert>
+	
+	<update id="updateState" parameterClass="java.util.Map">
+		update EMPINST.GIVEN_NAME 
+		set PROF_USRSTATE = #usrState.code#
+		where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<delete id="delete" parameterClass="map">
+		delete from EMPINST.GIVEN_NAME
+		where 
+			PROF_KEY = #key#
+			and PROF_GIVENNAME in <iterate property="names" open="(" close=")" conjunction=",">#names[]#</iterate>
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+	
+	<delete id="deleteAll" parameterClass="map">
+		delete from EMPINST.GIVEN_NAME
+		where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+	
+	<select id="get" parameterClass="map" resultMap="GivenNameResult">
+		select 
+			<include refid="sql_SelectGivenName"/>
+		from
+			EMPINST.GIVEN_NAME G
+		where
+			G.PROF_KEY = #key#
+			<isNotNull prepend="AND" property="source">G.PROF_NAME_SOURCE = #source#</isNotNull>
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<select id="getForKeys" parameterClass="map" resultMap="GivenNameResult">
+		select 
+			<include refid="sql_SelectGivenName"/>
+		from
+			EMPINST.GIVEN_NAME G
+		where
+			G.PROF_KEY in <iterate property="keys" open="(" close=")" conjunction=",">#keys[]#</iterate>
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<!-- This is currently in place for the Cloud and feature parity with the guest model.
+	     This should(?) be dropped for visitor model. -->
+	<update id="updateTenantKey" parameterClass="java.util.Map">
+		update EMPINST.GIVEN_NAME set TENANT_KEY = #newTenantKey# where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+</sqlMap>

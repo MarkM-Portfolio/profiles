@@ -1,0 +1,119 @@
+<config xmlns="http://www.ibm.com/profiles-types" id="profiles-types">
+	<type>
+		<parentId>snx:mtperson</parentId>
+		<orgId>20000300</orgId> <!--Please verify that this is the correct orgId value of our Test IBM org -->
+		<id>default</id>
+		<property>
+			<ref>jobResp</ref> <!-- job title - managed via BSS. will not make this readwrite. -->
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>telephoneNumber</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>ipTelephoneNumber</ref> 
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>mobileNumber</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>faxNumber</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>description</ref>
+			<updatability>read</updatability>
+			<hidden>true</hidden>
+			<richText>true</richText>
+		</property>
+		<property>
+			<ref>experience</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<richText>true</richText>
+		</property>
+		<property>
+			<ref>profileLinks</ref>
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>item1</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Division]]>
+			</label>
+		</property>
+		<property>
+			<ref>item2</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Department]]>
+			</label>
+		</property>
+		<property>
+			<ref>item3</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Preferred Contact Method]]>
+			</label>
+		</property>
+		<property>
+			<ref>item4</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Employee Type]]>
+			</label>
+		</property>
+		<property>
+			<ref>item5</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Building Name]]>
+			</label>
+		</property>
+		<property>
+			<ref>item6</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Floor]]>
+			</label>
+		</property>
+		<property>
+			<ref>item7</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Office]]>
+			</label>
+		</property>
+		<property>
+			<ref>item8</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Assistant]]>
+			</label>
+		</property>
+		<property>
+			<ref>item9</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Native First Name]]>
+			</label>
+		</property>
+		<property>
+			<ref>item10</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Native Last Name]]>
+			</label>
+		</property>
+	</type>
+</config>

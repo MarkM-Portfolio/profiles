@@ -1,0 +1,343 @@
+/* ***************************************************************** */
+/*                                                                   */
+/* IBM Confidential                                                  */
+/*                                                                   */
+/* OCO Source Materials                                              */
+/*                                                                   */
+/* Copyright IBM Corp. 2014                                          */
+/*                                                                   */
+/* The source code for this program is not published or otherwise    */
+/* divested of its trade secrets, irrespective of what has been      */
+/* deposited with the U.S. Copyright Office.                         */
+/*                                                                   */
+/* ***************************************************************** */
+
+This document records various formats of the UserPlatformEventData as created in the test case UserPlatformEventTransformTest.testTransforms
+The formats were inspected in a debugger as the UserPlatformEvent object is transformed to the database payload format and back to the
+Map object used for publish.
+
+
+//Event sample from IC 3.0 for UserPlatformEvent
+================================================
+
+	UserPlatformEventData eventData = createUserPlatformEventData(eventType, OLD_UID, OLD_GUID, employee, LOGINS);
+	// mimic the insert process. the employee properties are converted to a string format
+	// that is ultimately.
+	String dbFormat = eventData.getDbPayloadFormat();
+//dbFormat (java.lang.String)
+{
+	"_prof.uid":"base$uid_value",
+	"_prof.deptNumber":"base$deptNumber_value",
+	"_prof.managerUid":"base$managerUid_value",
+	"_prof.logins":["foo","bar"],
+	"_prof.distinguishedName":"base$distinguishedName_value",
+	"_prof.key":"2da0a83b-32d0-46a0-a547-4fc2fa021d13",
+	"_prof.isManager": "base$isManager_value",
+	"_prof.jobResp":"base$jobResp_value",
+	"_prof.profileType":"base$profileType_value",
+	"_prof.employeeTypeCode":"base$employeeTypeCode_value",
+	"_prof.workLocationCode":"base$workLocationCode_value",
+	"_prof.email":"foo@BAR",
+	"_prof.eventType":"user.record.activate",
+	"_prof.lastUpdate":1323185690277,
+	"_prof.old.guid":"oldGuid",
+	"_prof.countryCode":"base$countryCode_value",
+	"_prof.displayName":"John Tester",
+	"_prof.usrState":1,
+	"_prof.guid":"BaR",
+	"_prof.title":"base$title_value",
+	"_prof.loginId":"fooBar",
+	"_prof.old.uid":"OLDUID",
+	"_prof.orgId":"base$orgId_value"
+}
+// dbFormat is now prepared for publish
+// step into upEvent.createPublishProperties();
+// poperties (com.ibm.json.java.JSONObject)
+{
+	"last_mod":1323185690277,
+	"user.ext.props":{
+		"base$orgId":["base$orgId_value"],
+		"base$managerUid":["base$managerUid_value"],
+		"base$workLocationCode":["base$workLocationCode_value"],
+		"base$jobResp":["base$jobResp_value"],
+		"base$profileType":["base$profileType_value"],
+		"base$isManager":["base$isManager_value"],
+		"base$title":["base$title_value"],
+		"base$countryCode":["base$countryCode_value"],
+		"base$distinguishedName":["base$distinguishedName_value"],
+		"base$uid":["base$uid_value"],
+		"base$employeeTypeCode":["base$employeeTypeCode_value"],
+		"base$deptNumber":["base$deptNumber_value"]
+	},
+	"user.name":"John Tester",
+	"user.email":"foo@BAR",
+	"externalId":"oldGuid",
+	"user.externalId":"BaR",
+	"user.logins":["bar","foo","foo@bar","foobar","base$uid_value"]
+ }
+ 
+//yetAnotherStringRep (java.lang.String)
+{
+	"externalId":"oldGuid",
+	"last_mod":1323185690277,
+	"user.ext.props":{
+		"base$orgId":["base$orgId_value"],
+		"base$managerUid":["base$managerUid_value"],
+		"base$workLocationCode":["base$workLocationCode_value"],
+		"base$jobResp":["base$jobResp_value"],
+		"base$profileType":["base$profileType_value"],
+		"base$isManager":["base$isManager_value"],
+		"base$title":["base$title_value"],
+		"base$countryCode":["base$countryCode_value"],
+		"base$distinguishedName":["base$distinguishedName_value"],
+		"base$uid":["base$uid_value"],
+		"base$employeeTypeCode":["base$employeeTypeCode_value"],
+		"base$deptNumber":["base$deptNumber_value"]
+	},
+	"user.externalId":"BaR",
+	"user.name":"John Tester",
+	"user.logins":["bar","foo","foo@bar","foobar","base$uid_value"],
+	"user.email":"foo@BAR"
+}
+
+//publishProperties (java.util.HashMap<String,String>)
+{
+	externalId=oldGuid,
+	user.ext.props={
+		"base$orgId":["base$orgId_value"],
+		"base$managerUid":["base$managerUid_value"],
+		"base$jobResp":["base$jobResp_value"],
+		"base$workLocationCode":["base$workLocationCode_value"],
+		"base$profileType":["base$profileType_value"],
+		"base$isManager":["base$isManager_value"],
+		"base$title":["base$title_value"],
+		"base$countryCode":["base$countryCode_value"],
+		"base$distinguishedName":["base$distinguishedName_value"],
+		"base$employeeTypeCode":["base$employeeTypeCode_value"],
+		"base$uid":["base$uid_value"],
+		"base$deptNumber":["base$deptNumber_value"]
+	},
+	user.externalId=BaR,
+	user.name=John Tester,
+	user.logins=["bar","foo","foo@bar","foobar","base$uid_value"],
+	user.email=foo@BAR
+}
+
+
+//Event sample from IC 5.0 for UserPlatformEvent
+================================================
+
+	UserPlatformEventData eventData = createUserPlatformEventData(eventType, OLD_UID, OLD_GUID, employee, LOGINS);
+	// mimic the insert process. the employee properties are converted to a string format
+	// that is ultimately.
+	String dbFormat = eventData.getDbPayloadFormat();
+//dbFormat (java.lang.String)
+{
+	"_prof.logins":["foo","bar"],
+	"_prof.title":"base$title_value",
+	"_prof.userMode":0,						<-- userMode is now persisted
+	"_prof.deptNumber":"base$deptNumber_value",
+	"_prof.old.guid":"oldGuid",
+	"_prof.email":"foo@BAR","_prof.orgId":"base$orgId_value",
+	"_prof.orgId":"base$orgId_value"
+	"_prof.key":"7b97cd35-9127-4f1c-9f8e-b182fc8b543b",
+	"_prof.workLocationCode":"base$workLocationCode_value",
+	"_prof.employeeTypeCode":"base$employeeTypeCode_value",
+	"_prof.countryCode":"base$countryCode_value",
+	"_prof.profileType":"base$profileType_value",
+	"_prof.isManager":"base$isManager_value",
+	"_prof.loginId":"fooBar",
+	"_prof.old.uid":"OLDUID",
+	"_prof.usrState":1,
+	"_prof.lastUpdate":1398105582355,
+	"_prof.displayName":"John Tester",
+	"_prof.jobResp":"base$jobResp_value",
+	"_prof.managerUid":"base$managerUid_value",
+	"_prof.distinguishedName":"base$distinguishedName_value",
+	"_prof.uid":"base$uid_value",
+	"_prof.eventType":"user.record.activate",
+    "_prof.guid":"BaR"
+}
+
+// dbFormat is now prepared for publish					note: userMode is not included in publish
+// step into upEvent.createPublishProperties();
+// poperties (com.ibm.json.java.JSONObject)
+{
+	"user.ext.props":{
+		"base$profileType":["base$profileType_value"],
+		"base$isManager":["base$isManager_value"],
+		"base$countryCode":["base$countryCode_value"],
+		"base$deptNumber":["base$deptNumber_value"],
+		"base$title":["base$title_value"],
+		"base$managerUid":["base$managerUid_value"],
+		"base$workLocationCode":["base$workLocationCode_value"],
+		"base$employeeTypeCode":["base$employeeTypeCode_value"],
+		"base$jobResp":["base$jobResp_value"],
+		"base$distinguishedName":["base$distinguishedName_value"],
+		"base$orgId":["base$orgId_value"],
+		"base$uid":["base$uid_value"]
+		},
+	"externalId":"oldGuid",
+	"user.externalId":"BaR",
+	"user.logins":["bar","foo","foo@bar","foobar","base$uid_value"],
+	"user.name":"John Tester",
+	"user.email":"foo@BAR",
+	"last_mod":1398105582355
+}
+
+// yetAnotherStringRep (java.lang.String)
+{
+	"user.ext.props":{
+		"base$profileType":["base$profileType_value"],
+		"base$isManager":["base$isManager_value"],
+		"base$countryCode":["base$countryCode_value"],
+		"base$deptNumber":["base$deptNumber_value"],
+		"base$title":["base$title_value"],
+		"base$managerUid":["base$managerUid_value"],
+		"base$workLocationCode":["base$workLocationCode_value"],
+		"base$employeeTypeCode":["base$employeeTypeCode_value"],
+		"base$jobResp":["base$jobResp_value"],
+		"base$distinguishedName":["base$distinguishedName_value"],
+		"base$orgId":["base$orgId_value"],
+		"base$uid":["base$uid_value"]
+	},
+	"externalId":"oldGuid",
+	"last_mod":1398105582355,
+	"user.email":"foo@BAR",
+	"user.externalId":"BaR",
+	"user.logins":["bar","foo","foo@bar","foobar","base$uid_value"],
+	"user.name":"John Tester"
+}
+
+//publishProperties (java.util.HashMap<String,String>)
+{
+	user.ext.props={
+		"base$countryCode":["base$countryCode_value"],
+		"base$isManager":["base$isManager_value"],
+		"base$profileType":["base$profileType_value"],
+		"base$deptNumber":["base$deptNumber_value"],
+		"base$title":["base$title_value"],
+		"base$workLocationCode":["base$workLocationCode_value"],
+		"base$managerUid":["base$managerUid_value"],
+		"base$employeeTypeCode":["base$employeeTypeCode_value"],
+		"base$jobResp":["base$jobResp_value"],
+		"base$orgId":["base$orgId_value"],
+		"base$distinguishedName":["base$distinguishedName_value"],
+		"base$uid":["base$uid_value"]
+	},
+	externalId=oldGuid,
+	user.email=foo@BAR,
+	user.externalId=BaR,
+	user.logins=["bar","foo","foo@bar","foobar","base$uid_value"],
+	user.name=John Tester
+}
+
+//Event sample from IC 5.0+ for UserPlatformEvent - orgid added to persisted content but not yet in publish content
+================================================
+//dbFormat (java.lang.String)
+{
+    "_prof.logins":["foo","bar"],
+    "_prof.title":"base$title_value",
+    "_prof.userMode":0,
+    "_prof.deptNumber":"base$deptNumber_value",
+    "_prof.old.guid":"oldGuid",
+    "_prof.email":"BaR",
+    "_prof.orgId":"base$orgId_value",
+    "_prof.key":"ab009cd8-0271-42c8-8fc2-ce17e01fdb82",
+    "_prof.workLocationCode":"base$workLocationCode_value",
+    "_prof.employeeTypeCode":"base$employeeTypeCode_value",
+    "_prof.countryCode":"base$countryCode_value",
+    "_prof.profileType":"base$profileType_value",
+    "_prof.isManager":"base$isManager_value",  
+    "_prof.loginId":"fooBar",
+    "_prof.old.uid":"OLDUID",
+    "_prof.usrState":1,
+    "_prof.lastUpdate":1400093720738,
+    "_prof.displayName":"John Tester",
+    "_prof.jobResp":"base$jobResp_value",
+    "_prof.managerUid":"base$managerUid_value",
+    "_prof.distinguishedName":"base$distinguishedName_value",
+    "_prof.uid":"base$uid_value",
+    "_prof.eventType":"user.record.activate",
+    "_prof.guid":"BaR"
+    "_prof.old.orgId":"base$orgId_value",                       <--- new
+}
+
+// properties (com.ibm.json.java.JSONObject)
+{
+    "user.ext.props":{
+        "base$profileType":["base$profileType_value"],
+        "base$isManager":["base$isManager_value"],
+        "base$countryCode":["base$countryCode_value"],
+        "base$deptNumber":["base$deptNumber_value"],
+        "base$title":["base$title_value"],
+        "base$managerUid":["base$managerUid_value"],
+        "base$workLocationCode":["base$workLocationCode_value"],
+        "base$employeeTypeCode":["base$employeeTypeCode_value"],
+        "base$jobResp":["base$jobResp_value"],
+        "base$distinguishedName":["base$distinguishedName_value"],
+        "base$orgId":["base$orgId_value"],
+        "base$uid":["base$uid_value"]
+    },
+    "externalId":"oldGuid",
+    "user.externalId":"BaR",
+    "user.name":"John Tester",
+    "last_mod":1400093720738,
+    "user.logins":["bar","foo","foobar","base$uid_value"],
+    "user.email":"BaR"
+}
+
+// publishProperties (java.util.HashMap<K,V>)
+ {
+    user.ext.props={
+        "base$countryCode":["base$countryCode_value"],
+        "base$isManager":["base$isManager_value"],
+        "base$profileType":["base$profileType_value"],
+        "base$deptNumber":["base$deptNumber_value"],
+        "base$title":["base$title_value"],
+        "base$workLocationCode":["base$workLocationCode_value"],
+        "base$managerUid":["base$managerUid_value"],
+        "base$employeeTypeCode":["base$employeeTypeCode_value"],
+        "base$jobResp":["base$jobResp_value"],
+        "base$orgId":["base$orgId_value"],
+        "base$distinguishedName":["base$distinguishedName_value"],
+        "base$uid":["base$uid_value"]
+    },
+    externalId=oldGuid,
+    user.email=BaR,
+    user.externalId=BaR,
+    user.logins=["bar","foo","foobar","base$uid_value"],
+    user.name=John Tester
+}
+
+//publishProperties (java.util.HashMap<String,String>)
+{
+	user.ext.props={
+		"base$countryCode":["base$countryCode_value"],
+		"base$isManager":["base$isManager_value"],
+		"base$profileType":["base$profileType_value"],
+		"base$deptNumber":["base$deptNumber_value"],
+		"base$title":["base$title_value"],
+		"base$workLocationCode":["base$workLocationCode_value"],
+		"base$managerUid":["base$managerUid_value"],
+		"base$employeeTypeCode":["base$employeeTypeCode_value"],
+		"base$jobResp":["base$jobResp_value"],
+		"base$orgId":["base$orgId_value"],
+		"base$distinguishedName":["base$distinguishedName_value"],
+		"base$uid":["base$uid_value"]
+	},
+	externalId=oldGuid,
+	user.email=foo@BAR,
+	user.externalId=BaR,
+	user.logins=["bar","foo","foo@bar","foobar","base$uid_value"],
+	user.name=John Tester
+}
+
+
+
+
+
+
+
+
+

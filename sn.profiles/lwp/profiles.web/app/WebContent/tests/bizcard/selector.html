@@ -1,0 +1,324 @@
+<!DOCTYPE Html>
+<html>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2013, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+	<head>
+		<title>Business Card Test Selector</title>
+		<script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.10/dojo/dojo.js.uncompressed.js"></script>
+		
+		<script>
+
+			window.showPredefinedTags = function() {
+				var frm = document.forms["selector"];
+				var el = frm["predefinedtags"];
+				var arr = el.options[el.selectedIndex].value.split("&");
+				
+				frm.semtags.value = "";
+				for (var ii = 0; ii < arr.length; ii++) {
+					frm.semtags.value += frm["semtags__" + arr[ii]].value
+				}
+			};
+			
+			window.showXdDojoInfo = function() {
+				var idx = document.forms["selector"]["xddojo"].selectedIndex;
+				document.getElementById('xdnote').style.display = (idx == 1?'block':'none');
+				document.getElementById('nonxdnote').style.display = (idx == 0?'block':'none');
+			};
+			
+			window.showDojoInfo = function() {
+				document.getElementById('dojoinfo').style.display = ((document.forms["selector"]["preloaddojo"].selectedIndex == 1)?"none":"block");
+				window.showXdDojoInfo();
+			};						
+			
+			window.showCssInfo = function() {
+				var idx = document.forms["selector"]["loadcss"].selectedIndex;
+				document.getElementById('cssinfo').style.display = (idx == 0?'block':'none');					
+			};						
+			
+			window.showBehaviorInfo = function() {
+				var idx = document.forms["selector"]["loadbehavior"].selectedIndex;
+				document.getElementById('behaviorinfo').style.display = (idx == 1?'block':'none');				
+			};
+		
+			require(
+				["dojo/_base/json", "dojo/dom-form", "dojo/cookie", "dojo/ready", "dojo/_base/window"], 
+				function(dojo, domForm, cookie, ready, win) {
+					// saves current state of the selector form.
+					window.saveFormParams = function(frm) {
+						try {
+							if (window.localStorage) {
+								window.localStorage["_bctest_frm"] = domForm.toJson(frm);
+								
+								// this is stored as a cookie so the user can clear the session cookies and have this stuff reset
+								cookie("_bctest_frmname", frm.name);
+							}
+							return true;
+						} catch (ee) {
+							console.log(ee);
+						}
+						return false;						
+					};
+					
+					ready(function() {
+						var frmname = cookie("_bctest_frmname");
+						if (frmname) {
+							var frm = win.doc.forms[frmname];
+							if (frm) {
+								var obj = dojo.fromJson(window.localStorage["_bctest_frm"] || "{}");
+								for (fld in obj) {
+									if (obj[fld]) {
+										if (frm[fld]) {											
+											if (frm[fld].selectedIndex) {
+												for (var ii = 0; ii < frm[fld].options.length; ii++) {
+													if (frm[fld].options[ii].value == obj[fld]) {
+														frm[fld].selectedIndex = ii;
+													}
+												}
+											} else 
+											if (frm[fld].tagName.toLowerCase() == "textarea" || frm[fld].tagName.toLowerCase() == "input" || frm[fld].value) {
+												frm[fld].value = obj[fld];
+											}											
+										}
+									}
+								}
+							}
+						}
+						
+						window.showCssInfo();
+						window.showDojoInfo();
+						window.showBehaviorInfo();
+											
+						
+					});
+				}
+			);	
+
+		</script>
+		<style>
+		label {
+			font-weight: bold;
+			display: block;
+			margin-top: 20px;			
+		}
+		input, select {
+			width: 250px;
+
+		}
+		.submit {
+			width: 100px;
+		}
+		.note {
+			font-size: .7em;
+			color: #333;
+		}
+		</style>
+	</head>
+	<body>
+		<h1>Business Card Test Selector</h1>
+		<form method="POST" action="dynamic.jsp" name="selector" id="selector" onsubmit="return window.saveFormParams(this);">
+			<div>
+				<label>Connections Server:</label>
+				<input name="connserver" value="//lcautoXX.swg.usma.ibm.com">
+			</div>
+			
+			<div>
+				<label>Preload Dojo:</label>
+				<select name="preloaddojo" onchange="window.showDojoInfo();">
+					<option value="auto">Auto</option>
+					<option value="false">No</option>
+					<option value="true">Yes</option>
+				</select>
+			</div>
+			
+			<div id="dojoinfo">
+		
+				<div>
+					<label>Use Cross-Domain Dojo:</label>
+					<select name="xddojo" onchange="window.showXdDojoInfo();">
+						<option selected value="false">No</option>
+						<option value="true">Yes</option>
+					</select>
+				</div>
+				
+				<div>
+					<label>Dojo Version:</label>
+					<input name="dojoversion" value="1.9.7" />
+					<div class="note" id="nonxdnote">Note: You'll need to copy the dojo directory into a directory named "dojo-release-&lt;release number>" to this server's directory where this index file is located. Click <a target="_new" href="http://download.dojotoolkit.org/">here</a> to download the version needed.</div>
+					<div class="note" id="xdnote">Note: Click <a target="_new" href="https://developers.google.com/speed/libraries/devguide#dojo">here</a> for a list of available versions.</div>
+
+				</div>
+			</div>
+			<script>window.showDojoInfo();</script>
+			
+			<div>
+				<label>Debug:</label>
+				<select name="debug">
+					<option value="false">No</option>
+					<option value="true">Yes</option>
+				</select>
+			</div>
+			
+			<div>
+				<label>Use Ajax Proxy:</label>
+				<select name="useAjaxProxy">
+					<option value="false">No</option>
+					<option value="true">Yes</option>
+				</select>
+			</div>
+			
+			<div>
+				<label>Predefined Semantic Tags:</label>
+				<div>
+					<select name="predefinedtags" onchange="window.showPredefinedTags();">
+						<option value="prof_popup">Profiles - Popup</option>
+						<option value='prof_inline'>Profiles - Inline</option>
+						<option value='prof_popup&prof_inline'>Profiles - Popup and Inline Combined</option>
+						<option value='comm_inline'>Community - Inline</option>
+						<option value='prof_popup&comm_inline'>Profiles and Community - Combined</option>
+					</select>
+				</div>
+				<textarea name="semtags" cols="125" rows="10"></textarea>
+				<div class="note">Note: This HTML will be inserted into the following page and rendered.</div>
+				
+				
+				<textarea name="semtags__prof_popup" style="display: none;">
+
+<div class="vcard">
+	<a href="javascript:void(0);"class="fn url">Amy Jones45</a>
+	<span class="email" style="display: none;">ajones45@janet.iris.com</span>
+</div>
+<div class="vcard">
+	<a href="javascript:void(0);"class="fn url">Amy Jones46 (DN)</a>
+	<span class="dn" style="display: none;">cn=Amy Jones46,cn=users,ou=collab,dc=ibm,dc=com</span>
+</div>
+<div class="vcard">
+	<a href="javascript:void(0);"class="fn url">User Not found</a>
+	<span class="email" style="display: none;">usernotfound@ibm.com</span>
+</div>
+				</textarea>
+				
+				<textarea name="semtags__prof_inline" style="display: none;">
+
+<div class="vcard X-person-display-inline">
+	<span class="fn" style="display:none;">Amy Jones47</span>
+	<span class="email" style="display:none;">ajones47@janet.iris.com</span>
+</div>
+<div class="vcard X-person-display-inline">
+	<span class="fn" style="display:none;">Amy Jones48 (DN)</span>
+	<span class="dn" style="display:none;">cn=Amy Jones48,cn=users,ou=collab,dc=ibm,dc=com</span>
+</div>
+<div class="vcard X-person-display-inline">
+	<span class="fn" style="display:none;">User Not found</span>
+	<span class="email" style="display: none;">usernotfound@ibm.com</span>
+</div>
+			
+				</textarea>
+				
+				<textarea name="semtags__comm_inline" style="display: none;">
+
+<div class="vcomm X-community-display-inline">
+	<span class="name" style="display:none;">Dev Community</span>
+	<span class="uuid" style="display:none">--PUT COMMUNITY UUID HERE--</span>
+	<span class="selectedWidgetId" style="display:none;">community</span>
+</div>			
+				</textarea>
+				<script>window.showPredefinedTags();</script>
+
+			</div>	
+			
+			
+			
+			
+			<div>
+				<label>Html Doctype (optional):</label>
+				<select name="doctype">
+					<option value="html">HTML 5</option>
+					<option value='HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"'>HTML 4.01 Strict</option>
+					<option value='HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"'>HTML 4.01 Transitional</option>
+					<option value='HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"'>HTML 3.2 (Quirks)</option>
+					<option value='html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"'>XHTML 1.0 Strict</option>
+					<option value='html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"'>XHTML 1.0 Transitional</option>
+					<option value='html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"'>XHTML 1.1</option>
+				</select>
+			</div>
+			
+			<div>
+				<label>Add Custom Service Links (optional):</label>
+				<select name="addservice">
+					<option value="false">No</option>
+					<option value="true">Yes</option>
+				</select>
+			</div>
+			
+			<div>
+				
+				<label>Load Connections CSS:</label>
+				<select name="loadcss" onchange="window.showCssInfo();">
+					<option value="false">No</option>
+					<option selected value="true">Yes</option>
+				</select>
+				
+			</div>
+
+			<div id="cssinfo">
+				<label>Custom CSS Files (optional):</label>
+				<input name="cssfiles" value="/connections/resources/web/_style?include=com.ibm.lconn.core.styles.oneui3/base/package3.css">
+				<div class="note">Note: If you want to load multiple css files, separate them by commas</div>			
+			</div>
+			
+			<script>window.showCssInfo();</script>
+			
+			
+			<div>
+				
+				<label>Override Card Behavior (optional):</label>
+				<select name="loadbehavior" onchange="window.showBehaviorInfo();">
+					<option selected value="false">No</option>
+					<option value="true">Yes</option>
+				</select>
+				
+			</div>
+
+			<div id="behaviorinfo">
+				<label>Behavior (optional):</label>
+				<select name="cardBehavior">
+					<option selected value="hover">Hover</option>
+					<option value="override">Override</option>
+					<!--<option value="postlink">Post Link</option>-->
+				</select>		
+			</div>
+			
+			<script>window.showBehaviorInfo();</script>			
+			
+			<div>
+				<label>Embedded HTML (optional):</label>
+				<textarea name="embedhtml" cols="125" rows="10"></textarea>
+			</div>
+			
+
+
+			
+			<br/>
+			<input type="submit" class="submit" value="Go"/>
+			
+			<br/><br/><hr size="1"/>
+			<div class="note">
+*OTHER NOTES:<br/>
+-Change your browser language to get the resulting test page to render in the that locale.
+			</div>
+		</form>
+
+	</body>
+</html>

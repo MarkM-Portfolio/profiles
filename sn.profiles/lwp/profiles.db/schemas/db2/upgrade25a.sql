@@ -1,0 +1,142 @@
+-- ***************************************************************** 
+--                                                                   
+-- IBM Confidential                                                  
+--                                                                   
+-- OCO Source Materials                                              
+--                                                                   
+-- Copyright IBM Corp. 2001, 2013                                    
+--                                                                   
+-- The source code for this program is not published or otherwise    
+-- divested of its trade secrets, irrespective of what has been      
+-- deposited with the U.S. Copyright Office.                         
+--                                                                   
+-- ***************************************************************** 
+
+-- 5724-S68                                                          
+CONNECT TO PEOPLEDB@
+
+DROP TABLE EMPINST.PROF_STRUCT_TAG@
+
+
+DROP TABLE  SNCORE.STRUCT_TAG@
+DROP SCHEMA SNCORE RESTRICT@
+
+
+------------------------------------------------
+-- DDL Statements for table "EMPINST"."EMPLOYEE"
+------------------------------------------------
+--- step 1: disable constraints
+--- keep the following stmt in sync with predbxfer.sql
+
+DROP TRIGGER "EMPINST"."T_EMPLOYEE_INSRT"@
+
+DROP TRIGGER "EMPINST"."T_EMPLOYEE_UPDT"@
+COMMIT@
+
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_MAIL_LOWER DROP EXPRESSION @ 
+COMMIT@
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_LOGIN_LOWER DROP EXPRESSION @
+COMMIT@
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_GW_EMAIL_LOWER DROP EXPRESSION @    
+COMMIT@
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_UID_LOWER DROP EXPRESSION @ 
+COMMIT@
+
+--- step 2: rename old table to temp
+
+RENAME TABLE "EMPINST"."EMPLOYEE" TO "EMPLOYEE_T"@
+
+--- step 3a: create new table
+--- keep the following stmt in sync with createdb.sql
+
+CREATE TABLE "EMPINST"."EMPLOYEE"  (
+	"PROF_KEY" VARCHAR(36) NOT NULL,
+	"PROF_UID" VARCHAR(256) NOT NULL ,
+	"PROF_UID_LOWER" GENERATED ALWAYS AS (LOWER(PROF_UID)),
+	"PROF_LAST_UPDATE" TIMESTAMP ,
+
+	"PROF_MAIL" VARCHAR(256) ,
+        "PROF_MAIL_LOWER" GENERATED ALWAYS AS (LOWER(PROF_MAIL)),
+	"PROF_GUID" VARCHAR(256) NOT NULL,
+	"PROF_SOURCE_UID" VARCHAR(256) NOT NULL,
+
+        "PROF_DISPLAY_NAME" VARCHAR(256) ,
+	"PROF_LOGIN" VARCHAR(256) ,
+	"PROF_LOGIN_LOWER" GENERATED ALWAYS AS (LOWER(PROF_LOGIN)),
+	"PROF_GIVEN_NAME"		VARCHAR(128)  ,
+	"PROF_SURNAME"			VARCHAR(128),
+	"PROF_ALTERNATE_LAST_NAME" VARCHAR(64) ,
+	"PROF_PREFERRED_FIRST_NAME" VARCHAR(32) ,
+	"PROF_PREFERRED_LAST_NAME" VARCHAR(64) ,
+	"PROF_TYPE"			VARCHAR(64),
+
+        "PROF_MANAGER_UID" VARCHAR(256) ,
+        "PROF_MANAGER_UID_LOWER" GENERATED ALWAYS AS (LOWER(PROF_MANAGER_UID)),
+        "PROF_SECRETARY_UID" VARCHAR(256) ,
+        "PROF_IS_MANAGER" CHAR(1) ,
+
+	"PROF_GROUPWARE_EMAIL" VARCHAR(128) ,
+	"PROF_GW_EMAIL_LOWER" GENERATED ALWAYS AS (LOWER(PROF_GROUPWARE_EMAIL)),
+	"PROF_JOB_RESPONSIBILITIES" VARCHAR(128) ,
+        "PROF_ORGANIZATION_IDENTIFIER" VARCHAR(64) ,
+	"PROF_ISO_COUNTRY_CODE" VARCHAR(3) ,
+	"PROF_FAX_TELEPHONE_NUMBER" VARCHAR(32) ,
+	"PROF_IP_TELEPHONE_NUMBER" VARCHAR(32),
+	"PROF_MOBILE" VARCHAR(32) ,
+	"PROF_PAGER" VARCHAR(32) ,
+	"PROF_TELEPHONE_NUMBER" VARCHAR(32) ,
+	"PROF_WORK_LOCATION" VARCHAR(32) ,
+
+	"PROF_BUILDING_IDENTIFIER" VARCHAR(64) ,
+	"PROF_DEPARTMENT_NUMBER" VARCHAR(16) ,
+	"PROF_EMPLOYEE_TYPE" VARCHAR(256) ,
+	"PROF_FLOOR" VARCHAR(16) ,
+	"PROF_EMPLOYEE_NUMBER" VARCHAR(16) ,
+	"PROF_PAGER_TYPE" VARCHAR(16) ,
+	"PROF_PAGER_ID" VARCHAR(32) ,
+	"PROF_PAGER_SERVICE_PROVIDER" VARCHAR(50) ,
+	"PROF_PHYSICAL_DELIVERY_OFFICE" VARCHAR(32) ,
+	"PROF_PREFERRED_LANGUAGE" VARCHAR(100) ,
+	"PROF_SHIFT" VARCHAR(4) ,
+	"PROF_TITLE" VARCHAR(256) ,
+        "PROF_COURTESY_TITLE" VARCHAR(64) ,
+	"PROF_TIMEZONE" VARCHAR(50) , 
+	"PROF_NATIVE_LAST_NAME" VARCHAR(256) ,
+	"PROF_NATIVE_FIRST_NAME" VARCHAR(256) ,
+	"PROF_BLOG_URL" VARCHAR(256) ,
+	"PROF_FREEBUSY_URL" VARCHAR(256) ,
+        "PROF_CALENDAR_URL" VARCHAR(256) ,
+
+	"PROF_DESCRIPTION" CLOB(1 M) NOT COMPACT ,
+        "PROF_EXPERIENCE" CLOB(1 M) NOT COMPACT,
+	"PROF_SOURCE_URL" VARCHAR(256),
+	CONSTRAINT "EMPLOYEE_PK" PRIMARY KEY ("PROF_KEY" )  )
+     IN "USERSPACE32K" INDEX IN USERSPACE4K @
+
+--- step 3b: drop constraints on new table
+--- keep the following stmt in sync with predbxfer.sql
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_MAIL_LOWER DROP EXPRESSION @ 
+COMMIT@
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_LOGIN_LOWER DROP EXPRESSION @
+COMMIT@
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_GW_EMAIL_LOWER DROP EXPRESSION @    
+COMMIT@
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_UID_LOWER DROP EXPRESSION @ 
+COMMIT@
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_MANAGER_UID_LOWER DROP EXPRESSION @ 
+COMMIT@
+
+
+
+-- TO COMPLETE UPGRADE25, RUN MigrateEmployeeTable JAVA PROGRAM AND THEN UPGRADE25B.SQL
+
+CONNECT RESET@

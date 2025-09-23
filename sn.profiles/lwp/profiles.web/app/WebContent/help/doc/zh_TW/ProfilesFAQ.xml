@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="設定檔" topic="frame.html">
+   <topic label="人員資訊概觀、指引及常見問題" href="frame.html">
+      <topic label="常見問題" href="c_pers_faq.html"/>
+      <topic label="歡迎使用設定檔" href="c_persona_welcome.html"/>
+      <topic label="本版本新增的功能？" href="c_whats_new.html"/>
+      <topic label="檢視設定檔" href="c_pers_profiles.html"/>
+      <topic label="協助工具特性" href="pDojo_accessibility.html"/>
+      <topic label="搜尋設定檔" href="c_pers_search_options.html"/>
+      <topic label="執行快速搜尋" href="t_pers_find_people.html"/>
+      <topic label="執行進階搜尋" href="t_pers_search_profiles.html"/>
+      <topic label="檢視搜尋結果" href="t_pers_search_results.html"/>
+      <topic label="使用設定檔名片" href="t_pers_use_biz_card.html"/>
+      <topic label="匯出聯絡詳細資料" href="t_pers_export_details.html"/>
+      <topic label="刪除同事" href="t_pers_delete_colleague.html"/>
+      <topic label="編輯設定檔" href="t_pers_edit_profiles.html"/>
+      <topic label="更新聯絡資訊" href="t_pers_update_contact_info.html"/>
+      <topic label="變更背景資訊" href="t_pers_change_bgd_info.html"/>
+      <topic label="變更您的設定檔影像檔" href="t_pers_edit_photo.html"/>
+      <topic label="上傳音訊檔" href="t_pers_audiofile_upload.html"/>
+      <topic label="使用標籤" href="c_pers_tags.html"/>
+      <topic label="標示您的設定檔" href="t_pers_tag_your_profile.html"/>
+      <topic label="新增外部連結至您的設定檔" href="t_add_external_links.html"/>
+      <topic label="新增同事" href="t_pers_add_colleagues.html"/>
+      <topic label="檢視同事" href="t_pers_view_colleagues.html"/>
+      <topic label="接受同事邀請" href="t_pers_accept_invitations.html"/>
+      <topic label="標示人員" href="t_pers_tag_people.html"/>
+   </topic>
+   <topic label="建立音訊檔" href="t_pers_audiofile_create.html"/>
+</toc>

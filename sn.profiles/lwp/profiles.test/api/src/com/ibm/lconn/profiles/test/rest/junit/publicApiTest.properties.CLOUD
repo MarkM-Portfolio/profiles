@@ -1,0 +1,72 @@
+# ***************************************************************** 
+#                                                                   
+# IBM Confidential                                                  
+#                                                                   
+# OCO Source Materials                                              
+#                                                                   
+# Copyright IBM Corp. 2011, 2015                            
+#                                                                   
+# The source code for this program is not published or otherwise    
+# divested of its trade secrets, irrespective of what has been      
+# deposited with the U.S. Copyright Office.                         
+#                                                                   
+# ***************************************************************** 
+
+# *****************************************************************
+# All these properties need to be setup correctly before running any
+# unit tests in this package on the cloud. For other details, see
+# the comments in TestSuiteApiCloud.java.
+#
+# Specifically, the users need to pre-exist on the system
+#
+# Another easy point to miss is that the 'baseUrl' would need to 
+# specify a port number, due to some limitation in parsing the URLs.
+#
+#******************************************************************
+
+# certain differences between on-prem & cloud systems; eg. cannot pass email as URL param on cloud 
+isCloud=true
+
+# The URL for the Profiles server
+baseUrl=https://apps.basesandboxN.swg.usma.ibm.com:443
+
+# The non-SSL URL for the Profiles server - if SSL is required in the deployment, this value should be the same as baseUrl
+baseUrlHttp=https://apps.basesandboxN.swg.usma.ibm.com:443
+
+# The user and password for the primary user to use when exercising tests
+username=ajones4@bluebox.lotus.com
+password=passw0rd
+email=ajones4@bluebox.lotus.com
+
+# The other user and password to use when exercising tests
+otherUsername=ajones5@bluebox.lotus.com
+otherPassword=passw0rd
+otherEmail=ajones5@bluebox.lotus.com
+
+# Third user for tests
+tertiaryUserName=ajones6@bluebox.lotus.com
+tertiaryPassword=passw0rd
+tertiaryEmail=ajones6@bluebox.lotus.com
+
+# The user and password for the admin user (must be in "org-admin" role for the application)
+adminUsername=ajones1@bluebox.lotus.com
+adminPassword=passw0rd
+
+# On Cloud the J2EE admin role is not assigned to individual users; for these tests to work, the Org-admin must be substituted
+
+# The user and password for the admin user with no profile (must be in "admin" role for the application)
+adminNoProfileUsername=ajones1@bluebox.lotus.com
+adminNoProfilePassword=passw0rd
+
+# The user and password for the search-admin user (must be in the "search-admin" role for the application
+searchUsername=ajones1@bluebox.lotus.com
+searchPassword=passw0rd
+
+# Set this value to true if you need to test against 3.0 legacy API for board now moved to news so it must be deployed in your environment
+testMessageBoard=false
+
+# Set this value to true if you want to test variable indexing of search
+testVariableSearchIndexing=false
+# Set this value to a profile-type id whose definition explicitly identifies the surname as not included in the fullTextIndex
+testVariableSearchIndexingProfileType=surnameNotIndexed
+

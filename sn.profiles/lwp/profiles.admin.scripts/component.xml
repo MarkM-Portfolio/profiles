@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.admin.scripts" description="Profiles Admin Scripts" spec-version="3.0" project-type="dir">  
+    <output-group name="to_lotus_live_installer">
+        <output type="file"  visibility="public" platform="all"
+            location="scripts/jython/profilesAdmin.py" preferredInstallLocation="bin_admin_lc" />
+    </output-group>
+</component>

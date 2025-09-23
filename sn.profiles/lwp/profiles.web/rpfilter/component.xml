@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2014
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.web/rpfilter" description="Profiles Reverse Proxy Filter Library" spec-version="3.0" type="source">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all"
+			location="${env.LWP_COMP_BUILD}/lib/lc.profiles.web.rpfilter.jar"
+			preferredInstallLocation="tmp" />
+	</output-group>
+
+	<output-group name="to_war">
+		<output type="jar" visibility="public" platform="all"
+			location="${env.LWP_COMP_BUILD}/lib/lc.profiles.web.rpfilter.jar"
+			preferredInstallLocation="WEB-INF/lib" />
+	</output-group>
+	
+	<output-group name="to_ear">
+		<output type="jar" visibility="public" platform="all"
+			location="${env.LWP_COMP_BUILD}/lib/lc.profiles.web.rpfilter.jar"
+			preferredInstallLocation="" />
+	</output-group>
+
+	<dependency name="prereqs.sn/was7.0" type="jar" version="7.0" />
+	<dependency name="prereqs.sn/jakarta.commons" type="jar" version="1.1" />
+	<dependency name="profiles.core/service.api" type="jar" version="3.0" />
+	<dependency name="lc.util/base" type="jar" version="3.0" />
+	<dependency name="lc.util/web" type="jar" version="3.0" />
+	<dependency name="prereqs.sn/hystrix" type="jar" />
+
+</component>

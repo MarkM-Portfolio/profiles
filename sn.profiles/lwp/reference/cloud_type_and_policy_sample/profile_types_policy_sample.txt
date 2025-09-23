@@ -1,0 +1,119 @@
+This document describes how to define a set of custom attribites and alter the editability. We'll also add a new profile tpe for which we'll alter feature capabilities.
+
+Adding custom attributes. The attributes (actually a subset of the attributes) discussed below were used, at a point in time, for W3 on the cloud. We'll discuss the steps for the sandbox default 'Amy Jones' org. The Amy Jones users are automatically created on the sandbox images. Amy Jones1 is the org-admin.
+
+Add the custom attributes via the org-admin console.
+
+    item1    Division
+    item2    Department
+    item3    Employee Type
+    item4    Contractor Company
+    item5    Assistant
+    item6    Native First Name
+    item7    Native Last Name
+    item8    Preferred Contact Method
+
+You can navigate to the ic_profiles app and see that the custom attributes appear. Recall that if you are in a cluster, there may be some latency in seeing the update.
+
+The file profile-types_sample_v0.xml contains some read/write refinements for the org attributes. Note that the file alters attribute readability for the default user type, as well as introduces a profile type named 'alt'. An 'alt' user has the same attribute set and we'll use this class or users to alter feature capabilities via policy settings.
+
+Update the organization's profile type definition
+=================================================
+
+An org's profile type specification can be updated in one of two ways:
+(1) via the wsadmin command that Profiles provides in profilesAdmin.py
+(2) via the admin API
+As of this writing, the Admin API is not exposed and we'll discuss using the wsadmin command.
+
+Edit profile-types_sample_v0.xml with the proper orgId. You should see NN as a placeholder for the orgId. It has been my experience that the 'Amy Jones' org has orgId=20000036. After editing profile-types_sample_v0.xml with the proper orgId, copy it to your sandbox acdmgr server (acdmgr.basesandboxNN.swg.usma.ibm.com). Add it to a easily accessible directory, as you will need to type in the file name. One option is to place the file in the directory from which you will run the wsadmin commands: /opt/IBM/WebSphere/AppServer/profiles/Dmgr01/bin.
+
+The wsadmin commands require two input parameters : the org-id of the customer of interest and the XML file. Navigate to the directory containing the Connections admin scripts and start wsadmin session.
+
+cd /opt/IBM/WebSphere/AppServer/profiles/Dmgr01/bin
+# ./wsadmin.sh -lang jython -user wasadmin -password Pa88w0rd
+--------------------------------------------------------------
+(note: You may need a port and host. I've not needed these ona sandbox. E.g.
+# ./wsadmin.sh -lang jython -user wasadmin -password Pa88w0rd -port 8880 -host 10.100.16.14)
+   
+WASX7209I: Connected to process "dmgr" on node dmgr_node using SOAP connector;  The type of process is: DeploymentManager
+WASX7031I: For help, enter: "print Help.help()"
+   
+wsadmin>execfile("profilesAdmin.py")
+------------------------------------
+   
+Connecting to WebSphere:name=ProfilesAdminService,type=LotusConnections,cell=lc45linux1Node01Cell,node=lc45linux1Node01,process=server1
+Profiles Administration initialized
+
+wsadmin>ProfilesService.setTenantProfileType("profile-types_sample_v0.xml","20000036")
+--------------------------------------------------------------------------------------
+Setting PT for org : 20000036 <config xmlns="http://www.ibm.com/profiles-types" id="profiles-types"><!-- note: see ocs item https://swgjazz.ibm.com:8004/jazz/web/projects/OCS#action=com.ibm.team.workitem.viewWorkItem&id=175437 --><type><parentId>snx:mtperson</parentId><orgId>20000036</orgId> <!-- CA1 IBM org --><id>default</id><property><ref>jobResp</ref> <!-- Job Responsibilities is being made editable --><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>telephoneNumber</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>mobileNumber</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>faxNumber</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>description</ref> <!-- About Me: populated with What I Am Known For --><updatability>readwrite</updatability><hidden>false</hidden><richText>true</richText></property><property><ref>experience</ref> <!-- Background: hide this field --><updatability>readwrite</updatability><hidden>true</hidden><richText>true</richText></property><property><ref>profileLinks</ref> <!-- hide this field --><updatability>readwrite</updatability><hidden>true</hidden></property><property><ref>phone1</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>phone2</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>phone3</ref> <!-- Will not be used, but apparently cannot hide --><updatability>readwrite</updatability><hidden>true</hidden></property><property><ref>address1</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>address2</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>address3</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>address4</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>officeName</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>item1</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Division:]]></label></property><property><ref>item2</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Department:]]></label></property><property><ref>item3</ref><updatability>read</updatability><label updatability="read"><![CDATA[Employee Type:]]></label></property><property><ref>item4</ref><updatability>read</updatability><label updatability="read"><![CDATA[Contractor Company:]]></label></property><property><ref>item5</ref><updatability>read</updatability><label updatability="read"><![CDATA[Assistant:]]></label></property><property><ref>item6</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Native First Name:]]></label></property><property><ref>item7</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Native Last Name:]]></label></property><property><ref>item8</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Preferred Contact Method:]]></label></property></type><!-- profile type that we'll assign alternate features and capabilities vis profile-policy --><type><parentId>default</parentId><orgId>20000036</orgId><id>alt</id></type></config>
+setTenantProfileType request processed
+
+wsadmin>ProfilesService.getTenantProfileType("20000036")
+--------------------------------------------------------
+Getting PT for org : 20000036
+getTenantProfileType request processed
+<config xmlns="http://www.ibm.com/profiles-types" id="profiles-types"><!-- note: see ocs item https://swgjazz.ibm.com:8004/jazz/web/projects/OCS#action=com.ibm.team.workitem.viewWorkItem&id=175437 --><type><parentId>snx:mtperson</parentId><orgId>20000036</orgId> <!-- CA1 IBM org --><id>default</id><property><ref>jobResp</ref> <!-- Job Responsibilities is being made editable --><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>telephoneNumber</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>ipTelephoneNumber</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>mobileNumber</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>faxNumber</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>description</ref> <!-- About Me: populated with What I Am Known For --><updatability>readwrite</updatability><hidden>false</hidden><richText>true</richText></property><property><ref>experience</ref> <!-- Background: hide this field --><updatability>readwrite</updatability><hidden>true</hidden><richText>true</richText></property><property><ref>profileLinks</ref> <!-- hide this field --><updatability>readwrite</updatability><hidden>true</hidden></property><property><ref>phone1</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>phone2</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>phone3</ref> <!-- Will not be used, but apparently cannot hide --><updatability>readwrite</updatability><hidden>true</hidden></property><property><ref>address1</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>address2</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>address3</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>address4</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>bldgId</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>floor</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>officeName</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>pagerNumber</ref><updatability>readwrite</updatability><hidden>false</hidden></property><property><ref>item1</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Division:]]></label></property><property><ref>item2</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Department:]]></label></property><property><ref>item3</ref><updatability>read</updatability><label updatability="read"><![CDATA[Employee Type:]]></label></property><property><ref>item4</ref><updatability>read</updatability><label updatability="read"><![CDATA[Contractor Company:]]></label></property><property><ref>item5</ref><updatability>read</updatability><label updatability="read"><![CDATA[Assistant:]]></label></property><property><ref>item6</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Native First Name:]]></label></property><property><ref>item7</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Native Last Name:]]></label></property><property><ref>item8</ref><updatability>readwrite</updatability><label updatability="read"><![CDATA[Preferred Contact Method:]]></label></property></type><!-- profile type that we'll assign alternate features and capabilities vis profile-policy --><type><parentId>default</parentId><orgId>20000036</orgId><id>alt</id></type></config>
+
+
+At this point you can navigate to the 'edit profile page' and see that the updates have taken effect. Again, recall that there may be latency in cluster.
+
+
+Update the organization's policy definition
+===========================================
+
+An org's profile policy can be updated in one of two ways:
+(1) via the wsadmin command that Profiles provides in profilesAdmin.py
+(2) via the admin API
+As of this writing, the Admin API is not exposed and we'll discuss using the wsadmin command.
+
+As with the profiles types, edit profile-policy_sample_v0.xml with the proper orgId. You should see NN as a placeholder for the orgId.
+Again, it has been my experice that the 'Amy Jones' org has orgId=20000036. Copy the file to the acdmgr (acdmgr.basesandboxNN.swg.usma.ibm.com)
+server, as you did the with profile-types_sample_v0.xml.
+
+The wsadmin commands require two input parameters : the org-id of the customer of interest and the XML file.
+Navigate to the directory containing the Connections admin scripts and start wsadmin session (if not already started from above)
+
+cd /opt/IBM/WebSphere/AppServer/profiles/Dmgr01/bin
+# ./wsadmin.sh -lang jython -user wasadmin -password Pa88w0rd
+--------------------------------------------------------------
+
+WASX7209I: Connected to process "dmgr" on node dmgr_node using SOAP connector;  The type of process is: DeploymentManager
+WASX7031I: For help, enter: "print Help.help()"
+
+wsadmin>execfile("profilesAdmin.py")
+------------------------------------
+
+Connecting to WebSphere:name=ProfilesAdminService,type=LotusConnections,cell=lc45linux1Node01Cell,node=lc45linux1Node01,process=server1
+Profiles Administration initialized
+
+wsadmin>ProfilesService.getTenantPolicy("20000036")
+---------------------------------------------------
+
+Getting Policy definition for org : 20000036
+getTenantPolicy processed
+No policy for organization : 20000036
+
+wsadmin>ProfilesService.setTenantPolicy("profile-policy_sample_v0.xml","20000036")
+----------------------------------------------------------------------------------
+
+Setting Policy for org : 20000036 policy: <?xml version="1.0" encoding="UTF-8"?><config id="profiles-policy" xmlns="http://www.ibm.com/profiles-policy"><features orgId="20000036"><feature name="profile.photo"><!-- photos are visible, but only alt users can update them --><!-- default/regular user cannot update photo --><profileType enabled="true"><acl name="profile.photo.view" scope="reader" /><acl name="profile.photo.update" scope="none" /></profileType><!-- alt user can update photo --><profileType type="alt" enabled="true"><acl name="profile.photo.view" scope="reader" /><acl name="profile.photo.update" scope="self" /></profileType></feature><feature name="profile.colleague"><!-- alt users can initiate netowrks among themselves and with default users --><!-- defaut users can initiate networks, but not with alt users --><profileType type="alt" actorType="alt" enabled="true"><acl name="profile.colleague.connect" scope="person_not_self" /></profileType><profileType type="alt" enabled="false"></profileType></feature><feature name="profile.following"><profileType type="alt" actorType="alt" enabled="true"><acl name="profile.following.view" scope="reader" /><acl name="profile.following.add" scope="person_not_self" /></profileType><profileType type="alt" enabled="false"></profileType></feature><feature name="profile.tag"><profileType type="alt" actorType="alt" enabled="true"><acl name="profile.tag.view" scope="reader" /><acl name="profile.tag.add" scope="person_and_self" /></profileType><profileType type="alt" enabled="false"></profileType></feature></features></config>
+setTenantPolicy request processed
+None
+
+wsadmin>ProfilesService.getTenantPolicy("20000036")
+---------------------------------------------------
+Getting Policy definition for org : 20000036
+getTenantPolicy processed
+<?xml version="1.0" encoding="UTF-8"?><config xmlns="http://www.ibm.com/profiles-policy" id="profiles-policy"><features orgId="20000036"><feature name="profile.tag"><profileType actorIdentity="standard" actorMode="internal" actorType="default" enabled="false" identity="standard" mode="internal" type="alt"/><profileType actorIdentity="standard" actorMode="internal" actorType="alt" enabled="true" identity="standard" mode="internal" type="alt"><acl name="profile.tag.add" scope="person_and_self"/><acl name="profile.tag.view" scope="reader"/></profileType></feature><feature name="profile.colleague"><profileType actorIdentity="standard" actorMode="internal" actorType="alt" enabled="true" identity="standard" mode="internal" type="alt"><acl name="profile.colleague.connect" scope="person_not_self"/></profileType><profileType actorIdentity="standard" actorMode="internal" actorType="default" enabled="false" identity="standard" mode="internal" type="alt"/></feature><feature name="profile.following"><profileType actorIdentity="standard" actorMode="internal" actorType="alt" enabled="true" identity="standard" mode="internal" type="alt"><acl name="profile.following.view" scope="reader"/><acl name="profile.following.add" scope="person_not_self"/></profileType><profileType actorIdentity="standard" actorMode="internal" actorType="default" enabled="false" identity="standard" mode="internal" type="alt"/></feature><feature name="profile.photo"><profileType actorIdentity="standard" actorMode="internal" actorType="default" enabled="true" identity="standard" mode="internal" type="default"><acl name="profile.photo.view" scope="reader"/><acl name="profile.photo.update" scope="none"/></profileType><profileType actorIdentity="standard" actorMode="internal" actorType="default" enabled="true" identity="standard" mode="internal" type="alt"><acl name="profile.photo.view" scope="reader"/><acl name="profile.photo.update" scope="self"/></profileType></feature></features></config>
+
+
+Update the organization's policy definition
+===========================================
+We will need to allow org-admin to set profileType via LLIS.
+For now, we'll update vis direct sql.
+
+Assign the profile type 'alt' to some set of users.
+
+Note for sandbox.As of this writing, ajones8,9,10 have subscriber ids 20000044, 20000045, 20000046 respectively. Check your database for the ids.
+ UPDATE EMPINST.EMPLOYEE SET PROF_TYPE = 'alt' WHERE PROF_GUID IN ('20000044','20000045','20000046')

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="profiles.web/javelin" default="js-build" basedir=".">
+
+	<import file="${env.WPLC_IMPORT}/std_props.xml" />
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml" />
+	
+	<property name="precompile.override" value="js-build" /> 
+
+	<property name="output.jar" value="${dir.lib}/lc.profiles.web.javelin.jar" />
+	<property name="output.war" value="${dir.lib}/lc.profiles.javelin.war" />
+	
+	<property name="override.websrc.dir" value="${basedir}/WebContent" />
+	<property name="web.xml" value="${basedir}/WebContent/WEB-INF/web.xml" />
+	<property name="jsObfuscator.skipobfuscation" value="true" />
+
+	<import file="${env.WPLC_IMPORT}/check.xml" />
+	<import file="${env.WPLC_IMPORT}/compile.xml" />
+	<import file="${env.WPLC_IMPORT}/rmic.xml" />
+	<import file="${env.WPLC_IMPORT}/package_extra.xml" />
+	<import file="${env.WPLC_IMPORT}/javadoc.xml" />
+	<import file="${env.WPLC_IMPORT}/jdepend.xml" />
+	<import file="${env.WPLC_IMPORT}/clean.xml" />
+	<import file="${env.WPLC_IMPORT}/comp_zip.xml" />
+	<import file="${env.WPLC_IMPORT}/std_targets.xml" />
+	<import file="${env.WPLC_IMPORT}/process_nls.xml" />
+	<import file="${env.WPLC_IMPORT}/performance.xml" />  
+	
+	<target name="js-build">
+	</target>
+
+</project>

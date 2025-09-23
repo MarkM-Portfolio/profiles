@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2015
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="profiles.core/service.api" default="development" basedir=".">
+
+	<import file="${env.WPLC_IMPORT}/std_props.xml" />
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml" />
+
+	<property name="output.jar" value="${dir.lib}/lc.profiles.core.service.api.jar" />
+	<property name="web.xml" value="${basedir}/web.xml" />
+
+	<import file="${env.WPLC_IMPORT}/check.xml" />
+	<import file="${env.WPLC_IMPORT}/compile.xml" />
+	<import file="${env.WPLC_IMPORT}/rmic.xml" />
+	<import file="${env.WPLC_IMPORT}/package_extra.xml" />
+	<import file="${env.WPLC_IMPORT}/javadoc.xml" />
+	<import file="${env.WPLC_IMPORT}/jdepend.xml" />
+	<import file="${env.WPLC_IMPORT}/clean.xml" />
+	<import file="${env.WPLC_IMPORT}/comp_zip.xml" />
+	<import file="${env.WPLC_IMPORT}/std_targets.xml" />
+	<import file="${env.WPLC_IMPORT}/process_nls.xml" />
+	<import file="${env.WPLC_IMPORT}/performance.xml" />  
+	
+	<!-- Property to establish version info -->
+	<property name="build.properties.name" value="com/ibm/lconn/core/util/appbuild.properties"/>
+	
+	<property name="include.pattern" value="**/*.xml,**/*.xsd"/>
+	
+	
+	<!-- include the internal policy xml files  -->
+	<property name="prejar.override" value="pre_jar" />
+	<property name="postpackage.override" value="post_jar" />
+	
+	<target name="pre_jar" >
+		<echo>Executing pre_jar </echo>
+		<copy todir="${basedir}/src/internal" verbose="true" overwrite="true">
+			<fileset dir="${basedir}/../../profiles.config.files/internal" casesensitive="yes">
+				<include name="internal-profiles-policy*.*" />
+			</fileset>		
+		</copy>
+	</target>
+	
+
+	<target name="post_jar" >
+		<echo>Executing post_jar </echo>
+		<delete dir="${basedir}/src/internal" failonerror="false" />  
+	</target>
+		
+		
+</project>

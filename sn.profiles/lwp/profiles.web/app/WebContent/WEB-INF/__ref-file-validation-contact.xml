@@ -1,0 +1,491 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+		<form name="editProfileForm">
+			<field property="attribute(contactInformation.blogUrl)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.blogUrl" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>256</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.blogUrl)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.blogUrl" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>256</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.description)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.aboutMe" /> 
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>250000</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.experience)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.background" /> 
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>250000</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.jobResp)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.header.searchby.jobtitle" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>128</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.secretaryName)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.editprofile.contactInformation.secretaryName" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>256</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.secretaryUid)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.editprofile.contactInformation.secretaryUid" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>36</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.secretaryEmail)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.editprofile.contactInformation.secretaryEmail" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>64</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.isManager)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.isManager" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>1</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.employeeNumber)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.employeeNumber" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>16</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.managerUid)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.managerUid" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>36</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.shift)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.shift" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>4</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.deptNumber)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.deptNumber" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>16</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.courtesyTitle)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.courtesyTitle" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>64</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.displayName)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.displayName" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>256</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.preferredFirstName)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.editprofile.contactinformation.preferredFirstName" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>32</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.preferredLastName)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.editprofile.contactinformation.preferredLastName" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>64</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.alternateLastname)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.alternateLastname" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>64</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.nativeFirstName)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.nativeFirstName" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>256</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.nativeLastName)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.nativeLastName" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>256</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.preferredLanguage)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.preferredLanguage" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>100</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.bldgId)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.bldgId" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>64</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.floor)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.floor" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>16</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.officeName)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.officeName" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>32</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.telephoneNumber)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.editprofile.contactinformation.telephoneNumber" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>32</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.ipTelephoneNumber)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.ipTelephoneNumber" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>32</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.mobileNumber)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.mobileNumber" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>32</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.pagerNumber)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.pagerNumber" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>32</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.pagerType)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.pagerType" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>16</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.pagerId)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.pagerId" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>32</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.pagerServiceProvider)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.pagerServiceProvider" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>50</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.faxNumber)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.faxNumber" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>32</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.email)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.people.email" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>64</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.groupwareEmail)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.groupwareEmail" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>128</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.calendarUrl)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.calendarUrl" />
+				<arg1 name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>256</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.freeBusyUrl)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.searchresults.searchby.freeBusyUrl" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>256</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+			<field property="attribute(contactInformation.timezone)" depends="maxbytelength,nonce">
+				<msg name="maxbytelength" key="errors.maxlength" /> 
+				<arg position="0" name="maxbytelength" key="label.editprofile.contactinformation.timezone" />
+				<arg position="1" name="maxbytelength" key="(maxbytelength)" resource="false" />
+				<var>
+					<var-name>maxbytelength</var-name>
+					<var-value>50</var-value>
+				</var>
+				<var>
+					<var-name>subEditForm</var-name>
+					<var-value>contactInfo</var-value>
+				</var>
+			</field>
+		</form>

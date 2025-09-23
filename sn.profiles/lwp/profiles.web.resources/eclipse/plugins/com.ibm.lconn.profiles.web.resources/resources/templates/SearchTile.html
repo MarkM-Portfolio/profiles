@@ -1,0 +1,29 @@
+<li class="lotusLeft">
+	<div>
+		<span class="lotusContentColOne">
+			<a aria-hidden="true" href="${profilesSvcLocation}/html/profileView.do?userid=${person.encoded_userid}" class="vcard" tabindex="-1">
+				<img 
+					id="${id}_photo" 
+					dojoAttachPoint="photoNode" 
+					class="lotusPhoto" 
+					alt="${messages.photoAltText}" 
+					src="${profilesSvcLocation}/photo.do?userid=${person.encoded_userid}&lastMod=${lastMod}"
+				/>
+			</a>
+		</span>
+		
+		<span class="lotusContentColTwo lotusContentColTwoTop">
+			<span class="vcard">
+				<a dojoAttachPoint="linkNode" href="${profilesSvcLocation}/html/profileView.do?userid=${person.encoded_userid}" class="fn url lotusPerson">${person.name}</a>
+				<span class="lotusHidden x-lconn-userid">${person.escape_userid}</span>
+				<p class="lotusHidden" dojoAttachPoint="inactiveNode">${messages.inactiveText}</p>
+			</span>
+		</span>
+
+		<span class="lotusContentColTwo" dojoAttachPoint="emailNode">
+			<a class='lotusEmail' href="mailto:${person.member}">${person.escape_member}</a>
+		</span>
+		
+		<span class="lotusContentColTwo" dojoAttachPoint="jobRespNode">${person.ext.escape_jobResp}</span>			
+	</div>
+</li>

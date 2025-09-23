@@ -1,0 +1,49 @@
+/* ***************************************************************** */
+/*                                                                   */
+/* IBM Confidential                                                  */
+/*                                                                   */
+/* OCO Source Materials                                              */
+/*                                                                   */
+/* Copyright IBM Corp. 2006, 2010                                    */
+/*                                                                   */
+/* The source code for this program is not published or otherwise    */
+/* divested of its trade secrets, irrespective of what has been      */
+/* deposited with the U.S. Copyright Office.                         */
+/*                                                                   */
+/* ***************************************************************** */
+
+/** Styles for popup person card **/
+.popupPersonCard #container {font:normal 1.0em/1.5em Helvetica, Arial sans-serif; width: 100%; height:100%;border: 1px solid #e0e0e0; -moz-border-radius:7px;background-color:#EFF6FE;}
+.popupPersonCard #container #levelOne {clear:left;margin:12px 0 5px;padding:0 0 0 125px;}
+.popupPersonCard #container #levelOne #photo {float:left;margin:0 0 0 -113px;padding:3px !important; border:1px solid #c2c2c4;background-color:#fff;}
+.popupPersonCard #container #levelOne #fn {font-size:1.2em;font-weight:bold;margin:3px 0px 0px;padding:0;}
+.popupPersonCard #container #levelOne #noProfileMsg {padding-top:10px;}
+.popupPersonCard #container #levelOne h3 {font-size:1.1em;font-weight:normal;margin:0;padding:0;}
+.popupPersonCard #container #levelTwo {border-top:1px solid #e3e3e4;clear:left;margin:0;padding:5px 0}
+.popupPersonCard #container #levelTwo #applicationLinks {padding-left:12px;}
+
+/** Styles for inline person card **/
+.container {background: url("../images/inlineNavCardBgTop.gif") no-repeat;padding:5px 0;width: 190px;min-height: 53px;margin:0 5px;}
+.inlinePersonCard {background:transparent url(../images/inlineNavCardBg.gif) repeat-y;}
+.inlinePersonCard .toggler img {padding-top:20px;}
+.inlinePersonCard .levelOne {display: table;height: 53px; #position: relative;overflow: hidden;}
+.inlinePersonCard .levelOne h4 {#position: absolute;display: table-cell;vertical-align: middle;padding-left:5px;top:25%;}
+.inlinePersonCard .levelOne h4 div {#position: relative;}
+.inlinePersonCard h4 {font-size:1.0em;line-height:1.1em;height:51px;font-weight:bold;width:102px;padding:0;margin:auto 5px;}
+.inlinePersonCard img {border: 0;margin:0 auto;}
+.inlinePersonCard h3 {background: url("../images/inlineNavCardBg.gif") repeat-y;font-size:.9em;padding:3px 5px;margin:0px;}
+.inlinePersonCard h3 span {border-bottom:1px solid #e0e0e0;display:block;margin:-3px 3px 0 0;padding:3px 5px 5px 5px;line-height:1.4em;}
+.inlinePersonCard .levelTwo .adr {color:#646768;}
+.inlinePersonCard span.first {margin-top:-1px;border-top:1px solid #e0e0e0;padding:2px 5px;}
+.inlinePersonCardBottom {background: url("../images/inlineNavCardBgBottom.gif") bottom no-repeat;margin:0px;padding:0;margin-bottom:5px;line-height:.6em;}
+.inlinePersonCard .toggler {background-color:#edeaeb;margin:0 5px;width:10px;height: 51px;}
+.inlinePersonCard .levelTwo {background: url("../images/inlineNavCardBg.gif") repeat-y;clear:both;}
+.inlinePersonCard .levelTwo ul {list-style-type:none;background: url("../images/inlineNavCardBg.gif") repeat-y;margin:0;padding:0 5px 2px 5px;}
+.inlinePersonCard .levelTwo ul li {padding:1px 5px;}
+.inlinePersonCard .levelTwo ul li.selected {margin-left:-3px;padding:2px 8px;background: #cce3fa;border:1px solid #a5d8fe;}
+.inlinePersonCard .levelTwo ul li.selected a, .inlinePersonCard .levelTwo ul li.selected a:hover, .inlinePersonCard .levelTwo ul li.selected a:focus, .inlinePersonCard .levelTwo ul li.selected a:visited {font-weight:bold;color:#000;text-decoration:none;}
+* html .inlinePersonCard h3  {padding-top:0;margin-top:0;}
+* html .inlinePersonCard span.first {padding:2px 5px 5px 5px; margin-top:3px;}
+* html .inlinePersonCardBottom {height:7px;z-index:100;margin-top:-3px}
+* html .inlinePersonCard .toggler {margin-left:3px;}
+* html .inlinePersonCard .toggler img {margin-top:20px;}

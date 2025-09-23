@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2011, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sdo:datagraph xmlns:sdo="commonj.sdo" xmlns:wim="http://www.ibm.com/websphere/wim">
+	<wim:schema>
+
+		<!--  The entity type for the organization policy -->
+		<wim:entitySchema nsPrefix="ic" nsURI="http://www.ibm.com/ibm/connections" entityName="OrgPolicy" parentEntityName="Party">
+			<wim:properties name="uid" />
+		</wim:entitySchema>
+		
+		<!-- OrgContainer property that denotes the ID of an organizations policy definition available on the OrgContainer -->
+		<wim:propertySchema nsURI="http://www.ibm.com/ibm/connections" dataType="STRING" multiValued="false" propertyName="ibm-vmmOrgPolicyID">
+			<wim:applicableEntityTypeNames>OrgContainer</wim:applicableEntityTypeNames>
+		</wim:propertySchema>
+		
+		<!-- OrganizationPolicy property that denotes the default sharing intent for resources (internal,external)  -->
+		<wim:propertySchema nsURI="http://www.ibm.com/ibm/connections" dataType="STRING" multiValued="false" propertyName="ibm-saasSharingIntent">
+			<wim:applicableEntityTypeNames>ic:OrgPolicy</wim:applicableEntityTypeNames>
+		</wim:propertySchema>
+		
+		<!-- OrganizationPolicy property that denotes if group support is enabled for the organization -->
+		<wim:propertySchema nsURI="http://www.ibm.com/ibm/connections" dataType="STRING" multiValued="false" propertyName="ibm-saasHasGroups">
+			<wim:applicableEntityTypeNames>ic:OrgPolicy</wim:applicableEntityTypeNames>
+		</wim:propertySchema>
+		
+		<!-- PersonAccount,Group property that references the organization id for the person/group -->
+		<wim:propertySchema nsURI="http://www.ibm.com/ibm/connections" dataType="STRING" multiValued="false" propertyName="ibm-saasOrgID">
+		  <wim:applicableEntityTypeNames>PersonAccount</wim:applicableEntityTypeNames>
+		  <wim:applicableEntityTypeNames>Group</wim:applicableEntityTypeNames>
+		</wim:propertySchema>
+		
+	</wim:schema>
+</sdo:datagraph>

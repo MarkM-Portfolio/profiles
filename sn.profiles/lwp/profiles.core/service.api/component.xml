@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * HCL Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright HCL Technologies Limited 2006, 2022
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.core/service.api" description="Profiles Core Service API" spec-version="3.0" project-type="java">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.core.service.api.jar" preferredInstallLocation="tmp" />
+	</output-group>
+
+	<output-group name="to_war">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.core.service.api.jar" preferredInstallLocation="WEB-INF/lib" />
+	</output-group>
+	
+	<output-group name="to_ear">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.core.service.api.jar" preferredInstallLocation="" />
+	</output-group>
+
+	<dependency name="prereqs.sn/acf.2.2.0-5" type="jar" version="2.2.0-5" />
+	<dependency name="prereqs.sn/was7.0" type="jar" version="7.0" />
+	<dependency name="prereqs.sn/jakarta.commons" type="jar" version="1.1" />
+	<dependency name="prereqs.sn/spring256" type="jar" version="2.5" />
+	<dependency name="prereqs.sn/json4j" type="jar" version="1.0.0.1 "/>
+	<dependency name="prereqs.sn/jsoup" type="jar"/>
+
+	<dependency name="lc.config.svc" type="jar" version="1.1" />
+	<dependency name="lc.util/base" type="jar" version="1.0" />
+	<dependency name="lc.util/web" type="jar" version="1.0" />
+	<dependency name="lc.util/config" type="jar" version="1.0" />
+	<dependency name="lc.admin/lc.admin" type="jar" version="1.0" />
+	<dependency name="lc.admin/userLifeCycle/spi" type="jar" version="3.0" />
+
+	<dependency name="lc.appext/core/api" type="jar" version="3.0" />
+	<dependency name="lc.appext/core/api" type="jar" version="3.0" />
+	<dependency name="lc.appext/msgvector/api" type="jar" version="3.0" />
+
+	<dependency name="lc.following/internal" type="jar" version="3.0 "/>
+	<dependency name="lc.component.integration/profiles" type="jar" version="3.0" />
+   	<dependency name="lc.sched.v2/core" type="jar" version="3.0"/>
+
+	<dependency name="highway/service" type="jar" version="1.0" />
+	<dependency name="highway/common" type="jar" version="1.0" />
+	<dependency name="highway/client" type="jar" version="1.0" />
+
+	<dependency name="prereqs.sn/hystrix" type="jar" />
+	<!-- OWASP HTML Sanitizer for ACFNext -->
+	<dependency name="prereqs.sn/owasp-java-html-sanitizer" type="jar" />
+    <dependency name="prereqs.sn/guava-16.0.1" type="jar" version="16.0.1" />   	     	
+
+</component>

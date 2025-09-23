@@ -1,0 +1,55 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2015                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<project name="profiles.web.resources.test" default="development" basedir=".">
+   <!-- Import helpers for property builds, do not change -->
+   <locateComponent component="prereqs.web.resources" property="eclipseBuildDir" locateBuildDir="false"/>
+   <import file="${eclipseBuildDir}/build_utils.xml" />
+   <import file="${env.WPLC_IMPORT}/pde_build.xml"/>  
+
+	<locateComponent component="prereqs.sn/jasmine-2.0" property="jasmine.basedir" locateBuildDir="false"/>
+	<import file="${jasmine.basedir}/jasmine.xml" />
+
+	<locateComponent component="prereqs.sn/jsdoc3" property="jsdoc.basedir" locateBuildDir="false"/>
+	<import file="${jsdoc.basedir}/jsdoc3.xml" />
+
+	<locateComponent component="prereqs.sn/jslint4java" property="jslint.basedir" locateBuildDir="false"/>
+	<import file="${jslint.basedir}/jslint.xml" />
+   
+   <target name="custom_init">
+		<antcall target="extract_jasmine_standalone">
+			<param name="to.dir" value="${basedir}/eclipse/plugins/com.ibm.lconn.profiles.web.resources.test/resources/" />
+		</antcall>
+   </target>
+   <target name="javadoc" />
+
+	<target name="custom_complete" depends="generate_jsdoc" />
+
+	<target name="run_jslint">
+		<antcall target="jslint">
+			<param name="src.dir" value="${basedir}/eclipse/plugins/com.ibm.lconn.profiles.web.resources.test/resources" />
+			<param name="jslint.outfile" value="jslint.lconn.profiles.test.out" />
+			<param name="jslint.halt" value="false"/>
+			<param name="jslint.excludes" value="**/spec/*.js,**/src/*.js,**/lib/jasmine*/**/*.js,**/specRunner.js"/>
+		</antcall>
+	</target>
+
+	<target name="generate_jsdoc">
+		<mkdir dir="${dir.build}/jsdoc"/>
+		<antcall target="run_jsdoc">
+			<param name="src.dir" value="${basedir}/eclipse/plugins/com.ibm.lconn.profiles.web.resources.test/resources" />
+			<param name="docs.topic.dir" value="lconn.profiles.test" />
+		</antcall>
+	</target>
+</project>

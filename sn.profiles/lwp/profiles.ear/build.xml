@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="profiles.ear" default="development" basedir=".">
+	<!--
+		dir.metainf set in std_dirs.xml, so set it before that is imported
+	-->
+	<property name="dir.metainf" value="${basedir}/EarContent/META-INF" />
+	<property name="app.xml" value="${basedir}/EarContent/META-INF/application.xml" />
+
+	<locateComponent component="lc.web.common" locateBuildDir="false" property="comp.mantis.src" />
+	<import file="${comp.mantis.src}/package_connections.xml" />
+	
+	<import file="${env.WPLC_IMPORT}/std_props.xml" />
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml" />
+
+	<property name="output.ear" value="${dir.lib}/profiles.ear" />
+
+	<import file="${env.WPLC_IMPORT}/check.xml" />
+	<import file="${env.WPLC_IMPORT}/compile.xml" />
+	<import file="${env.WPLC_IMPORT}/rmic.xml" />
+	<import file="${env.WPLC_IMPORT}/package_extra.xml" />
+	<import file="${env.WPLC_IMPORT}/nojavadoc.xml" />
+	<import file="${env.WPLC_IMPORT}/jdepend.xml" />
+	<import file="${env.WPLC_IMPORT}/clean.xml" />
+	<import file="${env.WPLC_IMPORT}/comp_zip.xml" />
+	<import file="${env.WPLC_IMPORT}/std_targets.xml" />
+	<import file="${env.WPLC_IMPORT}/process_nls.xml" />
+	<import file="${env.WPLC_IMPORT}/performance.xml" />
+</project>

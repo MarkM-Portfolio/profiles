@@ -1,0 +1,28 @@
+<!--
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="sn.profiles" default="development" basedir=".">
+  <!-- WARNING: The following property allows a single switch for pseudo-translation properties. However,
+                this is a non-documented, non-supported setting. This actually adds a new link between
+                this component and sn.infra and assumes that it has sn.infra in its fe_element.xml.
+                Before modifying this, ask karim.heredia@ie.ibm.com or jay_boyd@us.ibm.com -->
+  <property file="${env.WPLC_HOME}/prereq_fes/sn.infra/lwp/build/globalization.test/pseudo/pseudo.properties" />
+  <property file="${env.WPLC_HOME}/socnet.03/sn.infra/lwp/build/globalization.test/pseudo/pseudo.properties" />
+  <import file="${env.WPLC_IMPORT}/std_props.xml"/>
+  <import file="${env.WPLC_IMPORT}/root_build.xml"/>
+  <import file="${env.WPLC_IMPORT}/translations.xml"/>
+
+<target name="bld-bvt" depends="development">
+	<ant dir="profiles.test/bvt" target="bvt" />
+</target>
+
+</project>

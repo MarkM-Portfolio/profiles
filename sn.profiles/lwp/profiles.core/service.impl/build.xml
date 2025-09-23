@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="profiles.core/service.impl" default="development" basedir=".">
+
+	<import file="${env.WPLC_IMPORT}/std_props.xml" />
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml" />
+
+	<property name="output.jar" value="${dir.lib}/lc.profiles.core.service.impl.jar" />
+	<property name="web.xml" value="${basedir}/web.xml" />
+
+	<import file="${env.WPLC_IMPORT}/check.xml" />
+	<import file="${env.WPLC_IMPORT}/compile.xml" />
+	<import file="${env.WPLC_IMPORT}/rmic.xml" />
+	<import file="${env.WPLC_IMPORT}/package_extra.xml" />
+	<import file="${env.WPLC_IMPORT}/javadoc.xml" />
+	<import file="${env.WPLC_IMPORT}/jdepend.xml" />
+	<import file="${env.WPLC_IMPORT}/clean.xml" />
+	<import file="${env.WPLC_IMPORT}/comp_zip.xml" />
+	<import file="${env.WPLC_IMPORT}/std_targets.xml" />
+	<import file="${env.WPLC_IMPORT}/process_nls.xml" />
+	<import file="${env.WPLC_IMPORT}/performance.xml" />
+
+    <!-- override mantis target 'classpath_init' which creates the classpath to be set in manifest.mf -->
+    <!-- see tools mantis script manifest.xml -->
+    <!--
+	<target name="classpath_init" unless="mf.copy.done">
+		<echo message="Build Message from profiles classpath_init override : Updating '${mf.manifest.file}' ..."/>
+		<property name="classPathAdd" value="config" />
+		<prereqclasspath componentXML="${basedir}/component.xml" recurseClasspath="false" useExtendedClasspath="false"/>
+		<path id="mf_cp">
+			<pathelement path="${classPathAdd}"/>
+			<pathelement path="${prereq.classpath}"/>
+		</path>
+		<pathconvert dirsep="/" pathsep=" " property="mf.cp" refid="mf_cp">
+			<mapper type="flatten"/>
+		</pathconvert>
+	</target>
+	-->
+
+	<!-- override mantis target 'manifest_simple' which sets the manifest classpath -->
+	<!-- see tools mantis script manifest.xml -->
+	<target name="manifest_simple" depends="manifest_version" unless="mf.copy.done">
+		<echo message="Build Message from anifest_simple override : Updating '${mf.manifest.file}' ..."/>
+		<property name="classPathAppend" value="config/ " />
+		<manifest file="${mf.manifest.file}" mode="update">
+			<attribute name="Class-Path" value="${classPathAppend}${mf.cp}"/>
+	    </manifest>
+	</target>
+
+</project>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<xsd:schema 
+	targetNamespace="http://www.ibm.com/profiles-policy"
+	xmlns="http://www.ibm.com/profiles-policy"
+	xmlns:tns="http://www.ibm.com/profiles-policy"
+	xmlns:pui="http://www.ibm.com/profiles-policy"
+	xmlns:lconn="http://www.ibm.com/LotusConnections-config"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+
+	<xsd:element name="config">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="features" minOccurs="0" maxOccurs="1"/>
+			</xsd:sequence>
+			<xsd:attribute name="id" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="features">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is for the user feature enablement based on their profile type
+			</xsd:documentation>
+		</xsd:annotation>		
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="feature" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:unique name="FeatureUniqueness">
+			<xsd:selector xpath="tns:feature"/>
+			<xsd:field xpath="@name"/>
+		</xsd:unique>
+	</xsd:element>
+
+	<xsd:element name="feature">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="profileType" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="name" use="required" >
+				<xsd:simpleType>
+				    <xsd:restriction base="xsd:string">
+					<xsd:enumeration value="profile.board" />
+					<xsd:enumeration value="profile.status" />
+					<xsd:enumeration value="profile.photo" />
+					<xsd:enumeration value="profile.pronunciation" />
+					<xsd:enumeration value="profile.colleague" />
+					<xsd:enumeration value="profile.reportTo" />
+					<xsd:enumeration value="profile.peopleManaged" />
+					<xsd:enumeration value="profile.tag" />
+					<xsd:enumeration value="profile.following" />
+				    </xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="profileType">
+	     <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="acl" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+	         <xsd:attribute name="type" type="xsd:string" use="required"/>
+		 <xsd:attribute name="enabled" type="xsd:boolean" use="required"/>
+	     </xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="acl">
+		<xsd:annotation>
+			<xsd:documentation>
+				Main acl object
+			</xsd:documentation>
+		</xsd:annotation>
+	    <xsd:complexType>
+			<xsd:attribute name="name" use="required">
+			    <xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="profile.board.view" />
+					<xsd:enumeration value="profile.board.write.message" />
+					<xsd:enumeration value="profile.board.write.comment" />
+					<xsd:enumeration value="profile.status.update" />
+					<xsd:enumeration value="profile.photo.update" />
+					<xsd:enumeration value="profile.photo.view" />
+					<xsd:enumeration value="profile.pronunciation.update" />
+					<xsd:enumeration value="profile.colleague.connect" />
+					<xsd:enumeration value="profile.tag.add" />
+					<xsd:enumeration value="profile.following.add" />
+				</xsd:restriction>
+			    </xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="scope" use="required" type="tns:aclScope"/>
+			<xsd:attribute name="dissallowNonAdminIfInactive" use="optional" type="xsd:boolean"/>
+	    </xsd:complexType>
+	</xsd:element>
+	
+	<xsd:simpleType name="aclScope">
+		<xsd:annotation>
+			<xsd:documentation>
+				Currently supported acl scope setthings for Profiles
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="none" />
+			<xsd:enumeration value="admin" />
+			<xsd:enumeration value="self" />
+			<xsd:enumeration value="reader"/>
+			<xsd:enumeration value="person_and_self" />
+			<xsd:enumeration value="person_not_self" />
+			<xsd:enumeration value="colleagues_and_self" />
+			<xsd:enumeration value="colleagues_not_self" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+</xsd:schema>

@@ -1,0 +1,297 @@
+-- ***************************************************************** 
+--                                                                   
+-- IBM Confidential                                                  
+--                                                                   
+-- OCO Source Materials                                              
+--                                                                   
+-- Copyright IBM Corp. 2001, 2010                                    
+--                                                                   
+-- The source code for this program is not published or otherwise    
+-- divested of its trade secrets, irrespective of what has been      
+-- deposited with the U.S. Copyright Office.                         
+--                                                                   
+-- ***************************************************************** 
+
+-- 5724-S68                                                          
+USE PEOPLEDB;
+GO
+
+------------------------------------------------
+-- DDL Statements for view "EMPINST"."EMPLOYEE"
+------------------------------------------------
+
+ALTER TABLE EMPINST.EMPLOYEE ALTER COLUMN PROF_DEPARTMENT_NUMBER NVARCHAR(24);
+GO
+
+CREATE INDEX DISP_IDX ON EMPINST.EMPLOYEE 
+		(PROF_KEY ASC, PROF_DISPLAY_NAME ASC);
+GO
+
+CREATE INDEX PROF_SNGN_IDX ON EMPINST.EMPLOYEE 
+		(PROF_KEY ASC, PROF_SURNAME ASC, PROF_GIVEN_NAME ASC);
+GO
+
+CREATE INDEX PROF_GN2_IDX ON EMPINST.EMPLOYEE 
+		(PROF_GIVEN_NAME ASC, PROF_KEY ASC);
+GO
+
+CREATE INDEX PROF_SN2_IDX ON EMPINST.EMPLOYEE 
+		(PROF_SURNAME ASC, PROF_KEY ASC);
+GO
+
+
+------------------------------------------------
+-- DDL Statements for table "EMPINST"."SURNAME"
+------------------------------------------------
+
+DROP INDEX EMPINST.SURNAME.SURNAME_UDX;
+GO
+
+DROP INDEX EMPINST.SURNAME.SURNAME_IDX;
+GO
+
+ALTER TABLE EMPINST.SURNAME ADD CONSTRAINT SURNAME_PK PRIMARY KEY (PROF_KEY, PROF_SURNAME);
+GO
+
+CREATE INDEX SURNAME_IDX ON EMPINST.SURNAME (PROF_SURNAME ASC, PROF_KEY ASC);
+GO
+
+------------------------------------------------
+-- DDL Statements for table "EMPINST"."GIVEN_NAME"
+------------------------------------------------
+
+DROP INDEX EMPINST.GIVEN_NAME.GIVEN_NAME_UDX;
+
+DROP INDEX EMPINST.GIVEN_NAME.GIVEN_NAME_IDX;
+GO
+
+ALTER TABLE EMPINST.GIVEN_NAME ADD CONSTRAINT GIVEN_NAME_PK PRIMARY KEY (PROF_KEY, PROF_GIVENNAME);
+GO
+
+CREATE INDEX GIVENNAME_IDX ON EMPINST.GIVEN_NAME (PROF_GIVENNAME ASC, PROF_KEY ASC);
+GO
+ 		 
+------------------------------------------------
+-- DDL Statements for table EMPINST.PROFILE_EXTENSIONS
+------------------------------------------------
+
+DROP INDEX EMPINST.PROFILE_EXTENSIONS.PROFILE_EXTENSIONS_IDX;
+GO
+
+ALTER TABLE EMPINST.PROFILE_EXTENSIONS ADD CONSTRAINT PROFILE_EXTENSIONS_PK PRIMARY KEY (PROF_KEY, PROF_PROPERTY_ID);
+GO
+
+------------------------------------------------
+-- DDL Statements for sequence for Table EMPINST.PROFILE_EXT_DRAFT
+------------------------------------------------
+
+DROP INDEX  EMPINST.PROFILE_EXT_DRAFT.EXT_DRAFT_PK;
+GO
+
+ALTER TABLE EMPINST.PROFILE_EXT_DRAFT ADD CONSTRAINT EXT_DRAFT_PK PRIMARY KEY (PROF_KEY, PROF_UPDATE_SEQUENCE);
+GO
+
+
+------------------------------------------------
+-- DDL Statements for view "EMPINST"."PRONUNCIATION"
+------------------------------------------------
+
+ALTER TABLE EMPINST.PRONUNCIATION ADD PROF_FILE_TYPE NVARCHAR(50) NOT NULL DEFAULT 'audio/wav';
+GO
+
+
+------------------------------------------------
+-- DDL Statements for view "EMPINST"."DEPARTMENT"
+------------------------------------------------
+
+exec sp_rename 'EMPINST.DEPARTMENT', 'DEPT_T'
+GO
+
+ 
+ CREATE TABLE EMPINST.DEPARTMENT  (
+		  PROF_DEPARTMENT_CODE 	NVARCHAR(24) NOT NULL, 
+		  PROF_DEPARTMENT_TITLE 	NVARCHAR(256)) ; 
+GO
+
+-- copy old data
+INSERT INTO EMPINST.DEPARTMENT (PROF_DEPARTMENT_CODE, PROF_DEPARTMENT_TITLE)
+(SELECT DISTINCT PROF_DEPARTMENT_CODE, PROF_DEPARTMENT_TITLE FROM EMPINST.DEPT_T);
+
+
+-- DDL Statements for indexes on Table EMPINST.DEPARTMENT
+
+
+ALTER TABLE EMPINST.DEPARTMENT ADD CONSTRAINT DEPT_PK PRIMARY KEY (PROF_DEPARTMENT_CODE ASC);
+GO
+
+ CREATE INDEX DEPARTMENT_WIZ1 ON EMPINST.DEPARTMENT 
+		(PROF_DEPARTMENT_TITLE ASC);
+GO
+
+
+DROP TABLE EMPINST.DEPT_T;
+GO
+
+------------------------------------------------
+-- DDL Statements for table "EMPINST"."USER_PLATFORM_EVENTS"
+------------------------------------------------
+
+CREATE TABLE EMPINST.USER_PLATFORM_EVENTS (
+	EVENT_KEY BIGINT IDENTITY(0,1) NOT NULL, 
+	EVENT_TYPE NVARCHAR(36) NOT NULL,
+	PAYLOAD NVARCHAR(max),
+	CREATED DATETIME NOT NULL,
+	CONSTRAINT PLATFORM_EVENTS_PK PRIMARY KEY (EVENT_KEY) 
+) ;
+GO
+
+
+-------------------------------------------------------------------
+-- START ADDING SCHEDULER TABLES
+-------------------------------------------------------------------
+
+CREATE TABLE EMPINST.PROFILES_SCHEDULER_TASK (
+	TASKID BIGINT NOT NULL,
+	VERSION NVARCHAR(5) NOT NULL,
+	ROW_VERSION INT NOT NULL,
+	TASKTYPE INT NOT NULL,
+	TASKSUSPENDED TINYINT NOT NULL,
+	CANCELLED TINYINT NOT NULL,
+	NEXTFIRETIME BIGINT NOT NULL,
+	STARTBYINTERVAL NVARCHAR(254),
+	STARTBYTIME BIGINT,
+	VALIDFROMTIME BIGINT,
+	VALIDTOTIME BIGINT,
+	REPEATINTERVAL NVARCHAR(254),
+	MAXREPEATS INT NOT NULL,
+	REPEATSLEFT INT NOT NULL,
+	TASKINFO IMAGE NULL,
+	NAME NVARCHAR(254) NOT NULL,
+	AUTOPURGE INT NOT NULL,
+	FAILUREACTION INT,
+	MAXATTEMPTS INT,
+	QOS INT,
+	PARTITIONID INT,
+	OWNERTOKEN NVARCHAR(200) NOT NULL,
+	CREATETIME BIGINT NOT NULL
+) ;
+GO
+
+ALTER TABLE EMPINST.PROFILES_SCHEDULER_TASK WITH NOCHECK 
+	ADD CONSTRAINT PROFILES_SCHEDULER_TASK_PK PRIMARY KEY  NONCLUSTERED ( TASKID );
+GO
+
+CREATE INDEX PROFILES_SCHEDULER_TASK_IDX1 
+	ON EMPINST.PROFILES_SCHEDULER_TASK (TASKID, OWNERTOKEN) ;
+GO
+
+CREATE INDEX PROFILES_SCHEDULER_TASK_IDX2 
+	ON EMPINST.PROFILES_SCHEDULER_TASK (NEXTFIRETIME ASC, REPEATSLEFT, PARTITIONID) ;
+GO
+
+CREATE TABLE EMPINST.PROFILES_SCHEDULER_TREG (
+	REGKEY NVARCHAR(254) NOT NULL,
+	REGVALUE NVARCHAR(254),
+	PRIMARY KEY (REGKEY)
+) ;
+GO
+
+
+CREATE TABLE EMPINST.PROFILES_SCHEDULER_LMGR (
+	LEASENAME NVARCHAR(254) NOT NULL,
+	LEASEOWNER NVARCHAR(254) NOT NULL,
+	LEASE_EXPIRE_TIME  BIGINT,
+	DISABLED NVARCHAR(5)
+) ;
+GO
+
+CREATE TABLE EMPINST.PROFILES_SCHEDULER_LMPR (
+	LEASENAME NVARCHAR(224) NOT NULL,
+	NAME NVARCHAR(224) NOT NULL,
+	VALUE NVARCHAR(224) NOT NULL
+) ;
+GO
+
+CREATE INDEX PROFILES_SCHEDULER_LMPR_IDX1
+	ON EMPINST.PROFILES_SCHEDULER_LMPR (LEASENAME, NAME) ;
+GO
+	
+-------------------------------------------------------------------
+-- END ADDING SCHEDULER TABLES
+-------------------------------------------------------------------
+
+{include.createDynaDefs.sql}
+
+--
+-- User state look aside index table
+--
+CREATE TABLE EMPINST.USER_STATE_LAIDX (
+	DEFID    BINARY(16) NOT NULL,
+	IDXID			BINARY(16) NOT NULL,
+	USRSTATE			INT NOT NULL,
+	USRSTATE_UPDATED		DATETIME NOT NULL,
+	OBJID				BINARY(16) NOT NULL,
+	OBJIDSTR			NCHAR(36) NOT NULL,
+	CONSTRAINT USER_STATE_PK PRIMARY KEY (IDXID)
+);
+GO
+
+--
+-- Foriegn key constraint on obj-ref table to clean up on deletion
+--
+ALTER TABLE EMPINST.USER_STATE_LAIDX ADD CONSTRAINT USRSTATE_OBJ_FK FOREIGN KEY (OBJID) 
+	REFERENCES EMPINST.DYNA_OBJ_REF(OBJID)
+	ON DELETE CASCADE ON UPDATE NO ACTION;
+GO
+	
+--
+-- Foriegn key constraint on def-ref table to clean up on deletion
+--
+ALTER TABLE EMPINST.USER_STATE_LAIDX ADD CONSTRAINT USRSTATE_DEF_FK FOREIGN KEY (DEFID) 
+	REFERENCES EMPINST.DYNA_DEFS(DEFID)
+	ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+--
+-- Constrain to one value per user
+--
+CREATE UNIQUE INDEX USRSTATE_CONS_VALB 
+	ON EMPINST.USER_STATE_LAIDX (OBJID ASC)
+	INCLUDE (OBJIDSTR, USRSTATE, USRSTATE_UPDATED);
+GO
+
+CREATE UNIQUE INDEX USRSTATE_CONS_VALS 
+	ON EMPINST.USER_STATE_LAIDX (OBJIDSTR ASC)
+	INCLUDE (OBJID, USRSTATE, USRSTATE_UPDATED);
+GO
+
+--
+-- Main index for scanning
+--
+CREATE INDEX USRSTATE_IDX
+	ON EMPINST.USER_STATE_LAIDX (USRSTATE ASC, USRSTATE_UPDATED ASC, OBJID ASC, OBJIDSTR ASC);
+GO
+
+-- ==========================================================
+-- Updates to the board
+-- ==========================================================
+{include.msgVector-fixup5.sql}
+
+--
+-- Add state field for lookaside index tables
+--
+INSERT INTO EMPINST.PROF_CONSTANTS VALUES ('LA_IDX_STATE', 'inconsistent');
+GO
+
+
+------------------------------------------------
+-- DDL Statements for sequence for Table EMPINST.PROFILES_SCHEDULER_LMGR
+------------------------------------------------
+
+ALTER TABLE EMPINST.PROFILES_SCHEDULER_LMGR
+	ADD PRIMARY KEY (LEASENAME);
+GO
+
+-- Update schema versions
+UPDATE EMPINST.SNPROF_SCHEMA SET DBSCHEMAVER= 27 WHERE COMPKEY='Profiles';
+GO

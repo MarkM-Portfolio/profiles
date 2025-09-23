@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Tenant">
+
+    <cacheModel id="TenantCache" type="LRU">
+    	<flushInterval hours="12"/>
+    	<flushOnExecute statement="Tenant.createTenant" />
+        <flushOnExecute statement="Tenant.updateTenantDescriptors" />
+        <!-- not allowed <flushOnExecute statement="Tenant.updateTenantExId" /-->
+        <flushOnExecute statement="Tenant.updateTenantState" />
+        <flushOnExecute statement="Tenant.deleteTenant" />
+		<property name="size" value="250" />
+    </cacheModel>
+
+	<typeAlias alias="Tenant" type="com.ibm.lconn.profiles.data.Tenant" />
+
+	<resultMap id="TenantResult" class="tenant">
+		<result property="tenantKey" column="TENANT_KEY" />
+		<result property="exid" column="TENANT_EXID" />
+		<result property="name" column="TENANT_NAME" />
+		<result property="lowercaseName" column="TENANT_NAME_LOWER" />
+		<result property="state" column="TENANT_STATE" />
+		<result property="created" column="TENANT_CREATED" javaType="java.sql.Timestamp" />
+		<result property="lastUpdate" column="TENANT_LASTUPDATE" javaType="java.sql.Timestamp" />
+	</resultMap>
+
+	<sql id="sql_WhereByTenantKey">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+
+	<sql id="sql_WhereByTenantKeyE">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND E.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+
+	<sql id="sql_WhereByTenantKeyC">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND C.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_WhereByTenantKeyL">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND L.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_WhereByTenantKeyP">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND P.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_WhereByTenantKeyPE">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND PE.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+
+	<sql id="sql_WhereByTenantKeyPT">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND PT.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_WhereByTenantKeyS">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND S.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_WhereByTenantKeyTBL">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND TBL.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_WhereByTenantKeyTE">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND TE.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_WhereByTenantKeyUP">
+		<isEqual property="applyMT" compareValue="true">
+		<isNotEqual property="tenantKey" compareValue="IGNORE_TENANTKEY">
+			AND UP.TENANT_KEY = #dbTenantKey#
+		</isNotEqual>
+		</isEqual>
+	</sql>
+
+	<insert id="createTenant" parameterClass="Tenant">
+		INSERT INTO EMPINST.TENANT(
+		  TENANT_KEY,
+		  TENANT_EXID,
+		  TENANT_NAME,
+		  TENANT_NAME_LOWER,
+		  TENANT_STATE,
+		  TENANT_CREATED,
+		  TENANT_LASTUPDATE
+		) VALUES (
+		  #tenantKey#,
+		  #exid#,
+		  #name#,
+		  #lowercaseName#,
+		  #state#,
+		  #created#,
+		  #lastUpdate#
+		)
+	</insert>
+
+	<!-- select id="getTenant" resultMap="TenantResult" parameterClass="string" cacheModel="TenantCache" -->
+	<select id="getTenant" resultMap="TenantResult" parameterClass="string">
+		SELECT TENANT_KEY,TENANT_EXID,TENANT_NAME,TENANT_NAME_LOWER,TENANT_STATE,TENANT_CREATED,TENANT_LASTUPDATE
+		FROM EMPINST.TENANT WHERE TENANT_KEY = #tenantKey#
+	</select>
+
+	<!-- select id="getTenantByExid" resultMap="TenantResult" parameterClass="string" cacheModel="TenantCache"-->
+	<select id="getTenantByExid" resultMap="TenantResult" parameterClass="string">
+		SELECT TENANT_KEY,TENANT_EXID,TENANT_NAME,TENANT_NAME_LOWER,TENANT_STATE,TENANT_CREATED,TENANT_LASTUPDATE
+		FROM EMPINST.TENANT WHERE TENANT_EXID = #exid#
+	</select>
+	
+	<select id="getTenantKeyList" resultClass="string">
+		SELECT TENANT_KEY FROM EMPINST.TENANT
+	</select>
+
+	<update id="updateTenantDescriptors" parameterClass="Tenant" >
+		UPDATE EMPINST.TENANT
+		SET
+		  TENANT_NAME = #name#,
+		  TENANT_NAME_LOWER = #lowercaseName#,
+		  TENANT_LASTUPDATE = #lastUpdate#
+		WHERE
+		  TENANT_KEY=#tenantKey#
+	</update>
+	
+	<!-- update exid not supported
+	<update id="updateTenantExId" parameterClass="map">
+		UPDATE EMPINST.TENANT SET TENANT_EXID = #exid#, TENANT_LASTUPDATE = #lastUpdate#
+		WHERE TENANT_KEY = #key#
+	</update>
+	 -->
+
+	<update id="updateTenantState" parameterClass="map">
+		UPDATE EMPINST.TENANT SET TENANT_STATE = #state# WHERE TENANT_KEY = #key#
+	</update>
+	
+	<delete id="deleteTenant" parameterClass="string">
+		DELETE FROM EMPINST.TENANT WHERE TENANT_KEY = #tenantKey#
+	</delete>
+
+	<!-- helper method used in tenantDao before a delete -->
+	<select id="countProfilesInTenant" parameterClass="string" resultClass="java.lang.Integer">
+		select count(*) from EMPINST.EMPLOYEE where TENANT_KEY = #tenantKey#
+	</select>
+
+</sqlMap>

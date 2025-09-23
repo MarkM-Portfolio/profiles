@@ -1,0 +1,39 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<component name="profiles.web.resources" 
+            owner="Bob Barber" 
+            owner-email="bbarber@us.ibm.com"
+            project-type="eclipse-pde">
+
+    <!--An output group is needed to get it into the fe.zip -->
+    <output-group name="to_web_resources_provision">
+       <output type="dir" 
+               visibility="public" 
+               platform="all" 
+               location="${env.LWP_COMP_BUILD}/eclipse/plugins" 
+               preferredInstallLocation=""/>
+    </output-group>
+
+	<dependency name="profiles.web/app" type="jar" />
+	
+	<!-- list all of your dependencies here - use the "dir" type.  
+	     Most components will depend only on lc.web.osgi -->
+	<dependency name="prereqs.web.resources" type="dir" />
+	<dependency name="lc.web.resources.base" type="dir" />
+	<dependency name="lc.web.osgi" type="dir" />
+	<dependency name="lc.web.resources" type="dir" />
+    <dependency name="prereqs.sn/jsdoc3" type="dir" />
+    <dependency name="prereqs.sn/jslint4java" type="dir" />
+</component>

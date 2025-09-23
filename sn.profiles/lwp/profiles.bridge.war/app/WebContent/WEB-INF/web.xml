@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2017                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!--
+/* 5724_S68                                                          */
+-->
+<web-app id="ProfilesBridgeWebApp"
+	xmlns="http://java.sun.com/xml/ns/j2ee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+	
+	<display-name>Profiles Bridge</display-name>
+	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- Initializes a number of static classes -->
+
+	<listener>
+            <listener-class>com.ibm.lconn.events.internal.enable.EventInitContextListener</listener-class>
+        </listener>
+
+	<listener>
+            <listener-class>com.ibm.lconn.profiles.web.servlet.ProfileFollowingRegistration</listener-class>
+        </listener>
+
+
+	<!-- **************** Filter Declarations **************** -->
+
+
+	<!-- event publisher resource reference -->
+	<ejb-local-ref id="EJBLocalRef_1266516033840">
+	  <description></description>
+	  <ejb-ref-name>ejb/EventPublisher</ejb-ref-name>
+	  <ejb-ref-type>Session</ejb-ref-type>
+	  <local-home>com.ibm.lconn.events.internal.publish.impl.JMSPublisherLocalHome</local-home>
+	  <local>com.ibm.lconn.events.internal.publish.impl.JMSPublisherLocal</local>
+	</ejb-local-ref>
+
+
+	<!-- For the Following API support -->
+	<servlet>
+	    <description>Servlet for REST API support for Following in Profiles</description>
+	    <display-name>FollowingRESTServlet</display-name>
+	    <servlet-name>FollowingRESTServlet</servlet-name>
+	    <servlet-class>com.ibm.lconn.following.web.FollowingControllerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>FollowingRESTServlet</servlet-name>
+	    <url-pattern>/follow/*</url-pattern>
+	</servlet-mapping>
+
+        
+</web-app>

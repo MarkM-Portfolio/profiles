@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Profily" topic="frame.html">
+   <topic label="Profily: Přehled, postupy a časté dotazy" href="frame.html">
+      <topic label="Často kladené otázky" href="c_pers_faq.html"/>
+      <topic label="Vítejte ve službě Profily" href="c_persona_welcome.html"/>
+      <topic label="Novinky v tomto vydání" href="c_whats_new.html"/>
+      <topic label="Zobrazení profilů" href="c_pers_profiles.html"/>
+      <topic label="Funkce usnadnění přístupu" href="pDojo_accessibility.html"/>
+      <topic label="Hledání profilů" href="c_pers_search_options.html"/>
+      <topic label="Provedení rychlého hledání" href="t_pers_find_people.html"/>
+      <topic label="Provádění rozšířeného hledání" href="t_pers_search_profiles.html"/>
+      <topic label="Zobrazení výsledků hledání" href="t_pers_search_results.html"/>
+      <topic label="Použití vizitky služby Profily" href="t_pers_use_biz_card.html"/>
+      <topic label="Exportování podrobných informací o kontaktu"
+             href="t_pers_export_details.html"/>
+      <topic label="Odstraňování kolegů" href="t_pers_delete_colleague.html"/>
+      <topic label="Úprava profilu" href="t_pers_edit_profiles.html"/>
+      <topic label="Aktualizace kontaktních informací"
+             href="t_pers_update_contact_info.html"/>
+      <topic label="Změna informací o pozadí" href="t_pers_change_bgd_info.html"/>
+      <topic label="Změna obrázku ve svém profilu" href="t_pers_edit_photo.html"/>
+      <topic label="Odeslání zvukového souboru" href="t_pers_audiofile_upload.html"/>
+      <topic label="Použití značek" href="c_pers_tags.html"/>
+      <topic label="Označkování vašeho profilu" href="t_pers_tag_your_profile.html"/>
+      <topic label="Přidávání externích odkazů do profilu" href="t_add_external_links.html"/>
+      <topic label="Přidávání kolegů" href="t_pers_add_colleagues.html"/>
+      <topic label="Zobrazování kolegů" href="t_pers_view_colleagues.html"/>
+      <topic label="Přijímání pozvánek kolegů" href="t_pers_accept_invitations.html"/>
+      <topic label="Přiřazování značek lidem" href="t_pers_tag_people.html"/>
+   </topic>
+   <topic label="Vytvoření zvukového souboru" href="t_pers_audiofile_create.html"/>
+</toc>

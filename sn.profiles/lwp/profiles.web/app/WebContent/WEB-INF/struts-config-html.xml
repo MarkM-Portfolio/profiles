@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC 
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+	
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<struts-config>
+
+	<!-- Data Sources -->
+	<data-sources>
+	</data-sources>
+
+	<!-- Form Beans -->
+	<form-beans>
+		<form-bean name="simpleSearchForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="searchBy" type="java.lang.String" /> 
+			<form-property name="searchFor" type="java.lang.String" /> 
+			<form-property name="name" type="java.lang.String" />
+			<form-property name="kanjiName" type="java.lang.String" />  
+			<form-property name="department" type="java.lang.String" />
+			<form-property name="phoneNumber" type="java.lang.String" />
+			<form-property name="jobTitle" type="java.lang.String" />  
+			<form-property name="email" type="java.lang.String" /> 
+			<form-property name="profileTags" type="java.lang.String" /> 
+			<!--   <form-property name="community" type="java.lang.String" /> --> 
+			<form-property name="lang" type="java.lang.String" />
+			<form-property name="activeUsersOnly" type="java.lang.String"/>
+		</form-bean>
+		<form-bean name="advancedSearchForm" type="org.apache.commons.beanutils.LazyDynaBean">				
+		</form-bean>
+		<form-bean name="keywordSearchForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="keyword" type="java.lang.String" /> 
+			<form-property name="activeUsersOnly" type="java.lang.String"/>
+		</form-bean>
+		<form-bean name="editProfileForm" type="com.ibm.peoplepages.webui.forms.EditProfileForm">
+		</form-bean>
+		<form-bean name="editProfilePhotoForm" type="com.ibm.peoplepages.webui.forms.EditProfileForm">
+		</form-bean>
+		<form-bean name="editProfilePronunciationForm" type="com.ibm.peoplepages.webui.forms.EditProfileForm">
+		</form-bean>
+		<form-bean name="editProfileInPlaceForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="profileTags" type="java.lang.String" /> 
+			<form-property name="aboutMe" type="java.lang.String" /> 
+			<form-property name="background" type="java.lang.String" />
+		</form-bean>
+		<form-bean name="editPeopleTagForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="profileTags" type="java.lang.String" /> 
+		</form-bean>
+		<form-bean name="loginForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="username" type="java.lang.String" />
+			<form-property name="password" type="java.lang.String" />
+		</form-bean>
+		<form-bean name="uploadPhotoForm" type="com.ibm.peoplepages.webui.forms.UploadPhotoForm">
+		</form-bean>
+	</form-beans>
+
+	<!-- Global Exceptions -->
+	<global-exceptions>
+		<exception key="errors.create" handler="com.ibm.peoplepages.exception.CustomExceptionHandler" scope="request" 
+			type="com.ibm.peoplepages.service.DataAccessCreateException" path="scene.error_view" />
+		<exception key="errors.delete" handler="com.ibm.peoplepages.exception.CustomExceptionHandler" scope="request" 
+			type="com.ibm.peoplepages.service.DataAccessDeleteException" path="scene.error_view" />
+		<exception key="errors.general" handler="com.ibm.peoplepages.exception.CustomExceptionHandler" scope="request" 
+			type="com.ibm.peoplepages.service.DataAccessException" path="scene.error_view" />
+		<exception key="errors.retrieve" handler="com.ibm.peoplepages.exception.CustomExceptionHandler" scope="request" 
+			type="com.ibm.peoplepages.service.DataAccessRetrieveException" path="scene.error_view" />
+		<exception key="errors.update" handler="com.ibm.peoplepages.exception.CustomExceptionHandler" scope="request" 
+			type="com.ibm.peoplepages.service.DataAccessUpdateException" path="scene.error_view" />
+		<exception key="errors.general" handler="com.ibm.peoplepages.exception.CustomExceptionHandler" scope="request" 
+			type="java.lang.RuntimeException" path="scene.error_view" />
+		<exception key="errors.general" handler="com.ibm.peoplepages.exception.CustomExceptionHandler" scope="request" 
+			type="java.lang.Exception" path="scene.error_view" />
+	</global-exceptions>
+
+	<!-- Global Forwards -->
+	<global-forwards type="org.apache.struts.action.ActionForward">
+		<forward name="error" path="/html/searchProfiles.do" />
+		<forward name="home" path="/html/searchProfiles.do" />
+		<forward name="loginRedirect" path="/auth/loginRedirect.do" redirect="true"/>
+		
+		<!-- Error forwards -->
+		<forward name="uiUserNotFound" path="/WEB-INF/internal/html/error/userNotFound.do"/>
+		<forward name="uiBadRequest" path="/WEB-INF/internal/html/error/badRequest.do"/>
+	</global-forwards>
+
+	<!-- Action Mappings -->
+	<action-mappings>
+	
+		<!-- 
+			Inactive URL mapping.  To maintain backwards compatibility redirect from old URLs
+		  -->
+		<action path="/home" type="com.ibm.lconn.profiles.web.actions.RedirectAction" parameter="/html/searchProfiles.do" />
+	
+		<!-- 
+			Active mappings
+		  --><!-- Need to comment this part out below, but till redirect is working... -->
+		<action path="/html/aboutView" type="com.ibm.lconn.profiles.web.actions.NoCacheCallSuccessAction">
+			<forward name="success" path="/WEB-INF/stripes/pages/app/about/aboutProfiles.jsp" />
+		</action>
+		
+		<action path="/html/advancedSearchView" type="com.ibm.peoplepages.webui.actions.NoCacheWithUserInfoSuccessAction">
+			<forward name="success" path="/WEB-INF/jsps/html/scenes/home/profilesHome.jsp" />
+		</action>
+		
+		<action path="/html/wc" type="com.ibm.lconn.profiles.web.actions.RedirectOldInvitationsPage"/>
+		
+        <action path="/WEB-INF/private/html/wc" type="com.ibm.peoplepages.webui.actions.WCViewAction">
+          <forward name="success" path="scene.wc"/>
+        </action>
+        
+        <action path="/html/networkView" type="com.ibm.peoplepages.webui.actions.NetworkViewAction">
+          <forward name="success" path="/WEB-INF/jsps/html/scenes/networkView/networkView.jsp"/>
+        </action>
+        <action path="/html/following" type="com.ibm.peoplepages.webui.actions.ProfileFollowingAction">
+          <forward name="success" path="scene.profile_view"/>
+        </action>        
+        <action path="/html/follow" type="com.ibm.peoplepages.webui.actions.ProfileViewAction">
+         	<forward name="profileView" path="/WEB-INF/jsps/ajax/follow.jsp" />
+        </action>
+        <action path="/html/unfollow" type="com.ibm.peoplepages.webui.actions.ProfileViewAction">
+         	<forward name="profileView" path="/WEB-INF/jsps/ajax/unfollow.jsp" />
+        </action>
+		<action path="/html/demoMovie" type="com.ibm.lconn.profiles.web.actions.NoCacheCallSuccessAction">
+			<forward name="success" path="/WEB-INF/jsps/html/scenes/demoMovie/Profiles_viewlet_swf.jsp" />
+		</action>
+		<action path="/html/toolsView" type="com.ibm.lconn.profiles.web.actions.NoCacheCallSuccessAction">
+			<forward name="success" path="scene.tools_view" />
+		</action>
+
+		<action path="/auth/loginRedirect" type="com.ibm.peoplepages.webui.actions.LoginRedirectAction">
+			<forward name="success" path="/html/searchProfiles.do" redirect="true"/>
+		</action>
+		<action path="/html/searchProfiles" type="com.ibm.peoplepages.webui.actions.SearchProfilesAction" unknown="true">
+			<forward name="success" path="/WEB-INF/jsps/html/scenes/home/profilesHome.jsp"/>
+			<forward name="error" path="/html/myProfileView.do" />
+		</action>
+		<action path="/html/simpleSearch" type="com.ibm.peoplepages.webui.actions.SimpleSearchAction" name="simpleSearchForm" scope="request">
+			<forward name="profileSearchResults" path="scene.profile_search_results_view" />
+			<forward name="profileView" path="/html/profileView.do" />
+		<!--  DELETE_COMMUNITYSEARCH	
+			<forward name="communitySearchResults" path="scene.community_search_results_view" />
+			<forward name="communityView" path="" />
+		-->
+		</action>
+		<action path="/ajax/simpleSearch" type="com.ibm.peoplepages.webui.actions.SimpleSearchAction" name="simpleSearchForm" scope="request">
+			<forward name="profileSearchResults" path="/WEB-INF/jsps/html/scenes/search/profileSearchResults.jsp" />
+			<forward name="profileView" path="/html/profileView.do" />
+		</action>
+		<!-- DELETE_COMMUNITYSEARCH
+		<action path="/html/communitySearch" type="com.ibm.peoplepages.webui.actions.CommunitySearchAction" name="simpleSearchForm" scope="request">
+			<forward name="communitySearchResults" path="scene.community_search_results_view" />
+			<forward name="communityView" path="" />
+		</action>
+		-->
+		<action path="/html/keywordSearch" type="com.ibm.peoplepages.webui.actions.KeywordSearchAction" name="keywordSearchForm" scope="request">
+			<forward name="profileSearchResults" path="scene.profile_search_results_view" />
+			<forward name="profileView" path="/html/profileView.do" />
+		<!-- DELETE_COMMUNITYSEARCH
+		 	<forward name="communitySearchResults" path="scene.community_search_results_view" />
+			<forward name="communityView" path="" /> 
+		-->
+		</action>
+		<action path="/ajax/keywordSearch" type="com.ibm.peoplepages.webui.actions.KeywordSearchAction" name="keywordSearchForm" scope="request">
+			<forward name="profileSearchResults" path="/WEB-INF/jsps/html/scenes/search/profileSearchResults.jsp" />
+			<forward name="profileView" path="/html/profileView.do" />
+		</action>
+		<action path="/html/advancedSearch" type="com.ibm.peoplepages.webui.actions.AdvancedSearchAction" name="advancedSearchForm" scope="request">
+			<forward name="profileSearchResults" path="scene.profile_search_results_view" />
+			<forward name="profileView" path="/html/profileView.do" />
+		<!-- DELETE_COMMUNITYSEARCH
+			<forward name="communitySearchResults" path="scene.community_search_results_view" />
+			<forward name="communityView" path="" />
+		-->
+		</action>
+		<action path="/ajax/advancedSearch" type="com.ibm.peoplepages.webui.actions.AdvancedSearchAction" name="advancedSearchForm" scope="request">
+			<forward name="profileSearchResults" path="/WEB-INF/jsps/html/scenes/search/profileSearchResults.jsp" />
+			<forward name="profileView" path="/html/profileView.do" />
+		</action>
+				  	
+		<action path="/html/profileView" type="com.ibm.peoplepages.webui.actions.ProfileViewAction">
+			<forward name="profileView" path="scene.profile_view" />
+	  	</action>
+	  	<action path="/WEB-INF/internal/html/error/userNotFound" type="com.ibm.peoplepages.webui.actions.ViewErrorAction" parameter="userNotFound">
+			<forward name="errorView" path="/nav/templates/error.jsp" />
+	  	</action>
+	  	<action path="/WEB-INF/internal/html/error/badRequest" type="com.ibm.peoplepages.webui.actions.ViewErrorAction" parameter="badRequest">
+			<forward name="errorView" path="/nav/templates/error.jsp" />
+	  	</action>
+	  	<action path="/html/myProfileView" type="com.ibm.peoplepages.webui.actions.MyProfileViewAction">
+			<forward name="profileView" path="scene.my_profile_view" />
+	  	</action>
+		<action path="/html/reportingStructureView" type="com.ibm.peoplepages.webui.actions.ReportingStructureViewAction">
+			<forward name="reportingStructureView" path="scene.reporting_structure_view" />
+	  	</action>
+	  	<action path="/html/editMyProfileView" input="scene.edit_my_profile_view" 
+	  		type="com.ibm.peoplepages.webui.actions.EditMyProfileViewAction" name="editProfileForm" scope="request" validate="false">
+	  		<forward name="editProfileView" path="scene.edit_my_profile_view" />
+	  	</action>
+	  	<action path="/ajax/editMyProfile" input="scene.edit_my_profile_view" 
+	  		type="com.ibm.peoplepages.webui.actions.EditMyProfileAction" name="editProfileForm" scope="request">
+	  		<!--  
+	  		<forward name="success" 	path="/html/myProfileView.do" redirect="true"/>
+			<forward name="cancel" 		path="/html/myProfileView.do" redirect="true"/>
+			<forward name="failure"		path="/WEB-INF/jsps/ajax/error.jsp" />
+			 -->
+			<forward name="profileView" path="/html/myProfileView.do" redirect="true"/>
+			<forward name="uploadPhoto" path="/html/uploadPhoto.do" />
+	  	</action>
+	  	<action path="/html/uploadPhoto" input="scene.edit_my_profile_view" 
+	  		type="com.ibm.peoplepages.webui.actions.UploadPhotoAction" name="uploadPhotoForm" scope="request">
+			<!--<forward name="profileView" path="/html/myProfileView.do" /> -->
+	  	</action>
+	  	
+		<action path="/oauth/photo"  forward="/photo.do"  />	
+
+		<action path="/photo" type="com.ibm.peoplepages.webui.actions.ProfileImageAction" />
+		<action path="/ext/photo" type="com.ibm.peoplepages.webui.actions.ProfileImageAction" />
+		<action path="/photo2" type="com.ibm.peoplepages.webui.actions.ProfileImageAction" />
+		<action path="/audio" type="com.ibm.peoplepages.webui.actions.ProfileAudioAction" />
+		<action path="/html/tempPhoto" type="com.ibm.peoplepages.webui.actions.TempPhotoViewAction"/>
+		<action path="/html/imageCrop" type="com.ibm.lconn.profiles.web.actions.NoCacheCallSuccessAction">
+			<forward name="success" path="/WEB-INF/jsps/html/scenes/profile/imageCrop.jsp" />
+		</action>
+		
+		<action path="/html/exportVCardDialog" type="com.ibm.peoplepages.webui.actions.ProfileViewAction">
+			<forward name="profileView" path="scene.vcard_export_view"/>
+		</action>
+		<action path="/html/networkInviteDialog" type="com.ibm.peoplepages.webui.actions.ProfileViewAction">
+			<forward name="profileView" path="scene.network_invite_view"/>
+		</action>
+		
+		<!-- ========================================== widget code base =================== -->
+		<!--  see: <sn.infra>/lc.widgets/lc.widgets.core/src/com/ibm/lconn/widgets/actions   -->
+		
+		<action path="/widgetInfoPersistence" 	type="com.ibm.lconn.widgets.actions.WidgetLayoutAndPreferencesInfoAction"/>
+		<action path="/widgetProcess" 			type="com.ibm.lconn.widgets.actions.WidgetProcessAction"/>
+		<!-- AhernM: not used by Profiles; removed for security
+		<action path="/saveWidgetPreferences" 	type="com.ibm.lconn.widgets.actions.SaveWidgetPreferencesAction"/>
+		<action path="/addWidget" 				type="com.ibm.lconn.widgets.actions.AddWidgetAction"/>
+		<action path="/removeWidget" 			type="com.ibm.lconn.widgets.actions.RemoveWidgetAction"/>				
+		<action path="/moveWidget" 				type="com.ibm.lconn.widgets.actions.MoveWidgetAction"/>
+        <action path="/userinfo" 				type="com.ibm.lconn.widgets.actions.UserInfoAction" />
+        -->
+        	
+		<!-- ajax -->
+		<action path="/html/loginInfo" type="com.ibm.peoplepages.webui.ajax.actions.LoginInfoAction">
+			<forward name="loginInfo" path="/WEB-INF/jsps/ajax/loginInfo.jsp" />
+	  	</action>
+		<action path="/html/profileFullReportToChain" type="com.ibm.peoplepages.webui.ajax.actions.ProfileFullReportToChainAction">
+			<forward name="profileFullReportToChain" path="/WEB-INF/jsps/ajax/profileFullReportToChain.jsp" />
+	  	</action>
+	  	<action path="/html/profileSameManager" type="com.ibm.peoplepages.webui.ajax.actions.ProfileSameManagerAction">
+			<forward name="profileSameManager" path="/WEB-INF/jsps/ajax/profileFullReportToChain.jsp" />
+	  	</action>
+	  	<action path="/html/profilePeopleManaged" type="com.ibm.peoplepages.webui.ajax.actions.ProfilePeopleManagedAction">
+			<forward name="profilePeopleManaged" path="/WEB-INF/jsps/ajax/profileFullReportToChain.jsp" />
+	  	</action>
+	  	<action path="/html/profileLocalTime" type="com.ibm.peoplepages.webui.ajax.actions.ProfileLocalTimeAction">
+	  		<forward name="profileLocalTime" path="/WEB-INF/jsps/ajax/profileLocalTime.jsp" />
+	  	</action>
+	  	<action path="/html/nameTypeahead" type="com.ibm.peoplepages.webui.ajax.actions.NameTypeaheadAction">
+			<forward name="nameTypeahead" path="/WEB-INF/jsps/ajax/nameTypeaheadJSON.jsp" />
+	  	</action>
+	  	<action path="/html/nameTypeaheadXML" type="com.ibm.peoplepages.webui.ajax.actions.NameTypeaheadAction">
+			<forward name="nameTypeahead" path="/WEB-INF/jsps/ajax/nameTypeaheadXML.jsp" />
+	  	</action>
+	  	<action path="/html/tagTypeahead" type="com.ibm.peoplepages.webui.ajax.actions.TagTypeaheadAction">
+			<forward name="tagTypeahead" path="/WEB-INF/jsps/ajax/tagTypeahead.jsp" />
+	  	</action>
+	  	
+	  	<!-- stats -->
+	  	<!-- see rtc 91327: collapse metrics and statistics-->
+  		<action path="/html/serverStats" type="com.ibm.lconn.profiles.web.actions.NoCacheCallSuccessAction">
+			<forward name="success" path="scene.server_metrics" />
+		</action>
+
+		<action path="/html/servermetrics" type="com.ibm.lconn.profiles.web.actions.NoCacheCallSuccessAction">
+			<forward name="success" path="scene.server_metrics" />
+		</action>
+		
+		<!-- tools servlet -->
+		<action path="/WEB-INF/internal/html/toolspage" type="com.ibm.lconn.profiles.web.actions.NoCacheCallSuccessAction">
+			<forward name="success" path="scene.nav_tools_page"/>
+		</action>
+		
+		<!-- Lotus Connection Service Integration -->
+		<action path="/resourceStrings" type="com.ibm.lconn.core.resourcebundles.ResourceBundleGenerator" />
+
+		<!-- BEGIN FREEMARKER TEMPLATE ACTIONS -->		
+		<action path="/html/profileDetails" type="com.ibm.lconn.profiles.web.ui.actions.ProfileDetailsAction"/>
+		<action path="/html/profileTemplate" type="com.ibm.lconn.profiles.web.ui.actions.ProfileTemplateAction"/>
+			  			
+		<!-- END FREEMARKER TEMPLATE ACTIONS -->
+					
+	</action-mappings>
+
+	<message-resources factory="com.ibm.lconn.profiles.web.util.ProfilesMessageResourcesFactory" parameter="com.ibm.lconn.profiles.strings.ui"/>
+
+	<plug-in className="org.apache.struts.tiles.TilesPlugin">
+		<set-property property="definitions-config" value="/WEB-INF/jsps/html/tiles-defs.xml"/>
+	</plug-in>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames" value="/WEB-INF/validator-rules.xml, /WEB-INF/custom-validator-rules.xml, /WEB-INF/validation.xml" />
+	</plug-in>
+</struts-config>

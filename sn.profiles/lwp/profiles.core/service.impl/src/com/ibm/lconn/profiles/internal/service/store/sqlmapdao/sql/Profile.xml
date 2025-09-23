@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Profile">
+
+	<typeAlias alias="profile" type="com.ibm.peoplepages.data.Employee" />
+	<typeAlias alias="indexingOptions" type="com.ibm.lconn.profiles.data.IndexerSearchOptions" />
+	<typeAlias alias="userState" type="com.ibm.lconn.profiles.internal.data.profile.UserState" />
+	<typeAlias alias="userMode" type="com.ibm.lconn.profiles.internal.data.profile.UserMode" />
+
+	<resultMap id="ProfileResult" class="profile">
+		<result property="guid" column="PROF_GUID" />
+		<result property="uid" column="PROF_UID" />
+		<result property="key" column="PROF_KEY" />
+		<result property="distinguishedName" column="PROF_SOURCE_UID" />
+		<result property="alternateLastname" column="PROF_ALTERNATE_LAST_NAME" />
+		<result property="bldgId" column="PROF_BUILDING_IDENTIFIER" />
+		<result property="orgId" column="PROF_ORGANIZATION_IDENTIFIER" />
+		<result property="countryCode" column="PROF_ISO_COUNTRY_CODE" />
+		<result property="courtesyTitle" column="PROF_COURTESY_TITLE" />
+		<result property="deptNumber" column="PROF_DEPARTMENT_NUMBER" />
+		<result property="description" column="PROF_DESCRIPTION" javaType="java.lang.String" />
+		<result property="displayName" column="PROF_DISPLAY_NAME" />
+		<result property="employeeTypeCode" column="PROF_EMPLOYEE_TYPE" />
+		<result property="email" column="PROF_MAIL" />
+		<result property="experience" column="PROF_EXPERIENCE" javaType="java.lang.String" />
+		<result property="faxNumber" column="PROF_FAX_TELEPHONE_NUMBER" />
+		<result property="floor" column="PROF_FLOOR" />
+		<result property="employeeNumber" column="PROF_EMPLOYEE_NUMBER" />
+		<result property="isManager" column="PROF_IS_MANAGER" />
+		<result property="jobResp" column="PROF_JOB_RESPONSIBILITIES" />
+		<result property="lastUpdate" column="PROF_LAST_UPDATE" javaType="java.sql.Timestamp" />
+		<result property="mobileNumber" column="PROF_MOBILE" />
+		<result property="managerUid" column="PROF_MANAGER_UID" />
+		<result property="groupwareEmail" column="PROF_GROUPWARE_EMAIL" />
+		<result property="pagerType" column="PROF_PAGER_TYPE" />
+		<result property="pagerNumber" column="PROF_PAGER" />
+		<result property="pagerId" column="PROF_PAGER_ID" />
+		<result property="pagerServiceProvider" column="PROF_PAGER_SERVICE_PROVIDER" />
+		<result property="officeName" column="PROF_PHYSICAL_DELIVERY_OFFICE" />
+		<result property="preferredFirstName" column="PROF_PREFERRED_FIRST_NAME" />
+		<result property="preferredLastName" column="PROF_PREFERRED_LAST_NAME" />
+		<result property="preferredLanguage" column="PROF_PREFERRED_LANGUAGE" />
+		<result property="secretaryUid" column="PROF_SECRETARY_UID" />
+		<result property="shift" column="PROF_SHIFT" />
+		<result property="title" column="PROF_TITLE" />
+		<result property="timezone" column="PROF_TIMEZONE" />
+		<result property="telephoneNumber" column="PROF_TELEPHONE_NUMBER" />
+		<result property="workLocationCode" column="PROF_WORK_LOCATION" />
+		<result property="nativeFirstName" column="PROF_NATIVE_FIRST_NAME" />
+		<result property="nativeLastName" column="PROF_NATIVE_LAST_NAME" />
+		<result property="freeBusyUrl" column="PROF_FREEBUSY_URL" />
+		<result property="calendarUrl" column="PROF_CALENDAR_URL" />
+		<result property="blogUrl" column="PROF_BLOG_URL" />
+		<result property="ipTelephoneNumber" column="PROF_IP_TELEPHONE_NUMBER" />
+		<result property="givenName" column="PROF_GIVEN_NAME" />
+		<result property="surname" column="PROF_SURNAME" />
+		<result property="loginId" column="PROF_LOGIN" />
+		<result property="profileType" column="PROF_TYPE" />
+		<result property="sourceUrl" column="PROF_SOURCE_URL" />
+		<result property="tenantKey" column="TENANT_KEY" />
+		<result property="homeTenantKey" column="H_TENANT_KEY" />
+		<result property="state" column="PROF_STATE" javaType="userState"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserStateTypeHandler" />
+		<result property="mode" column="PROF_MODE" javaType="userMode"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserModeHandler" />
+		<result property="mcode" column="PROF_IDHASH" />
+	</resultMap>
+
+    <!-- see ProfileLogin.xml if changes are made here. we have a dupe and queries were
+         not entirely reworked to deal with augments needed there -->
+	<resultMap id="MinimalProfileResult" class="profile">
+		<result property="guid" column="PROF_GUID" />
+		<result property="uid" column="PROF_UID" />
+		<result property="key" column="PROF_KEY" />
+		<result property="distinguishedName" column="PROF_SOURCE_UID" />
+		<result property="displayName" column="PROF_DISPLAY_NAME" />
+		<result property="email" column="PROF_MAIL" />
+		<result property="lastUpdate" column="PROF_LAST_UPDATE" javaType="java.sql.Timestamp" />
+		<result property="managerUid" column="PROF_MANAGER_UID" />
+		<result property="givenName" column="PROF_GIVEN_NAME" />
+		<result property="surname" column="PROF_SURNAME" />
+		<result property="loginId" column="PROF_LOGIN" />
+		<result property="profileType" column="PROF_TYPE" />
+		<result property="sourceUrl" column="PROF_SOURCE_URL" />
+		<result property="tenantKey" column="TENANT_KEY" />
+		<result property="homeTenantKey" column="H_TENANT_KEY" />
+		<result property="state" column="PROF_STATE" javaType="userState"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserStateTypeHandler" />
+		<result property="mode" column="PROF_MODE" javaType="userMode"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserModeHandler" />
+			<result property="mcode" column="PROF_IDHASH" />
+	</resultMap>
+
+	<resultMap id="ProfileEventKey" class="com.ibm.lconn.profiles.internal.service.store.interfaces.SearchEventProfileKey">
+		<result property="key" column="AKEY" />
+		<result property="keyType" column="KEY_TYPE" />
+		<result property="lastUpdate" column="LAST_UPDATE" />
+	</resultMap>
+	
+	<resultMap id="ProfileModeResult" class="profile">
+		<result property="guid" column="PROF_GUID" />
+		<result property="key" column="PROF_KEY" />
+		<result property="tenantKey" column="TENANT_KEY" />
+		<result property="homeTenantKey" column="H_TENANT_KEY" />
+		<result property="mode" column="PROF_MODE" javaType="userMode"
+			typeHandler="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.UserModeHandler" />
+	</resultMap>
+
+	<!-- KEEP sql_LiteResultSelect and sql_LiteResultSelectEMPLY in synch -->
+	<sql id="sql_LiteResultSelect">
+		PROF_GUID, PROF_UID, PROF_KEY, PROF_SOURCE_UID,
+		PROF_ALTERNATE_LAST_NAME, PROF_BUILDING_IDENTIFIER,
+		PROF_ORGANIZATION_IDENTIFIER, PROF_ISO_COUNTRY_CODE,
+		PROF_COURTESY_TITLE, PROF_DEPARTMENT_NUMBER, '' as PROF_DESCRIPTION,
+		PROF_DISPLAY_NAME, PROF_EMPLOYEE_TYPE, PROF_MAIL, '' as PROF_EXPERIENCE,
+		PROF_FAX_TELEPHONE_NUMBER, PROF_FLOOR,
+		PROF_EMPLOYEE_NUMBER,
+		PROF_IS_MANAGER, PROF_JOB_RESPONSIBILITIES,
+		PROF_LAST_UPDATE, PROF_MOBILE, PROF_MANAGER_UID, PROF_GROUPWARE_EMAIL,
+		PROF_PAGER_TYPE, PROF_PAGER, PROF_PAGER_ID,
+		PROF_PAGER_SERVICE_PROVIDER, PROF_PHYSICAL_DELIVERY_OFFICE,
+		PROF_PREFERRED_FIRST_NAME,
+		PROF_PREFERRED_LAST_NAME,
+		PROF_PREFERRED_LANGUAGE, PROF_SECRETARY_UID, PROF_SHIFT, PROF_TITLE,
+		PROF_TIMEZONE, PROF_TELEPHONE_NUMBER,
+		PROF_WORK_LOCATION,
+		PROF_NATIVE_FIRST_NAME, PROF_NATIVE_LAST_NAME, PROF_FREEBUSY_URL,
+		PROF_CALENDAR_URL, PROF_BLOG_URL,
+		PROF_IP_TELEPHONE_NUMBER, PROF_GIVEN_NAME, PROF_SURNAME, PROF_LOGIN,
+		PROF_TYPE, PROF_SOURCE_URL, TENANT_KEY, H_TENANT_KEY, PROF_STATE, PROF_MODE, PROF_IDHASH
+	</sql>
+	<!-- KEEP sql_LiteResultSelect and sql_LiteResultSelectEMPLY in synch -->
+	<sql id="sql_LiteResultSelectEMPLY">
+		EMPLY.PROF_GUID, EMPLY.PROF_UID, EMPLY.PROF_KEY, EMPLY.PROF_SOURCE_UID,
+		EMPLY.PROF_ALTERNATE_LAST_NAME, EMPLY.PROF_BUILDING_IDENTIFIER,
+		EMPLY.PROF_ORGANIZATION_IDENTIFIER, EMPLY.PROF_ISO_COUNTRY_CODE,
+		EMPLY.PROF_COURTESY_TITLE, EMPLY.PROF_DEPARTMENT_NUMBER, '' as PROF_DESCRIPTION,
+		EMPLY.PROF_DISPLAY_NAME, EMPLY.PROF_EMPLOYEE_TYPE, EMPLY.PROF_MAIL, '' as PROF_EXPERIENCE,
+		EMPLY.PROF_FAX_TELEPHONE_NUMBER, EMPLY.PROF_FLOOR,
+		EMPLY.PROF_EMPLOYEE_NUMBER,
+		EMPLY.PROF_IS_MANAGER, EMPLY.PROF_JOB_RESPONSIBILITIES,
+		EMPLY.PROF_LAST_UPDATE, EMPLY.PROF_MOBILE, EMPLY.PROF_MANAGER_UID, EMPLY.PROF_GROUPWARE_EMAIL,
+		EMPLY.PROF_PAGER_TYPE, EMPLY.PROF_PAGER, EMPLY.PROF_PAGER_ID,
+		EMPLY.PROF_PAGER_SERVICE_PROVIDER, EMPLY.PROF_PHYSICAL_DELIVERY_OFFICE,
+		EMPLY.PROF_PREFERRED_FIRST_NAME,
+		EMPLY.PROF_PREFERRED_LAST_NAME,
+		EMPLY.PROF_PREFERRED_LANGUAGE, EMPLY.PROF_SECRETARY_UID, EMPLY.PROF_SHIFT, EMPLY.PROF_TITLE,
+		EMPLY.PROF_TIMEZONE, EMPLY.PROF_TELEPHONE_NUMBER,
+		EMPLY.PROF_WORK_LOCATION,
+		EMPLY.PROF_NATIVE_FIRST_NAME, EMPLY.PROF_NATIVE_LAST_NAME, EMPLY.PROF_FREEBUSY_URL,
+		EMPLY.PROF_CALENDAR_URL, EMPLY.PROF_BLOG_URL,
+		EMPLY.PROF_IP_TELEPHONE_NUMBER, EMPLY.PROF_GIVEN_NAME, EMPLY.PROF_SURNAME, EMPLY.PROF_LOGIN, 
+		EMPLY.PROF_TYPE, EMPLY.PROF_SOURCE_URL, EMPLY.TENANT_KEY, EMPLY.H_TENANT_KEY, EMPLY.PROF_STATE,
+		EMPLY.PROF_MODE, EMPLY.PROF_IDHASH
+	</sql>
+
+	<!-- KEEP sql_ResultSelect and sql_ResultSelectEMPLY in synch -->
+	<sql id="sql_ResultSelect">
+		PROF_GUID, PROF_UID, PROF_KEY, PROF_SOURCE_UID,
+		PROF_ALTERNATE_LAST_NAME, PROF_BUILDING_IDENTIFIER,
+		PROF_ORGANIZATION_IDENTIFIER, PROF_ISO_COUNTRY_CODE,
+		PROF_COURTESY_TITLE, PROF_DEPARTMENT_NUMBER, PROF_DESCRIPTION,
+		PROF_DISPLAY_NAME, PROF_EMPLOYEE_TYPE, PROF_MAIL, PROF_EXPERIENCE,
+		PROF_FAX_TELEPHONE_NUMBER, PROF_FLOOR, PROF_EMPLOYEE_NUMBER,
+		PROF_IS_MANAGER, PROF_JOB_RESPONSIBILITIES, PROF_LAST_UPDATE,
+		PROF_MOBILE, PROF_MANAGER_UID, PROF_GROUPWARE_EMAIL,
+		PROF_PAGER_TYPE,
+		PROF_PAGER, PROF_PAGER_ID, PROF_PAGER_SERVICE_PROVIDER,
+		PROF_PHYSICAL_DELIVERY_OFFICE, PROF_PREFERRED_FIRST_NAME,
+		PROF_PREFERRED_LAST_NAME, PROF_PREFERRED_LANGUAGE, PROF_SECRETARY_UID,
+		PROF_SHIFT, PROF_TITLE, PROF_TIMEZONE, PROF_TELEPHONE_NUMBER,
+		PROF_WORK_LOCATION, PROF_NATIVE_FIRST_NAME, PROF_NATIVE_LAST_NAME,
+		PROF_FREEBUSY_URL, PROF_CALENDAR_URL, PROF_BLOG_URL,
+		PROF_IP_TELEPHONE_NUMBER, PROF_GIVEN_NAME, PROF_SURNAME, PROF_LOGIN,
+		PROF_TYPE, PROF_SOURCE_URL, TENANT_KEY, H_TENANT_KEY, PROF_STATE, PROF_MODE, PROF_IDHASH
+	</sql>
+	<!-- KEEP sql_ResultSelect and sql_ResultSelectEMPLY in synch -->
+	<sql id="sql_ResultSelectEMPLY">
+		EMPLY.PROF_GUID, EMPLY.PROF_UID, EMPLY.PROF_KEY, EMPLY.PROF_SOURCE_UID,
+		EMPLY.PROF_ALTERNATE_LAST_NAME, EMPLY.PROF_BUILDING_IDENTIFIER,
+		EMPLY.PROF_ORGANIZATION_IDENTIFIER, EMPLY.PROF_ISO_COUNTRY_CODE,
+		EMPLY.PROF_COURTESY_TITLE, EMPLY.PROF_DEPARTMENT_NUMBER, EMPLY.PROF_DESCRIPTION,
+		EMPLY.PROF_DISPLAY_NAME, EMPLY.PROF_EMPLOYEE_TYPE, EMPLY.PROF_MAIL, EMPLY.PROF_EXPERIENCE,
+		EMPLY.PROF_FAX_TELEPHONE_NUMBER, EMPLY.PROF_FLOOR, EMPLY.PROF_EMPLOYEE_NUMBER,
+		EMPLY.PROF_IS_MANAGER, EMPLY.PROF_JOB_RESPONSIBILITIES, EMPLY.PROF_LAST_UPDATE,
+		EMPLY.PROF_MOBILE, EMPLY.PROF_MANAGER_UID, EMPLY.PROF_GROUPWARE_EMAIL,
+		EMPLY.PROF_PAGER_TYPE,
+		EMPLY.PROF_PAGER, EMPLY.PROF_PAGER_ID, EMPLY.PROF_PAGER_SERVICE_PROVIDER,
+		EMPLY.PROF_PHYSICAL_DELIVERY_OFFICE, EMPLY.PROF_PREFERRED_FIRST_NAME,
+		EMPLY.PROF_PREFERRED_LAST_NAME, EMPLY.PROF_PREFERRED_LANGUAGE, EMPLY.PROF_SECRETARY_UID,
+		EMPLY.PROF_SHIFT, EMPLY.PROF_TITLE, EMPLY.PROF_TIMEZONE, EMPLY.PROF_TELEPHONE_NUMBER,
+		EMPLY.PROF_WORK_LOCATION, EMPLY.PROF_NATIVE_FIRST_NAME, EMPLY.PROF_NATIVE_LAST_NAME,
+		EMPLY.PROF_FREEBUSY_URL, EMPLY.PROF_CALENDAR_URL, EMPLY.PROF_BLOG_URL,
+		EMPLY.PROF_IP_TELEPHONE_NUMBER, EMPLY.PROF_GIVEN_NAME, EMPLY.PROF_SURNAME, EMPLY.PROF_LOGIN,
+		EMPLY.PROF_TYPE, EMPLY.PROF_SOURCE_URL, EMPLY.TENANT_KEY, EMPLY.H_TENANT_KEY, EMPLY.PROF_STATE,
+		EMPLY.PROF_MODE, EMPLY.PROF_IDHASH
+	</sql>
+
+	<sql id="sql_MinimalResultSelect">
+		PROF_GUID, PROF_UID, PROF_KEY, PROF_SOURCE_UID,
+		PROF_DISPLAY_NAME, PROF_MAIL, PROF_LAST_UPDATE, PROF_MANAGER_UID,
+		PROF_GIVEN_NAME, PROF_SURNAME, PROF_LOGIN, PROF_TYPE, PROF_SOURCE_URL,
+		TENANT_KEY, H_TENANT_KEY, PROF_STATE, PROF_MODE, PROF_IDHASH
+	</sql>
+
+	<sql id="sql_WhereByLookupKey">
+		<isEqual property="lookupType" compareValue="KEY">PROF_KEY = #lookupValue# </isEqual>
+		<isEqual property="lookupType" compareValue="EMAIL">PROF_MAIL_LOWER = #lookupValue# </isEqual>
+		<isEqual property="lookupType" compareValue="UID">PROF_UID_LOWER = #lookupValue# </isEqual>
+		<isEqual property="lookupType" compareValue="GUID">PROF_GUID = #lookupValue# </isEqual>
+		<isEqual property="lookupType" compareValue="DN">PROF_SRC_UID_LOWER = #lookupValue# </isEqual>
+		<isEqual property="lookupType" compareValue="MCODE">PROF_IDHASH = #lookupValue# </isEqual>
+	</sql>
+
+	<sql id="sql_WhereByLookupKeys">
+		<isEqual property="lookupType" compareValue="KEY">PROF_KEY
+		</isEqual>
+		<isEqual property="lookupType" compareValue="EMAIL">PROF_MAIL_LOWER
+		</isEqual>
+		<isEqual property="lookupType" compareValue="UID">PROF_UID_LOWER
+		</isEqual>
+		<isEqual property="lookupType" compareValue="GUID">PROF_GUID
+		</isEqual>
+		<isEqual property="lookupType" compareValue="DN">PROF_SRC_UID_LOWER
+		</isEqual>
+		<isEqual property="lookupType" compareValue="MCODE">PROF_IDHASH
+		</isEqual>
+		in
+		<iterate open="(" close=")" conjunction="," property="lookupValues">
+			#lookupValues[]#
+		</iterate>
+	</sql>
+
+	<sql id="sql_ProfileOrderBy">
+		<isEqual property="orderBy" compareValue="displayName">
+			order by PROF_DISPLAY_NAME
+			<include refid="Profile.sql_ProfileSortOrder" />
+		</isEqual>
+		<isEqual property="orderBy" compareValue="surname">
+			order by PROF_SURNAME
+			<include refid="Profile.sql_ProfileSortOrder" />
+		</isEqual>
+		<isEqual property="orderBy" compareValue="givenName">
+			order by PROF_GIVEN_NAME
+			<include refid="Profile.sql_ProfileSortOrder" />
+		</isEqual>
+	</sql>
+
+	<sql id="sql_ProfileSortOrder">
+		<isEqual property="sortOrder" compareValue="asc">ASC</isEqual>
+		<isEqual property="sortOrder" compareValue="desc">DESC</isEqual>
+	</sql>
+
+	<!-- Simplified based on further performance analysis -->
+	<sql id="sql_WhereOrderedProfileKeySet">
+		<include refid="Profile.sql_WhereByLookupKeys" />
+	</sql>
+
+	<sql id="sql_TBL_SelectEmployeeWithKeyOnly">
+		(
+		select
+		PROF_KEY
+		from
+		EMPINST.EMPLOYEE
+		where
+		<include refid="Profile.sql_WhereByLookupKey" />
+		)
+	</sql>
+
+	<sql id="sql_TBL_SelectEmployeeWithKeyAndProfileType">
+		(
+		select
+		PROF_KEY,PROF_TYPE,PROF_STATE,PROF_MODE
+		from
+		EMPINST.EMPLOYEE
+		where
+		<include refid="Profile.sql_WhereByLookupKey" />
+		)
+	</sql>
+
+	<insert id="createProfile" parameterClass="map">
+		insert into EMPINST.EMPLOYEE
+		(
+		PROF_KEY,
+		TENANT_KEY,
+		H_TENANT_KEY,
+		PROF_STATE,
+		PROF_MODE,
+		PROF_LAST_UPDATE
+		<isNotEmpty prepend="," property="uid">PROF_UID, PROF_UID_LOWER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="email">PROF_MAIL, PROF_MAIL_LOWER, PROF_IDHASH
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="guid">PROF_GUID
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="distinguishedName">PROF_SOURCE_UID, PROF_SRC_UID_LOWER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="displayName">PROF_DISPLAY_NAME
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="loginId">PROF_LOGIN, PROF_LOGIN_LOWER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="givenName">PROF_GIVEN_NAME
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="surname">PROF_SURNAME
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="alternateLastname">PROF_ALTERNATE_LAST_NAME
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="preferredFirstName">PROF_PREFERRED_FIRST_NAME
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="preferredLastName">PROF_PREFERRED_LAST_NAME
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="profileType">PROF_TYPE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="managerUid">PROF_MANAGER_UID, PROF_MANAGER_UID_LOWER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="secretaryUid">PROF_SECRETARY_UID
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="isManager">PROF_IS_MANAGER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="groupwareEmail">PROF_GROUPWARE_EMAIL, PROF_GW_EMAIL_LOWER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="jobResp">PROF_JOB_RESPONSIBILITIES
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="orgId">
+			PROF_ORGANIZATION_IDENTIFIER</isNotEmpty>
+		<isNotEmpty prepend="," property="countryCode">PROF_ISO_COUNTRY_CODE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="faxNumber">PROF_FAX_TELEPHONE_NUMBER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="ipTelephoneNumber">PROF_IP_TELEPHONE_NUMBER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="mobileNumber">PROF_MOBILE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="pagerNumber">PROF_PAGER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="telephoneNumber">PROF_TELEPHONE_NUMBER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="workLocationCode">PROF_WORK_LOCATION
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="bldgId">PROF_BUILDING_IDENTIFIER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="deptNumber">PROF_DEPARTMENT_NUMBER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="employeeTypeCode">PROF_EMPLOYEE_TYPE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="floor">PROF_FLOOR
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="employeeNumber">PROF_EMPLOYEE_NUMBER
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="pagerType">PROF_PAGER_TYPE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="pagerId">PROF_PAGER_ID
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="pagerServiceProvider">
+			PROF_PAGER_SERVICE_PROVIDER</isNotEmpty>
+		<isNotEmpty prepend="," property="officeName">
+			PROF_PHYSICAL_DELIVERY_OFFICE</isNotEmpty>
+		<isNotEmpty prepend="," property="preferredLanguage">PROF_PREFERRED_LANGUAGE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="shift">PROF_SHIFT
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="title">PROF_TITLE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="courtesyTitle">PROF_COURTESY_TITLE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="timezone">PROF_TIMEZONE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="nativeLastName">PROF_NATIVE_LAST_NAME
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="nativeFirstName">PROF_NATIVE_FIRST_NAME
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="blogUrl">PROF_BLOG_URL
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="freeBusyUrl">PROF_FREEBUSY_URL
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="calendarUrl">PROF_CALENDAR_URL
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="description">PROF_DESCRIPTION
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="experience">PROF_EXPERIENCE
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="sourceUrl">PROF_SOURCE_URL
+		</isNotEmpty>
+		)
+		values
+		(		
+		#key#,
+		#dbTenantKey#,
+		#dbHomeTenantKey#,
+		#state.code#,
+		#mode.code#,
+		#lastUpdate#
+		<isNotEmpty prepend="," property="uid">#uid#, #uidLower#</isNotEmpty>
+		<isNotEmpty prepend="," property="email">#email#, #emailLower#, #mcode#</isNotEmpty>
+		<isNotEmpty prepend="," property="guid">#guid#</isNotEmpty>
+		<isNotEmpty prepend="," property="distinguishedName">#distinguishedName#, #distinguishedNameLower#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="displayName">#displayName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="loginId">#loginId#, #loginIdLower#
+		</isNotEmpty>
+		<!-- TODO
+			PROF_LOGIN_LOWER
+			-->
+		<isNotEmpty prepend="," property="givenName">#givenName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="surname">#surname#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="alternateLastname">#alternateLastname#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="preferredFirstName">#preferredFirstName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="preferredLastName">#preferredLastName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="profileType">#profileType#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="managerUid">#managerUid#, #managerUidLower#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="secretaryUid">#secretaryUid#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="isManager">#isManager#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="groupwareEmail">#groupwareEmail#, #groupwareEmailLower#
+		</isNotEmpty>
+		<!-- TODO
+			PROF_GW_EMAIL_LOWER
+			-->
+		<isNotEmpty prepend="," property="jobResp">#jobResp#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="orgId">#orgId#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="countryCode">#countryCode#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="faxNumber">#faxNumber#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="ipTelephoneNumber">#ipTelephoneNumber#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="mobileNumber">#mobileNumber#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="pagerNumber">#pagerNumber#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="telephoneNumber">#telephoneNumber#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="workLocationCode">#workLocationCode#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="bldgId">#bldgId#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="deptNumber">#deptNumber#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="employeeTypeCode">#employeeTypeCode#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="floor">#floor#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="employeeNumber">#employeeNumber#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="pagerType">#pagerType#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="pagerId">#pagerId#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="pagerServiceProvider">#pagerServiceProvider#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="officeName">#officeName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="preferredLanguage">#preferredLanguage#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="shift">#shift#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="title">#title#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="courtesyTitle">#courtesyTitle#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="timezone">#timezone#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="nativeLastName">#nativeLastName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="nativeFirstName">#nativeFirstName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="blogUrl">#blogUrl#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="freeBusyUrl">#freeBusyUrl#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="calendarUrl">#calendarUrl#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="description">#description#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="experience">#experience#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="sourceUrl">#sourceUrl#
+		</isNotEmpty>
+		)
+	</insert>
+
+	<delete id="deleteProfile" parameterClass="map">
+		delete from
+		EMPINST.EMPLOYEE
+		where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+
+	<update id="setState" parameterClass="map">
+		update EMPINST.EMPLOYEE SET PROF_STATE = #state#
+		WHERE PROF_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+
+	<update id="blankEmailAndLoginId" parameterClass="map">
+		update
+		EMPINST.EMPLOYEE
+		SET PROF_LOGIN = NULL, PROF_LOGIN_LOWER = NULL, PROF_MAIL = NULL, PROF_MAIL_LOWER = NULL, PROF_IDHASH = #mcode#, PROF_LAST_UPDATE = #lastUpdate# 
+		WHERE
+		PROF_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>	
+	</update>
+
+	<update id="updateProfile" parameterClass="java.util.Map">
+		update EMPINST.EMPLOYEE
+		<dynamic prepend="SET">
+			<isNotNull prepend="," property="alternateLastname">
+				PROF_ALTERNATE_LAST_NAME = #alternateLastname# 
+			</isNotNull>
+			<isNotNull prepend="," property="bldgId">
+				PROF_BUILDING_IDENTIFIER = #bldgId# 
+			</isNotNull>
+			<isNotNull prepend="," property="blogUrl">
+				PROF_BLOG_URL = #blogUrl# 
+			</isNotNull>
+			<isNotNull prepend="," property="calendarUrl">
+				PROF_CALENDAR_URL = #calendarUrl# 
+			</isNotNull>
+			<isNotNull prepend="," property="countryCode">
+				PROF_ISO_COUNTRY_CODE = #countryCode# 
+			</isNotNull>
+			<isNotNull prepend="," property="courtesyTitle">
+				PROF_COURTESY_TITLE = #courtesyTitle# 
+			</isNotNull>
+			<isNotNull prepend="," property="deptNumber">
+				PROF_DEPARTMENT_NUMBER = #deptNumber# 
+			</isNotNull>
+			<isNotNull prepend="," property="description">
+				PROF_DESCRIPTION = #description# 
+			</isNotNull>
+			<isNotNull prepend="," property="displayName">
+				PROF_DISPLAY_NAME = #displayName# 
+			</isNotNull>
+			<isNotNull prepend="," property="distinguishedName">
+				PROF_SOURCE_UID = #distinguishedName#,
+				PROF_SRC_UID_LOWER = #distinguishedNameLower#
+			</isNotNull>
+			<isNotNull prepend="," property="email">
+				PROF_MAIL = #email#,
+				PROF_MAIL_LOWER = #emailLower#,
+				PROF_IDHASH = #mcode#
+			</isNotNull>
+			<isNotNull prepend="," property="employeeNumber">
+				PROF_EMPLOYEE_NUMBER = #employeeNumber#
+			</isNotNull>
+			<isNotNull prepend="," property="employeeTypeCode">
+				PROF_EMPLOYEE_TYPE = #employeeTypeCode#
+			</isNotNull>
+			<isNotNull prepend="," property="experience">
+				PROF_EXPERIENCE = #experience#
+			</isNotNull>
+			<isNotNull prepend="," property="faxNumber">
+				PROF_FAX_TELEPHONE_NUMBER = #faxNumber#
+			</isNotNull>
+			<isNotNull prepend="," property="floor">
+				PROF_FLOOR = #floor#
+			</isNotNull>
+			<isNotNull prepend="," property="freeBusyUrl">
+				PROF_FREEBUSY_URL = #freeBusyUrl#
+			</isNotNull>
+			<isNotNull prepend="," property="givenName">
+				PROF_GIVEN_NAME = #givenName#
+			</isNotNull>
+			<isNotNull prepend="," property="groupwareEmail">
+				PROF_GROUPWARE_EMAIL = #groupwareEmail#,
+				PROF_GW_EMAIL_LOWER = #groupwareEmailLower#
+			</isNotNull>
+			<isNotNull prepend="," property="guid">
+				PROF_GUID = #guid#
+			</isNotNull>
+			<isNotNull prepend="," property="ipTelephoneNumber">
+				PROF_IP_TELEPHONE_NUMBER = #ipTelephoneNumber#
+			</isNotNull>
+			<isNotNull prepend="," property="isManager">
+				PROF_IS_MANAGER = #isManager#
+			</isNotNull>
+			<isNotNull prepend="," property="jobResp">
+				PROF_JOB_RESPONSIBILITIES = #jobResp# 
+			</isNotNull>
+			<isNotNull prepend="," property="loginId">
+				PROF_LOGIN = #loginId#,
+				PROF_LOGIN_LOWER = #loginIdLower# 
+			</isNotNull>
+			<isNotNull prepend="," property="managerUid">
+				PROF_MANAGER_UID = #managerUid#,
+				PROF_MANAGER_UID_LOWER = #managerUidLower# 
+			</isNotNull>
+			<isNotNull prepend="," property="mobileNumber">
+				PROF_MOBILE = #mobileNumber# 
+			</isNotNull>
+			<isNotNull prepend="," property="nativeFirstName">
+				PROF_NATIVE_FIRST_NAME = #nativeFirstName# 
+			</isNotNull>
+			<isNotNull prepend="," property="nativeLastName">
+				PROF_NATIVE_LAST_NAME = #nativeLastName# 
+			</isNotNull>
+			<isNotNull prepend="," property="officeName">
+				PROF_PHYSICAL_DELIVERY_OFFICE = #officeName# 
+			</isNotNull>
+			<isNotNull prepend="," property="orgId">
+				PROF_ORGANIZATION_IDENTIFIER = #orgId# 
+			</isNotNull>
+			<isNotNull prepend="," property="pagerId">
+				PROF_PAGER_ID = #pagerId# 
+			</isNotNull>
+			<isNotNull prepend="," property="pagerNumber">
+				PROF_PAGER = #pagerNumber# 
+			</isNotNull>
+			<isNotNull prepend="," property="pagerServiceProvider">
+				PROF_PAGER_SERVICE_PROVIDER = #pagerServiceProvider# 
+			</isNotNull>
+			<isNotNull prepend="," property="pagerType">
+				PROF_PAGER_TYPE = #pagerType# 
+			</isNotNull>
+			<isNotNull prepend="," property="preferredFirstName">
+				PROF_PREFERRED_FIRST_NAME = #preferredFirstName# 
+			</isNotNull>
+			<isNotNull prepend="," property="preferredLanguage">
+				PROF_PREFERRED_LANGUAGE = #preferredLanguage# 
+			</isNotNull>
+			<isNotNull prepend="," property="preferredLastName">
+				PROF_PREFERRED_LAST_NAME = #preferredLastName#
+			</isNotNull>
+			<isNotNull prepend="," property="profileType">
+				PROF_TYPE = #profileType# 
+			</isNotNull>
+			<isNotNull prepend="," property="secretaryUid">
+				PROF_SECRETARY_UID = #secretaryUid# 
+			</isNotNull>
+			<isNotNull prepend="," property="shift">
+				PROF_SHIFT = #shift# 
+			</isNotNull>
+			<isNotNull prepend="," property="sourceUrl">
+				PROF_SOURCE_URL = #sourceUrl# 
+			</isNotNull>
+			<isNotNull prepend="," property="surname">
+				PROF_SURNAME = #surname# 
+			</isNotNull>
+			<isNotNull prepend="," property="telephoneNumber">
+				PROF_TELEPHONE_NUMBER = #telephoneNumber# 
+			</isNotNull>
+			<isNotNull prepend="," property="timezone">
+				PROF_TIMEZONE = #timezone# 
+			</isNotNull>
+			<isNotNull prepend="," property="title">
+				PROF_TITLE = #title# 
+			</isNotNull>
+			<isNotNull prepend="," property="uid">
+				PROF_UID = #uid#,
+				PROF_UID_LOWER = #uidLower# 
+			</isNotNull>
+			<isNotNull prepend="," property="workLocationCode">
+				PROF_WORK_LOCATION = #workLocationCode# 
+			</isNotNull>
+			<isNotNull prepend="," property="lastUpdate">
+				PROF_LAST_UPDATE = #lastUpdate# 
+			</isNotNull>
+		</dynamic>
+		WHERE
+		PROF_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</update>
+
+	<!-- 
+		Update profile
+	  -->
+	<update id="touchProfile" parameterClass="java.util.Map">
+		update EMPINST.EMPLOYEE set PROF_LAST_UPDATE=#lastUpdate# where PROF_KEY=#key#
+		<isNotNull property="userState">
+		        AND PROF_STATE = #userState#
+		</isNotNull>
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</update>
+
+	<!-- 
+		SQL parts for indexing
+	 -->
+	<sql id="sql_WhereForIndexer">
+		where
+		E.LAST_UPDATE &lt;= #until#
+		and
+		<isNotEqual property="joinKey" compareValue="true">
+			(
+				E.LAST_UPDATE &gt; #since#
+				<isNotNull property="sinceKey">
+				or
+				(
+					E.LAST_UPDATE = #since#
+					and
+					E.AKEY &gt; #sinceKey#
+				)
+				</isNotNull>
+			)
+		</isNotEqual>
+		<isEqual property="joinKey" compareValue="true">
+			P.PROF_KEY =
+				#sinceKey#
+			and
+			(
+				E.LAST_UPDATE &gt; P.PROF_LAST_UPDATE
+				or
+				(
+					E.LAST_UPDATE = P.PROF_LAST_UPDATE
+					and
+					E.AKEY &gt; P.PROF_KEY
+				)
+			)
+		</isEqual>
+	</sql>
+
+	<sql id="sql_MaybeSelectProfileForIndexing">
+		<isEqual property="joinKey" compareValue="true" prepend=",">
+			EMPINST.EMPLOYEE P
+		</isEqual>
+	</sql>
+	
+	<sql id="sql_SelectPersonForIndexing">
+		(select PROF_KEY as AKEY, 0 as KEY_TYPE, PROF_LAST_UPDATE as LAST_UPDATE
+		  from EMPINST.EMPLOYEE
+		 <isEqual property="initialIndex" compareValue="false">
+		 union all
+		 select EVENT_KEY as AKEY, 1 as KEY_TYPE, CREATED as LAST_UPDATE
+		  from EMPINST.EVENTLOG where EVENT_TYPE = 5
+		 </isEqual>) E <!-- 5 == Profile Removed -->
+	</sql>
+
+	<!--
+		Must select keys first to overcome db2 query optimizer issue when all
+		(or most) Profiles have same update time
+	-->
+	<select id="selectKeysForIndexing" resultMap="ProfileEventKey" parameterClass="indexingOptions">
+		<include refid="snaxUtil.sql_limitStart_select" />
+			AKEY, KEY_TYPE, LAST_UPDATE
+		from
+			<include refid="Profile.sql_SelectPersonForIndexing"/>
+			<include refid="Profile.sql_MaybeSelectProfileForIndexing" />
+		<include refid="Profile.sql_WhereForIndexer" />
+		order by
+			LAST_UPDATE ASC, AKEY ASC
+		<include refid="snaxUtil.sql_limitEnd" />
+	</select>
+	
+	<!-- 
+	select
+					KEY, KEY_TYPE, LAST_UPDATE
+				from
+					(select
+						KEY, KEY_TYPE, LAST_UPDATE
+					 from
+						<include refid="Profile.sql_SelectPersonForIndexing"/>
+						<include refid="Profile.sql_MaybeSelectProfileForIndexing" />
+					 <include refid="Profile.sql_WhereForIndexer" />)
+				order by
+					LAST_UPDATE ASC, KEY ASC
+			<include refid="snaxUtil.sql_limitEnd" />
+			union all
+			<include refid="snaxUtil.sql_limitStart_select" />
+					KEY, KEY_TYPE, LAST_UPDATE
+				FROM
+					(select EVENT_KEY as KEY, 1 as KEY_TYPE, CREATED as LAST_UPDATE
+					 from EMPINST.EVENTLOG where EVENT_TYPE = 6) E	
+					<include refid="Profile.sql_MaybeSelectProfileForIndexing" />
+				<include refid="Profile.sql_WhereForIndexer" />
+				order by
+					LAST_UPDATE ASC, KEY ASC
+			<include refid="snaxUtil.sql_limitEnd" />
+	 -->
+
+	<!-- talked to joseph. holding off on indexer tenant constraint until needed, current thought is we won't use it -->
+	<select id="selectProfilesForIndexing" resultMap="ProfileResult" parameterClass="list">
+		select
+			<include refid="Profile.sql_ResultSelect" />
+		from
+			EMPINST.EMPLOYEE
+		where
+			PROF_KEY in
+				<iterate open="(" close=")" conjunction=",">#[]#</iterate>
+		order by 
+			PROF_LAST_UPDATE ASC, PROF_KEY ASC
+	</select>
+
+	<select id="countForIndexing" resultClass="int" parameterClass="indexingOptions">
+		select
+			count(*)
+		from
+			<include refid="Profile.sql_SelectPersonForIndexing"/>
+			<include refid="Profile.sql_MaybeSelectProfileForIndexing" />
+		<include refid="Profile.sql_WhereForIndexer" />
+	</select>
+
+	<!-- 
+		For getProfiles()
+	 -->
+	<select id="selectByLookupKeysMinimal" resultMap="MinimalProfileResult" parameterClass="map">
+		select
+		<include refid="Profile.sql_MinimalResultSelect" />
+		from
+		EMPINST.EMPLOYEE
+		where
+		<include refid="Profile.sql_WhereOrderedProfileKeySet" />
+		<include refid="Tenant.sql_WhereByTenantKey" />
+		<include refid="Profile.sql_ProfileOrderBy" />
+	</select>
+
+	<!-- 
+		For getProfiles()
+	 -->
+	<select id="selectByLookupKeysLite" resultMap="ProfileResult" parameterClass="map">
+		select
+		<include refid="sql_LiteResultSelect" />
+		from
+		EMPINST.EMPLOYEE
+		where
+		<include refid="Profile.sql_WhereOrderedProfileKeySet" />
+		<include refid="Tenant.sql_WhereByTenantKey" />
+		<include refid="Profile.sql_ProfileOrderBy" />
+	</select>
+
+	<!-- 
+		For getProfiles()
+	 -->
+	<select id="selectByLookupKeysFull" resultMap="ProfileResult" parameterClass="map">
+		select
+		<include refid="sql_ResultSelect" />
+		from
+		EMPINST.EMPLOYEE
+		where
+		<include refid="Profile.sql_WhereOrderedProfileKeySet" />
+		<include refid="Tenant.sql_WhereByTenantKey" />
+		<include refid="Profile.sql_ProfileOrderBy" />
+	</select>
+
+	<!-- 
+		For getProfilesByEmailsForJavelin()
+	 -->
+	<select id="selectByEmails" resultMap="ProfileResult" parameterClass="map">
+		select
+		<include refid="sql_LiteResultSelect" />
+		from
+		EMPINST.EMPLOYEE
+		where(
+		PROF_MAIL_LOWER = #email#
+		or
+		PROF_GW_EMAIL_LOWER = #email#
+		)
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+	
+	<select id="selectKeysForPlkSet" resultClass="string" parameterClass="map">
+		select PROF_KEY
+		from EMPINST.EMPLOYEE
+		where PROF_KEY in (
+		    select PROF_KEY from EMPINST.EMPLOYEE
+		    where <include refid="Profile.sql_WhereByLookupKeys"/>
+		    <include refid="Tenant.sql_WhereByTenantKey" />
+		)
+	</select>
+	
+	<select id="selectExternalIdsForPlkSet" resultClass="string" parameterClass="map">
+		select PROF_GUID
+		from EMPINST.EMPLOYEE
+		where PROF_KEY in (
+		    select PROF_KEY from EMPINST.EMPLOYEE
+		    where <include refid="Profile.sql_WhereByLookupKeys"/>
+		    <include refid="Tenant.sql_WhereByTenantKey" />
+		)
+	</select>
+	
+	<select id="findDistinctProfileTypes" resultClass="string" parameterClass="map">
+		select distinct	PROF_TYPE
+		from EMPINST.EMPLOYEE
+		where 1=1
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+	
+	<!-- util method used to retrieve profile mode when role was not found -->
+	<select id="getProfileMode" resultMap="ProfileModeResult" parameterClass="map">
+		select PROF_GUID, PROF_KEY, PROF_MODE, TENANT_KEY, H_TENANT_KEY
+		from EMPINST.EMPLOYEE
+		where <include refid="sql_WhereByLookupKey"/>
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+	
+	<!-- 
+		STATs SQL calls.  TODO STATS - move to consolidate stats SQL files
+	-->
+	<select id="countProfiles" resultClass="java.lang.Integer" parameterClass="map">
+		select count(*) from EMPINST.EMPLOYEE
+		WHERE 1=1
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+
+	<sql id="sql_EmployeeWhereMode">
+		<isNotNull property="employeeMode">
+		and E.PROF_MODE = #employeeMode#
+		</isNotNull>
+	</sql>
+
+	<sql id="sql_EmployeeWhereState">
+		<isNotNull property="employeeState">
+		and E.PROF_STATE = #employeeState#
+		</isNotNull>
+	</sql>
+
+	<select id="countProfilesExtra" resultClass="java.lang.Integer" parameterClass="map">
+		select count(*) from EMPINST.EMPLOYEE E
+		WHERE 1=1
+		<include refid="sql_EmployeeWhereState"/>
+		<include refid="sql_EmployeeWhereMode" />
+		<include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+
+	<select id="countProfilesWithBackground" resultClass="java.lang.Integer" parameterClass="map">
+	    SELECT COUNT(*) FROM EMPINST.EMPLOYEE WHERE PROF_DESCRIPTION IS NOT NULL
+	    <include refid="Tenant.sql_WhereByTenantKey" />
+	</select>
+
+	<!-- This is currently in place for the Cloud and feature parity with the guest model.
+	     This should(?) be dropped for visitor model. -->
+	<update id="updateTenantKey" parameterClass="java.util.Map">
+		update EMPINST.EMPLOYEE set TENANT_KEY = #newTenantKey# where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+</sqlMap>

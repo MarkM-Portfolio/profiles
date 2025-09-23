@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<project name="profiles.db/schemas" default="development" basedir="."> 
+
+	<import file="${env.WPLC_IMPORT}/std_props.xml"/>
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml"/>
+	<import file="${env.WPLC_IMPORT}/process_nls.xml" />
+ 
+  	<import file="buildSchema.xml"/>
+  
+	<target name="development">
+		<antcall target="bld-schemas"/>
+	</target>
+	
+	<target name="production">
+		<antcall target="bld-schemas"/>
+	</target>
+	
+	<target name="clean">
+		<antcall target="clean-gen-schema"/>
+	</target>
+	
+	<!-- Needed for buildroom -->
+	<target name="javadoc" description="Do nothing..."/>
+
+</project>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2014                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Role">
+
+    <cacheModel id="RoleCache" type="LRU">
+        <flushOnExecute statement="Role.deleteByEmp" />
+        <flushOnExecute statement="Role.deleteByEmpRole" />
+        <property name="size" value="100" />
+    </cacheModel>
+
+	<typeAlias alias="employeerole" type="com.ibm.lconn.profiles.data.EmployeeRole" />
+
+	<resultMap id="EmployeeRole" class="employeerole">
+		<result property="key" column="MAP_KEY" />
+		<result property="profKey" column="PROF_KEY" />
+		<result property="roleId" column="ROLE_ID" />
+		<result property="created" column="CREATED" javaType="java.sql.Timestamp" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+	
+	<resultMap id="EmployeeRoleIds" class="employeerole">
+		<result property="key" column="MAP_KEY" />
+		<result property="profKey" column="PROF_KEY" />
+		<result property="roleId" column="ROLE_ID" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+	
+	<resultMap id="EmployeeRoleIdsNoKey" class="employeerole">
+		<result property="profKey" column="PROF_KEY" />
+		<result property="roleId" column="ROLE_ID" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+	
+	<insert id="insert" parameterClass="employeerole">
+		INSERT INTO EMPINST.EMP_ROLE_MAP(
+		  MAP_KEY,
+		  PROF_KEY,
+		  ROLE_ID,
+		  CREATED,
+		  TENANT_KEY
+		)
+		VALUES (
+		  #key#,
+		  #profKey#,
+		  #roleId#,
+		  #created#,
+		  #dbTenantKey#
+		)
+	</insert>
+	
+	<select id="getRolesByEmp" resultMap="EmployeeRole" parameterClass="map">
+		SELECT MAP_KEY, PROF_KEY, ROLE_ID, CREATED, TENANT_KEY
+		FROM EMPINST.EMP_ROLE_MAP WHERE PROF_KEY = #profKey#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<!-- util method -->
+	<select id="getRoleIdsByEmp" resultMap='EmployeeRoleIds' parameterClass="map">
+		SELECT MAP_KEY, PROF_KEY, ROLE_ID, TENANT_KEY
+		FROM EMPINST.EMP_ROLE_MAP WHERE PROF_KEY = #profKey#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<!-- util method (used by dsx) so we are trying to get minimum set of info. do we need tenant? -->
+	<select id="getRoleIdsForKeys" resultMap="EmployeeRoleIdsNoKey" parameterClass="map">
+		SELECT PROF_KEY, ROLE_ID,TENANT_KEY
+		FROM EMPINST.EMP_ROLE_MAP
+		WHERE PROF_KEY IN
+		<iterate property="profKeyList" open="(" close=")" conjunction=",">#profKeyList[]#</iterate>
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<delete id="deleteByEmpRole" parameterClass="map">
+		DELETE FROM EMPINST.EMP_ROLE_MAP
+		WHERE PROF_KEY = #profKey# AND ROLE_ID = #roleId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+	
+	<delete id="deleteByEmp" parameterClass="map">
+		DELETE FROM EMPINST.EMP_ROLE_MAP
+		WHERE PROF_KEY = #profKey#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+
+</sqlMap>

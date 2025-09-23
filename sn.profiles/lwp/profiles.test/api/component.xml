@@ -1,0 +1,36 @@
+<!-- ************************************************************** -->
+<!--                                                                -->
+<!-- Licensed Materials - Property of HCL                           -->
+<!--                                                                -->
+<!-- Copyright HCL Technologies Limited 2008, 2021                  -->
+<!--                                                                -->
+<!-- US Government Users Restricted Rights                          -->
+<!--                                                                -->
+<!-- ************************************************************** -->
+
+<component name="profiles.test/api" description="Profiles API Test" project-type="java" spec-version="${app.comp.version}"  disabled="false">
+   <output-group name="dist">
+      <output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/profiles.test.api.jar"/>
+   </output-group>
+
+   <output-group name="to_war">
+      <output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/profiles.test.api.jar"  preferredInstallLocation="WEB-INF/lib"/>
+   </output-group>
+
+   <dependency name="prereqs.sn/junit" type="jar" version="3.8.1"/>
+   <dependency name="prereqs.sn/jakarta.commons" type="jar" version="1.1"/>
+   <dependency name="prereqs.sn/json4j" type="jar" version="1.0.0.1" />
+   <dependency name="prereqs.sn/log4j2" type="jar"/>
+
+   <dependency name="prereqs.sn/abdera040patch0509" type="jar" version="0.4.0" />	
+   <!-- Must come after abdera -->
+   <dependency name="prereqs.sn/was7.0" type="jar" version="7.0" />
+
+   <dependency name="lc.config.svc" type="jar" version="1.1"/>
+   <dependency name="directory.services" type="jar" version="2.0"/>
+   <dependency name="lc.customauthclient" type="jar" version="0.1"/> 
+   <dependency name="lc.util/base" type="jar" version="2.0" />
+
+   <dependency name="prereqs.sn/hystrix" type="jar" />
+   <dependency name="profiles.core/service.api" type="jar" version="3.0" />
+</component>

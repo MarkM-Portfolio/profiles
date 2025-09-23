@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!--
+ * This is a historical file that contains logic related to consolidating cloud photos to a single table
+ * based on guid (subscriberid) as the sole key. The idea was that photos in a data center would consolidate
+ * to a single table (PHOTO_GUID), then eventually to a centralized photo service that should/could service
+ * photos worldwide. The work was done in conjunction with db fixupscripts postfixup55.1s.sql and
+ * postfixup55.2s.sql. Look at the history of those files. 
+ -->
+
+<sqlMap namespace="Photo">
+
+	<typeAlias alias="photo"
+		type="com.ibm.lconn.profiles.data.Photo" />
+	
+	<typeAlias alias="PhotoRetrievalOptions"
+		type="com.ibm.lconn.profiles.data.PhotoRetrievalOptions"/>
+	
+	<typeAlias alias="TenantPhotoRetrievalOptions"
+		type="com.ibm.lconn.profiles.internal.service.store.sqlmapdao.ro.TenantPhotoRO"/>
+
+	<typeAlias alias="userState" type="com.ibm.lconn.profiles.internal.data.profile.UserState" />
+	<typeAlias alias="userMode" type="com.ibm.lconn.profiles.internal.data.profile.UserMode" />
+	
+	<resultMap id="GetAllPhotosResult" class="photo">
+		<result property="key" column="PROF_KEY" />
+		<result property="guid" column="PROF_GUID" />
+		<result property="updated" column="PROF_UPDATED" javaType="java.util.Date"/>
+		<result property="image" column="PROF_IMAGE" />
+		<result property="fileType" column="PROF_FILE_TYPE"/>
+	</resultMap>
+	
+	<resultMap id="PhotoImageResult" class="photo">
+		<result property="key" column="PROF_KEY" />
+		<result property="updated" column="PROF_UPDATED" javaType="java.util.Date"/>
+		<result property="image" column="PROF_IMAGE" />
+		<result property="thumbnail" column="PROF_THUMBNAIL" />
+		<result property="fileType" column="PROF_FILE_TYPE"/>
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+	
+	<resultMap id="CloudImageResult" class="photo">
+		<result property="guid" column="PROF_GUID" />
+		<result property="updated" column="PROF_UPDATED" javaType="java.util.Date"/>
+		<result property="image" column="PROF_IMAGE" />
+		<result property="thumbnail" column="PROF_THUMBNAIL" />
+		<result property="fileType" column="PROF_FILE_TYPE"/>		
+	</resultMap>
+
+	<sql id="sql_selectForGetAllImage">
+		P.PROF_KEY as PROF_KEY,
+		E.PROF_GUID as PROF_GUID,
+		P.PROF_UPDATED as PROF_UPDATED, 
+		P.PROF_IMAGE as PROF_IMAGE, 
+		P.PROF_FILE_TYPE as PROF_FILE_TYPE,
+		P.TENANT_KEY as TENANT_KEY
+	</sql>
+		
+	<!-- used under PhotoConnector to iterate through photos. this will remain with simple tenant constraint and is -->
+	<!-- thus used to help iterate through photos in a single org. -->
+	<!-- returns all -->
+	<select id="getAllPhotos" resultMap="GetAllPhotosResult" parameterClass="map">
+		SELECT <include refid="sql_selectForGetAllImage"/>
+		FROM EMPINST.PHOTO P, EMPINST.EMPLOYEE E
+		WHERE P.PROF_KEY = E.PROF_KEY
+		<include refid="Tenant.sql_WhereByTenantKeyP"/>
+		<isNotNull property="options.nextPhotoKey">
+			AND P.PROF_KEY >= #options.nextPhotoKey#
+		</isNotNull>
+		ORDER BY P.PROF_KEY ASC
+	</select>
+
+	<select id="countProfilesWithPictures" resultClass="java.lang.Integer" parameterClass="map">
+	    SELECT COUNT(*) FROM EMPINST.PHOTO P
+	    WHERE 1=1
+		<include refid="Tenant.sql_WhereByTenantKeyP"/>
+		AND P.PROF_IMAGE IS NOT NULL
+	</select>
+
+	<update id="updatePhoto" parameterClass="map">
+		update EMPINST.PHOTO SET
+  		PROF_IMAGE = #photo.image#, PROF_FILE_TYPE=#photo.fileType#, PROF_UPDATED=#photo.updated#, PROF_THUMBNAIL = #photo.thumbnail# 
+		WHERE
+		PROF_KEY=#photo.key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<update id="updatePhotoBkup" parameterClass="map">
+		update EMPINST.PHOTOBKUP SET
+  		PROF_IMAGE = #photo.image#, PROF_FILE_TYPE=#photo.fileType#, PROF_UPDATED=#photo.updated#, PROF_THUMBNAIL = #photo.thumbnail# 
+		WHERE
+		PROF_KEY=#photo.key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<insert id="insertPhoto" parameterClass="photo">
+		insert into EMPINST.PHOTO
+		(PROF_IMAGE, PROF_THUMBNAIL, PROF_FILE_TYPE, PROF_KEY, PROF_UPDATED, TENANT_KEY)
+		values
+		(#image#, #thumbnail#, #fileType#, #key#, #updated#, #dbTenantKey#)
+	</insert>
+	
+	<insert id="insertPhotoBkup" parameterClass="photo">
+		insert into EMPINST.PHOTOBKUP
+		(PROF_IMAGE, PROF_THUMBNAIL, PROF_FILE_TYPE, PROF_KEY, PROF_UPDATED, TENANT_KEY)
+		values
+		(#image#, #thumbnail#, #fileType#, #key#, #updated#, #dbTenantKey#)
+	</insert>
+	
+	<!-- DEFACE_PHOTO revisit these delete queries -->
+	<delete id="deletePhotoByKey" parameterClass="map">
+		DELETE FROM EMPINST.PHOTO WHERE PROF_KEY IN (
+			SELECT E2.PROF_KEY FROM EMPINST.EMPLOYEE E1, EMPINST.EMPLOYEE E2
+			WHERE E1.PROF_KEY = #key#
+			AND E2.PROF_GUID = E1.PROF_GUID )
+	    <!-- query below is when phase II is complete -->
+		<!-- delete FROM EMPINST.PHOTO WHERE PROF_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/> -->
+	</delete>
+	
+	<delete id="deletePhotoBkupByKey" parameterClass="map">
+		DELETE FROM EMPINST.PHOTOBKUP WHERE PROF_KEY IN (
+			SELECT E2.PROF_KEY FROM EMPINST.EMPLOYEE E1, EMPINST.EMPLOYEE E2
+			WHERE E1.PROF_KEY = #key#
+			AND E2.PROF_GUID = E1.PROF_GUID )
+	    <!-- query below is when phase II is complete -->
+		<!-- delete FROM EMPINST.PHOTO WHERE PROF_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/> -->
+	</delete>
+	
+	<select id="GetPhotoUpdateDate" resultClass="java.util.Date" parameterClass="map">
+	    SELECT PROF_UPDATED FROM EMPINST.PHOTO P WHERE P.PROF_KEY = #lookupValue# <include refid="Tenant.sql_WhereByTenantKeyP"/>
+	</select>
+	
+	<select id="GetPhotoGuidUpdateDate" resultClass="java.util.Date" parameterClass="map">
+	    SELECT PROF_UPDATED FROM EMPINST.PHOTO_GUID P WHERE P.PROF_GUID = #lookupValue#
+	</select>
+	
+	<!-- This is currently in place for the Cloud and feature parity with the guest model.
+	     This should(?) be dropped for visitor model. -->
+	<update id="updateTenantKey" parameterClass="java.util.Map">
+		update EMPINST.PHOTO set TENANT_KEY = #newTenantKey# where PROF_KEY = #key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<insert id="insertPhotoGuid" parameterClass="photo">
+		insert into EMPINST.PHOTO_GUID
+		(PROF_GUID, PROF_IMAGE, PROF_THUMBNAIL, PROF_FILE_TYPE, PROF_UPDATED, H_TENANT_KEY)
+		values
+		(#guid#, #image#, #thumbnail#, #fileType#, #updated#, #tenantKey#)
+	</insert>
+	
+	<update id="updatePhotoGuid" parameterClass="photo">
+		update EMPINST.PHOTO_GUID SET
+  		PROF_IMAGE = #image#, PROF_FILE_TYPE=#fileType#, PROF_UPDATED=#updated#, PROF_THUMBNAIL = #thumbnail# 
+		WHERE
+		PROF_GUID=#guid#
+	</update>
+	
+	<select id="GetPhotoGuidImage" resultMap="CloudImageResult" parameterClass="java.util.Map">
+		select
+		    PG.PROF_GUID as PROF_GUID,
+		    <isNotEmpty property="isImage">PG.PROF_IMAGE as PROF_IMAGE,</isNotEmpty>
+		    <isNotEmpty property="isThumbnail">PG.PROF_THUMBNAIL as PROF_THUMBNAIL,</isNotEmpty>
+		    PG.PROF_FILE_TYPE AS PROF_FILE_TYPE,
+		    PG.PROF_UPDATED AS PROF_UPDATED
+		from EMPINST.PHOTO_GUID PG
+		where PG.PROF_GUID = #lookupValue#
+	</select>
+	
+	<select id="GetPhotoImage" resultMap="PhotoImageResult" parameterClass="java.util.Map">
+		select
+		    P.PROF_KEY AS PROF_KEY,
+		    NULL AS PROF_GUID,
+		    P.TENANT_KEY AS TENANT_KEY,
+		    <isNotEmpty property="isImage">P.PROF_IMAGE as PROF_IMAGE,</isNotEmpty>
+		    <isEmpty    property="isImage">null as PROF_IMAGE,</isEmpty>
+		    <isNotEmpty property="isThumbnail">P.PROF_THUMBNAIL as PROF_THUMBNAIL,</isNotEmpty>
+		    <isEmpty    property="isThumbnail">null as PROF_THUMBNAIL,</isEmpty>
+		    P.PROF_FILE_TYPE AS PROF_FILE_TYPE,
+		    P.PROF_UPDATED AS PROF_UPDATED
+		from EMPINST.PHOTO P
+		where P.PROF_KEY = #lookupValue# 
+		<include refid="Tenant.sql_WhereByTenantKeyP"/>
+	</select>
+	
+	<select id="GetPhotoBkupImage" resultMap="PhotoImageResult" parameterClass="java.util.Map">
+		select
+		    P.PROF_KEY AS PROF_KEY,
+		    NULL AS PROF_GUID,
+		    P.TENANT_KEY AS TENANT_KEY,
+		    <isNotEmpty property="isImage">P.PROF_IMAGE as PROF_IMAGE,</isNotEmpty>
+		    <isEmpty    property="isImage">null as PROF_IMAGE,</isEmpty>
+		    <isNotEmpty property="isThumbnail">P.PROF_THUMBNAIL as PROF_THUMBNAIL,</isNotEmpty>
+		    <isEmpty    property="isThumbnail">null as PROF_THUMBNAIL,</isEmpty>
+		    P.PROF_FILE_TYPE AS PROF_FILE_TYPE,
+		    P.PROF_UPDATED AS PROF_UPDATED
+		from EMPINST.PHOTOBKUP P
+		where P.PROF_KEY = #lookupValue# 
+		<include refid="Tenant.sql_WhereByTenantKeyP"/>
+	</select>
+	
+	<select id="GetPhotoImageForTDI" resultMap="PhotoImageResult" parameterClass="java.util.Map">
+		select
+		    P.PROF_KEY AS PROF_KEY,
+		    E.PROF_GUID AS PROF_GUID,
+		    P.TENANT_KEY AS TENANT_KEY,
+		    <isNotEmpty property="isImage">P.PROF_IMAGE as PROF_IMAGE,</isNotEmpty>
+		    <isEmpty    property="isImage">null as PROF_IMAGE,</isEmpty>
+		    <isNotEmpty property="isThumbnail">P.PROF_THUMBNAIL as PROF_THUMBNAIL,</isNotEmpty>
+		    <isEmpty    property="isThumbnail">null as PROF_THUMBNAIL,</isEmpty>
+		    P.PROF_FILE_TYPE AS PROF_FILE_TYPE,
+		    P.PROF_UPDATED AS PROF_UPDATED
+		from EMPINST.PHOTO P, EMPINST.EMPLOYEE E
+		where P.PROF_KEY = E.PROF_KEY
+			and E.<include refid="Profile.sql_WhereByLookupKey" />
+			<include refid="Tenant.sql_WhereByTenantKeyP"/>
+	</select>
+	
+	<delete id="deletePhotoGuid" parameterClass="map">
+		delete FROM EMPINST.PHOTO_GUID WHERE PROF_GUID=#guid#
+	</delete>
+		
+</sqlMap>

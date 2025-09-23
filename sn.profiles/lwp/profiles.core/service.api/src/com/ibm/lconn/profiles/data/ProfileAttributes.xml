@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2009, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<attributes>
+	<sa attrId="key"/>
+	<sa attrId="uid"/>
+	<sa attrId="guid"/>
+	<sa attrId="loginId"/>
+	<sa attrId="distinguishedName"/>
+	<sa attrId="employeeTypeCode" />
+	<sa attrId="jobResp" />
+	<sa attrId="secretaryUid" />
+	<sa attrId="isManager" />
+	<sa attrId="employeeNumber" />
+	<sa attrId="managerUid" />
+	<sa attrId="shift" />
+	<sa attrId="deptNumber" />
+	<sa attrId="countryCode" />
+	<sa attrId="courtesyTitle" />
+	<sa attrId="displayName" />
+	<sa attrId="preferredFirstName" />
+	<sa attrId="preferredLastName" />
+	<sa attrId="alternateLastname" />
+	<sa attrId="nativeFirstName" />
+	<sa attrId="nativeLastName" />
+	<sa attrId="preferredLanguage" />
+	<sa attrId="bldgId" />
+	<sa attrId="floor" />
+	<sa attrId="officeName" />
+	<sa attrId="telephoneNumber" />
+	<sa attrId="ipTelephoneNumber" />
+	<sa attrId="mobileNumber" />
+	<sa attrId="pagerNumber" />
+	<sa attrId="pagerType" />
+	<sa attrId="pagerId" />
+	<sa attrId="pagerServiceProvider" />
+	<sa attrId="faxNumber" />
+	<sa attrId="email" />
+	<sa attrId="groupwareEmail" />
+	<sa attrId="calendarUrl" />
+	<sa attrId="freeBusyUrl" />
+	<sa attrId="blogUrl" />
+	<sa attrId="description" />
+	<sa attrId="experience" />
+	<sa attrId="givenName" />
+	<sa attrId="surname" />
+	<sa attrId="workLocationCode"/>
+	<sa attrId="timezone"/>
+	<sa attrId="orgId"/>
+	<sa attrId="title"/>
+	<sa attrId="lastUpdate"/>
+	<sa attrId="profileType"/>
+	<sa attrId="sourceUrl"/>
+</attributes>

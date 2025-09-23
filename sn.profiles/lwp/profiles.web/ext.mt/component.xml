@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ************************************************************** -->
+<!--                                                                -->
+<!-- Licensed Materials - Property of HCL                           -->
+<!--                                                                -->
+<!-- Copyright HCL Technologies Limited 2002, 2021                  -->
+<!--                                                                -->
+<!-- US Government Users Restricted Rights                          -->
+<!--                                                                -->
+<!-- ************************************************************** -->
+<component name="profiles.web/ext.mt" description="Profiles Web App Extension MT" spec-version="3.0" project-type="war">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.web.ext.jar" preferredInstallLocation="tmp" />
+		<output type="war" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.ext.war" preferredInstallLocation="tmp" />
+	</output-group>
+   
+	<output-group name="to_ear">
+		<output type="war" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.ext.war" preferredInstallLocation="" />
+	</output-group>
+
+	<output-group name="to_war">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.web.ext.jar" preferredInstallLocation="WEB-INF/lib" />
+	</output-group>
+  
+	<dependency name="prereqs.sn/struts.minimal" type="jar" version="1.2.4" />
+	<dependency name="prereqs.sn/struts.extra" type="jar" version="1.2.4" />
+	<dependency name="prereqs.sn/jakarta.commons.beanutils170" type="jar" version="1.7" />
+	<dependency name="prereqs.sn/jakarta.commons.fileupload-1.2.1" type="jar" version="1.2" />
+	<dependency name="prereqs.sn/mybatis" type="jar" version="2.3.5" />
+	<dependency name="prereqs.sn/spring256" type="jar" version="2.5" />
+	<dependency name="prereqs.sn/jawr.2.5.1" type="jar" version="2.5.1"/>
+	<dependency name="prereqs.sn/log4j2" type="jar"/>
+	<dependency name="prereqs.sn/json4j" type="jar" version="1.0.0.1"/>
+	
+	<dependency name="lc.appext/core/api" type="jar" version="3.0" />
+	<dependency name="lc.appext/core/impl" type="jar" version="3.0" />
+	
+	<dependency name="profiles.core/service.api" type="jar" version="3.0" />
+	<dependency name="profiles.core/service.impl" type="jar" version="3.0" />
+	<dependency name="profiles.web/core" type="jar" version="3.0"/>
+	<dependency name="profiles.web/app" type="jar" version="3.0"/>
+	<dependency name="profiles.web/rpfilter" type="jar" version="3.0" />
+
+	<dependency name="lc.extdatamodel/lc.extdatamodel.api" type="jar" version="1.0"/>    
+	<dependency name="lc.component.integration/profiles" type="jar" version="3.0" />
+	
+	<dependency name="lc.web.common" type="jar" />
+
+</component>

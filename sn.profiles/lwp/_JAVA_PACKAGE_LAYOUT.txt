@@ -1,0 +1,19 @@
+Package Names:
+	com/ibm/lconn/profiles/api/*
+			- API classes intended for 'direct-calling' (ie java level access) outside of Profiles
+			- There are no classes that fall into this category in 3.0
+			
+	com/ibm/lconn/profiles/spi/*
+			- Future plug point for SPIs
+
+	com/ibm/lconn/profiles/internal/*		
+			- All classes should branch from this unless otherwise noted including data and utilities
+			- This is where 'service-level' classes live
+			
+	com/ibm/lconn/profiles/web/*			
+			- Web level classes
+			- The web nature is non-public
+	
+	com/ibm/lconn/profiles/tdi/*
+			- TDI level classes
+			- This tdi nature is non-public except through the TDI interface.

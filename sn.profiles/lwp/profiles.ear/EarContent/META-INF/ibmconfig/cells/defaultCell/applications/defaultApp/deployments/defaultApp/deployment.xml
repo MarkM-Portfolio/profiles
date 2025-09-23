@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- 5724-S68                                                          -->
+<appdeployment:Deployment 
+   xmi:version="2.0" 
+   xmlns:xmi="http://www.omg.org/XMI" 
+   xmlns:appdeployment="http://www.ibm.com/websphere/appserver/schemas/5.0/appdeployment.xmi" 
+   xmi:id="Deployment_1272055317296">
+  <deployedObject xmi:type="appdeployment:ApplicationDeployment" xmi:id="ApplicationDeployment_1272055317296" startingWeight="1" warClassLoaderPolicy="SINGLE">
+    <classloader xmi:id="Classloader_1272055317296" mode="PARENT_LAST"/>
+    <modules xmi:type="appdeployment:WebModuleDeployment" xmi:id="WebModuleDeployment_1272055317296" startingWeight="10000" uri="lc.profiles.app.war"/>
+    <modules xmi:type="appdeployment:WebModuleDeployment" xmi:id="WebModuleDeployment_1272055317298" startingWeight="10000" uri="lc.profiles.seedlist.war"/>
+    <modules xmi:type="appdeployment:EJBModuleDeployment" xmi:id="EJBModuleDeployment_1272055317297" startingWeight="5000" uri="lc.events.publish.jar"/>
+    <modules xmi:type="appdeployment:EJBModuleDeployment" xmi:id="EJBModuleDeployment_1272055317299" startingWeight="5000" uri="lconn.scheduler.ejb.jar"/>
+    <modules xmi:type="appdeployment:WebModuleDeployment" xmi:id="WebModuleDeployment_1272055317300" startingWeight="10000" uri="lc.profiles.ext.war"/>
+  </deployedObject>
+</appdeployment:Deployment>

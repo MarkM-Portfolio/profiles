@@ -1,0 +1,51 @@
+-- ***************************************************************** 
+--                                                                   
+-- IBM Confidential                                                  
+--                                                                   
+-- OCO Source Materials                                              
+--                                                                   
+-- Copyright IBM Corp. 2013, 2014                             
+--                                                                   
+-- The source code for this program is not published or otherwise    
+-- divested of its trade secrets, irrespective of what has been      
+-- deposited with the U.S. Copyright Office.                         
+--                                                                   
+-- ***************************************************************** 
+
+SET CURRENT SCHEMA EMPINST;
+
+------
+-- Drop FKs
+------
+
+ALTER TABLE EMPINST.EMPLOYEE			DROP CONSTRAINT EMPLOYEE_TENANT_FK;
+ALTER TABLE EMPINST.GIVEN_NAME			DROP CONSTRAINT GVNAME_TENANT_FK;
+ALTER TABLE EMPINST.SURNAME				DROP CONSTRAINT SURNAME_TENANT_FK;
+ALTER TABLE EMPINST.PROFILE_EXTENSIONS	DROP CONSTRAINT PROFEXT_TENT_FK;
+ALTER TABLE EMPINST.PROFILE_EXT_DRAFT	DROP CONSTRAINT PREXTDRFT_TENT_FK;
+ALTER TABLE EMPINST.PEOPLE_TAG			DROP CONSTRAINT PPLTAG_TENT_FK;
+ALTER TABLE EMPINST.DEPARTMENT			DROP CONSTRAINT DEPT_TENANT_FK;
+ALTER TABLE EMPINST.ORGANIZATION		DROP CONSTRAINT ORG_TENANT_FK;
+ALTER TABLE EMPINST.COUNTRY				DROP CONSTRAINT CNTRY_TENANT_FK;
+ALTER TABLE EMPINST.EMP_TYPE			DROP CONSTRAINT EMPTYPE_TENANT_FK;
+ALTER TABLE EMPINST.PHOTO				DROP CONSTRAINT PHOTO_TENT_FK;
+ALTER TABLE EMPINST.PRONUNCIATION		DROP CONSTRAINT PRONUNC_TENT_FK;
+ALTER TABLE EMPINST.WORKLOC				DROP CONSTRAINT WORKLOC_TENANT_FK;
+ALTER TABLE EMPINST.EMP_DRAFT			DROP CONSTRAINT EMPDRAFT_TENT_FK;
+ALTER TABLE EMPINST.CHG_EMP_DRAFT		DROP CONSTRAINT CHEMPDRFT_TENT_FK;
+ALTER TABLE EMPINST.PROF_CONNECTIONS	DROP CONSTRAINT CONNECT_TENT_FK;
+ALTER TABLE EMPINST.EVENTLOG			DROP CONSTRAINT EVLOG_TENANT_FK;
+ALTER TABLE EMPINST.PROFILE_LOGIN		DROP CONSTRAINT LOGIN_TENANT_FK;
+ALTER TABLE EMPINST.PROFILE_PREFS		DROP CONSTRAINT PROFPREF_TENT_FK;
+ALTER TABLE EMPINST.PROFILE_LAST_LOGIN	DROP CONSTRAINT LASTLOGIN_TENT_FK;
+ALTER TABLE EMPINST.USER_PLATFORM_EVENTS DROP CONSTRAINT UPLTEV_TENANT_FK;
+COMMIT;
+
+------
+-- Update schema version
+------
+UPDATE EMPINST.SNPROF_SCHEMA SET DBSCHEMAVER= 40, RELEASEVER='4.5.0.0' WHERE COMPKEY='Profiles';
+COMMIT;
+
+
+

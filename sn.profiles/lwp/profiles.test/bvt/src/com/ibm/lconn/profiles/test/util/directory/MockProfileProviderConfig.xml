@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2013, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<config>
+
+	<org>
+		<name>Org1 Name</name>
+		<id>org_1_exid</id>
+		<email>contact@org1.com</email>
+	</org>
+	
+	<org>
+		<name>Org2 Name</name>
+		<id>org_2_exid</id>
+		<email>contact@org2.com</email>
+	</org>
+	
+	<!-- this org is intended to be used for special tests that will delete the org. do not add subscribers. -->
+	<org>
+		<name>Delete Org</name>
+		<id>delete_org_exid</id>
+		<email>contact@deleteorg.com</email>
+	</org>
+	
+	<!-- this org is used in a special test where we delete the org and users then send a revoke.
+	     call it an orphaned org since it will exist in the directory but not the proflis db
+	     when we run tests -->
+	<org>
+		<name>Orphaned in Directory Org</name>
+		<id>orphaned_org_exid</id>
+		<email>contact@orphanedorg.com</email>
+	</org>
+	
+	<!-- guest org used to ensure BSS commands are ignored. it must be the last org -->
+	<org>
+		<name>Guest Org</name>
+		<id>0</id>
+		<email>guest@guest.com</email>
+	</org>
+	
+	<!--  org1 subscribers -->
+	<subscriber>
+		<email>sub1@org1.com</email>
+		<givenName>subscriber1_org1</givenName>
+		<surname>subscriber1_org1</surname>
+		<displayName>Subscriber 1 Org 1</displayName>
+		<id>subscriber_1_org_1_exid</id>
+		<orgId>org_1_exid</orgId>
+		<acctId>subscriber_1_org_1_acctid</acctId>
+	</subscriber>
+	
+	<account>
+		<id>subscriber_1_org_1_acctid</id>
+		<login>sub1@org1.com</login>
+	</account>
+	
+	<subscriber>
+		<email>subtomove@org1.com</email>
+		<givenName>subscriber_tomove_org1</givenName>
+		<surname>subscriber_tomove_org1</surname>
+		<displayName>Subscriber ToMove Org 1</displayName>
+		<id>subscriber_tomove_org_1_exid</id>
+		<orgId>org_1_exid</orgId>
+		<acctId>subscriber_tomove_org_1_acctid</acctId>
+	</subscriber>
+	
+	<account>
+		<id>subscriber_tomove_org_1_acctid</id>
+		<login>subtomove@org1.com</login>
+	</account>
+	
+	<!-- org2 subscribers -->
+	<subscriber>
+		<email>sub1@org2.com</email>
+		<givenName>subscriber1_org2</givenName>
+		<surname>subscriber1_org2</surname>
+		<displayName>Subscriber 1 Org 2</displayName>
+		<id>subscriber_1_org_2_exid</id>
+		<orgId>org_2_exid</orgId>
+		<acctId>subscriber_1_org_2_acctid</acctId>
+	</subscriber>
+	
+	<account>
+		<id>subscriber_1_org_2_acctid</id>
+		<login>sub1@org2.com</login>
+	</account>
+	
+	<subscriber>
+		<email>deleteguy1@delete.com</email>
+		<givenName>subscriber1_orgDelete</givenName>
+		<surname>subscriber1_orgDelete</surname>
+		<displayName>Subscriber 1 Org Delete</displayName>
+		<id>subscriber_1_org_delete_exid</id>0000
+		<orgId>delete_org_exid</orgId>
+		<acctId>deleteguy1_org_delete_acctid</acctId>
+	</subscriber>
+	
+	<account>
+		<id>deleteguy1_org_delete_acctid</id>
+		<login>deleteguy1@delete.com</login>
+	</account>
+	
+	<subscriber>
+		<email>guestguy@guest.com</email>
+		<givenName>guest</givenName>
+		<surname>guy</surname>
+		<displayName>Guest Guy</displayName>
+		<id>guestguy</id>
+		<orgId>0</orgId>
+		<acctId>guestguyacct</acctId>
+	</subscriber>
+	
+	<account>
+		<id>guestguyacct</id>
+		<login>guestguy@guest.com</login>
+	</account>
+	
+	<!-- Orphaned org subscribers -->
+		<!-- this org is used in a special test where we delete the org and users then send a revoke.
+	     call it an orphaned org since it will exist in the directory but not the proflis db
+	     when we run tests -->
+	<subscriber>
+		<email>sub1@orphanedorg.com</email>
+		<givenName>subscriber1_orphanedorg</givenName>
+		<surname>subscriber1_orphanedorg</surname>
+		<displayName>Subscriber 1 Orphaned Org</displayName>
+		<id>subscriber_1_orphanedorg_exid</id>
+		<orgId>orphaned_org_exid</orgId>
+		<acctId>subscriber_1_orphanedorg_acctid</acctId>
+	</subscriber>
+	
+	<account>
+		<id>subscriber_1_orphanedorg_acctid</id>
+		<login>sub1@orphanedorg.com</login>
+	</account>
+
+</config>

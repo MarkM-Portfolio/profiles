@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="ProfileDraft">
+
+	<typeAlias alias="employee" type="com.ibm.peoplepages.data.Employee" />
+
+	<insert id="insertDraftEmployee" parameterClass="java.util.Map">
+		insert into EMPINST.EMP_DRAFT
+		<dynamic prepend="("> 
+			PROF_KEY,
+			PROF_UID,
+			<isNotNull property="alternateLastname" >
+  				PROF_ALTERNATE_LAST_NAME,
+			</isNotNull>
+			<isNotNull property="bldgId" >
+  				PROF_BUILDING_IDENTIFIER,
+			</isNotNull>
+			<isNotNull property="calendarUrl" >
+  				PROF_CALENDAR_URL,
+			</isNotNull>			
+			<isNotNull  property="countryCode" >
+  				PROF_ISO_COUNTRY_CODE,
+			</isNotNull>	
+			<isNotNull  property="courtesyTitle" >
+  				PROF_COURTESY_TITLE,
+			</isNotNull>	
+			<isNotNull  property="deptNumber" >
+  				PROF_DEPARTMENT_NUMBER,
+			</isNotNull>
+			<isNotNull  property="description" >
+  				PROF_DESCRIPTION,
+			</isNotNull>
+			<isNotNull  property="displayName" >
+  				PROF_DISPLAY_NAME,
+			</isNotNull>	
+			<isNotNull  property="givenName" >
+  				PROF_GIVEN_NAME,
+			</isNotNull>	
+			<isNotNull  property="surname" >
+  				PROF_SURNAME,
+			</isNotNull>	
+			<isNotNull  property="email" >
+  				PROF_MAIL,
+			</isNotNull>
+			<isNotNull  property="distinguishedName" >
+  				PROF_SOURCE_UID,
+			</isNotNull>
+			<isNotNull  property="employeeNumber" >
+  				PROF_EMPLOYEE_NUMBER,
+			</isNotNull>					
+			<isNotNull  property="employeeTypeCode" >
+  				PROF_EMPLOYEE_TYPE,
+			</isNotNull>
+			<isNotNull  property="experience" >
+  				PROF_EXPERIENCE,
+			</isNotNull>
+			<isNotNull  property="faxNumber" >
+  				PROF_FAX_TELEPHONE_NUMBER,
+			</isNotNull>			
+			<isNotNull  property="floor" >
+  				PROF_FLOOR,
+			</isNotNull>
+			<isNotNull  property="freeBusyUrl" >
+  				PROF_FREEBUSY_URL,
+			</isNotNull>			
+			<isNotNull  property="groupwareEmail" >
+  				PROF_GROUPWARE_EMAIL,
+			</isNotNull>
+			<isNotNull  property="ipTelephoneNumber" >
+  				PROF_IP_TELEPHONE_NUMBER,
+			</isNotNull>			
+			<isNotNull  property="isManager" >
+  				PROF_IS_MANAGER,
+			</isNotNull>			
+			<isNotNull  property="jobResp" >
+  				PROF_JOB_RESPONSIBILITIES,
+			</isNotNull>
+			<isNotNull  property="managerUid" >
+  				PROF_MANAGER_UID,
+			</isNotNull>
+			<isNotNull  property="mobileNumber" >
+  				PROF_MOBILE,
+			</isNotNull>
+			<isNotNull  property="nativeFirstName" >
+  				PROF_NATIVE_FIRST_NAME,
+			</isNotNull>
+			<isNotNull  property="nativeLastName" >
+  				PROF_NATIVE_LAST_NAME,
+			</isNotNull>						
+			<isNotNull  property="pagerType" >
+  				PROF_PAGER_TYPE,
+			</isNotNull>
+			<isNotNull  property="pagerNumber" >
+  				PROF_PAGER,
+			</isNotNull>
+			<isNotNull  property="pagerId" >
+  				PROF_PAGER_ID,
+			</isNotNull>
+			<isNotNull  property="pagerServiceProvider" >
+  				PROF_PAGER_SERVICE_PROVIDER,
+			</isNotNull>									
+			<isNotNull  property="officeName" >
+  				PROF_PHYSICAL_DELIVERY_OFFICE,
+			</isNotNull>
+			<isNotNull  property="orgId" >
+  				PROF_ORGANIZATION_IDENTIFIER,
+			</isNotNull>
+			<isNotNull  property="preferredFirstName" >
+  				PROF_PREFERRED_FIRST_NAME,
+			</isNotNull>
+			<isNotNull  property="preferredLastName" >
+  				PROF_PREFERRED_LANGUAGE,
+			</isNotNull>
+			<isNotNull  property="preferredLanguage" >
+  				PROF_PREFERRED_LAST_NAME,
+			</isNotNull>
+			<isNotNull  property="secretaryUid" >
+  				PROF_SECRETARY_UID,
+			</isNotNull>
+			<isNotNull  property="shift" >
+  				PROF_SHIFT,
+			</isNotNull>
+			<isNotNull  property="telephoneNumber" >
+  				PROF_TELEPHONE_NUMBER,
+			</isNotNull>
+			<isNotNull  property="timezone" >
+  				PROF_TIMEZONE,
+			</isNotNull>			
+			<isNotNull  property="title" >
+  				PROF_TITLE,
+			</isNotNull>
+			<isNotNull  property="workLocationCode" >
+  				PROF_WORK_LOCATION,
+			</isNotNull>
+			PROF_LAST_UPDATE,
+			<isNotEmpty  property="guid" >
+  				PROF_GUID,
+			</isNotEmpty>
+			TENANT_KEY
+			)
+		</dynamic>
+		VALUES
+		<dynamic prepend="("> 
+			#key#,
+			#uid#,
+			<isNotNull property="alternateLastname" >
+  				#alternateLastname#,
+			</isNotNull>
+			<isNotNull property="bldgId" >
+  				#bldgId#,
+			</isNotNull>
+			<isNotNull property="calendarUrl" >
+  				#calendarUrl#,
+			</isNotNull>			
+			<isNotNull property="countryCode" >
+  				#countryCode#,
+			</isNotNull>	
+			<isNotNull property="courtesyTitle" >
+  				#courtesyTitle#,
+			</isNotNull>	
+			<isNotNull property="deptNumber" >
+  				#deptNumber#,
+			</isNotNull>
+			<isNotNull property="description" >
+  				#description#,
+			</isNotNull>
+			<isNotNull property="displayName" >
+  				#displayName#,
+			</isNotNull>	
+			<isNotNull property="givenName" >
+  				#givenName#,
+			</isNotNull>	
+			<isNotNull property="surname" >
+  				#surname#,
+			</isNotNull>	
+			<isNotNull property="email" >
+  				#email#,
+			</isNotNull>
+			<isNotNull property="distinguishedName" >
+  				#distinguishedName#,
+			</isNotNull>
+			<isNotNull property="employeeNumber" >
+  				#employeeNumber#,
+			</isNotNull>					
+			<isNotNull property="employeeTypeCode" >
+  				#employeeTypeCode#,
+			</isNotNull>
+			<isNotNull property="experience" >
+  				#experience#,
+			</isNotNull>
+			<isNotNull property="faxNumber" >
+  				#faxNumber#,
+			</isNotNull>			
+			<isNotNull property="floor" >
+  				#floor#,
+			</isNotNull>
+			<isNotNull property="freeBusyUrl" >
+  				#freeBusyUrl#,
+			</isNotNull>			
+			<isNotNull property="groupwareEmail" >
+  				#groupwareEmail#,
+			</isNotNull>
+			<isNotNull property="ipTelephoneNumber" >
+  				#ipTelephoneNumber#,
+			</isNotNull>			
+			<isNotNull property="isManager" >
+  				#isManager#,
+			</isNotNull>			
+			<isNotNull property="jobResp" >
+  				#jobResp#,
+			</isNotNull>
+			<isNotNull property="managerUid" >
+  				#managerUid#,
+			</isNotNull>
+			<isNotNull property="mobileNumber" >
+  				#mobileNumber#,
+			</isNotNull>
+			<isNotNull property="nativeFirstName" >
+  				#nativeFirstName#,
+			</isNotNull>
+			<isNotNull property="nativeLastName" >
+  				#nativeLastName#,
+			</isNotNull>						
+			<isNotNull property="pagerType" >
+  				#pagerType#,
+			</isNotNull>
+			<isNotNull property="pagerNumber" >
+  				#pagerNumber#,
+			</isNotNull>
+			<isNotNull property="pagerId" >
+  				#pagerId#,
+			</isNotNull>
+			<isNotNull property="pagerServiceProvider" >
+  				#pagerServiceProvider#,
+			</isNotNull>									
+			<isNotNull property="officeName" >
+  				#officeName#,
+			</isNotNull>
+			<isNotNull property="orgId" >
+  				#orgId#,
+			</isNotNull>
+			<isNotNull property="preferredFirstName" >
+  				#preferredFirstName#,
+			</isNotNull>
+			<isNotNull property="preferredLastName" >
+  				#preferredLastName#,
+			</isNotNull>
+			<isNotNull property="preferredLanguage" >
+  				#preferredLanguage#,
+			</isNotNull>
+			<isNotNull property="secretaryUid" >
+  				#secretaryUid#,
+			</isNotNull>
+			<isNotNull property="shift" >
+  				#shift#,
+			</isNotNull>
+			<isNotNull property="telephoneNumber" >
+  				#telephoneNumber#,
+			</isNotNull>
+			<isNotNull property="timezone" >
+  				#timezone#,
+			</isNotNull>			
+			<isNotNull property="title" >
+  				#title#,
+			</isNotNull>
+			<isNotNull property="workLocationCode" >
+  				#workLocationCode#,
+			</isNotNull>
+			#lastUpdate#,
+			<isNotEmpty property="guid" >
+  				#guid#,
+			</isNotEmpty>
+			#dbTenantKey#
+			)
+		</dynamic>
+	</insert>	
+
+	<sql id="sql_dateRangeFilterForPurge">
+		<isPropertyAvailable property="startDate">		
+		        <isNotNull prepend="AND" property="startDate">
+			        <![CDATA[ PROF_LAST_UPDATE >=  #startDate# ]]>
+			</isNotNull>
+		</isPropertyAvailable>			
+		<isPropertyAvailable property="endDate">			
+		        <isNotNull prepend="AND" property="endDate">
+			        <![CDATA[ PROF_LAST_UPDATE <  #endDate# ]]>
+			</isNotNull>
+		</isPropertyAvailable>				
+	</sql>
+
+	<delete id="purgeDraftTable" parameterClass="java.util.Map">
+		delete from
+			EMPINST.EMP_DRAFT 
+		where
+			PROF_UPDATE_SEQUENCE in 
+			(
+				<include refid="snaxUtil.sql_sub_limitStart_select"/>
+					D.PROF_UPDATE_SEQUENCE
+				from 
+					EMPINST.EMP_DRAFT D
+				where
+					1=1
+					<include refid="sql_dateRangeFilterForPurge" />
+					<include refid="Tenant.sql_WhereByTenantKey"/>
+					<include refid="snaxUtil.sql_sub_limitEnd"/>
+			)
+	</delete>
+</sqlMap>
+

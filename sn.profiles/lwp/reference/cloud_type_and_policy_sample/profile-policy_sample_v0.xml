@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config id="profiles-policy" xmlns="http://www.ibm.com/profiles-policy">
+	<features orgId="NN">
+		<feature name="profile.photo">
+			<!-- photos are visible, but only alt users can update them -->
+			<!-- default/regular user cannot update photo -->
+			<profileType enabled="true">
+				<acl name="profile.photo.view" scope="reader" />
+				<acl name="profile.photo.update" scope="none" />
+			</profileType>
+			<!-- alt user can update photo -->
+			<profileType type="alt" enabled="true">
+				<acl name="profile.photo.view" scope="reader" />
+				<acl name="profile.photo.update" scope="self" />
+			</profileType>			
+		</feature>
+		<feature name="profile.colleague">
+			<!-- alt users can initiate netowrks among themselves and with default users -->
+			<!-- defaut users can initiate networks, but not with alt users -->
+			<profileType type="alt" actorType="alt" enabled="true">
+				<acl name="profile.colleague.connect" scope="person_not_self" />
+			</profileType>
+			<profileType type="alt" enabled="false">
+			</profileType>
+		</feature>
+		<feature name="profile.following">
+			<profileType type="alt" actorType="alt" enabled="true">
+				<acl name="profile.following.view" scope="reader" />
+				<acl name="profile.following.add" scope="person_not_self" />
+			</profileType>
+			<profileType type="alt" enabled="false">
+			</profileType>
+		</feature>
+		<feature name="profile.tag">
+			<profileType type="alt" actorType="alt" enabled="true">
+				<acl name="profile.tag.view" scope="reader" />
+				<acl name="profile.tag.add" scope="person_and_self" />
+			</profileType>
+			<profileType type="alt" enabled="false">
+			</profileType>
+		</feature>
+	</features>
+</config>

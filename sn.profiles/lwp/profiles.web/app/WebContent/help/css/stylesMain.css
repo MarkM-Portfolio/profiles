@@ -1,0 +1,165 @@
+/* ***************************************************************** */
+/*                                                                   */
+/* IBM Confidential                                                  */
+/*                                                                   */
+/* OCO Source Materials                                              */
+/*                                                                   */
+/* Copyright IBM Corp. 2009, 2010                                    */
+/*                                                                   */
+/* The source code for this program is not published or otherwise    */
+/* divested of its trade secrets, irrespective of what has been      */
+/* deposited with the U.S. Copyright Office.                         */
+/*                                                                   */
+/* ***************************************************************** */
+
+/* Body and box-like elements */
+html, body { padding: 0; margin: 0; }
+body {
+	background:#fff url(../images/pagetitlebkgd.jpg) left top repeat-x;
+	font: normal .75em/1.5em "Helvetica", "Verdana", sans-serif; }
+
+h1.pagetitleA{
+	margin:0;
+	padding: 20px 0 0 70px;
+	background: url(../images/Activities_48x48.gif) 15px 10px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1.pagetitleB{
+	margin:0;
+	padding: 25px 0 0 90px;
+	background: url(../images/help_blogs.gif) 10px 5px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1.pagetitleC{
+	margin:0;
+	padding: 20px 0 0 70px;
+	background: url(../images/help_communities.gif.gif) 10px 5px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1.pagetitleD{
+	margin:0;
+	padding: 25px 0 0 90px;
+	background: url(../images/help_bookmarks.gif) 10px 5px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1.pagetitleH{
+	margin:0;
+	padding: 25px 0 0 90px;
+	background: url(../images/help_homepage.gif) 10px 5px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1.pagetitleP{
+	margin:0;
+	padding: 25px 0 0 90px;
+	background: url(../images/help_profiles.gif) 10px 5px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1.pagetitleS{
+	margin:0;
+	padding: 20px 0 0 70px;
+	background: url(../images/help_search.gif) 10px 5px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1.pagetitleW{
+	margin:0;
+	padding: 20px 0 0 70px;
+	background: url(../images/help_wiki.gif) 10px 5px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1.pagetitleF{
+	margin:0;
+	padding: 20px 0 0 70px;
+	background: url(../images/help_files.gif) 10px 5px no-repeat;
+	font-family:"Helvetica Neue", "Helvetica", sans-serif; color:#519cef;
+	height:50px;
+	border-bottom-width:0;
+}
+
+h1 {
+	margin: 0 0 5px 0;
+	padding: 0 0 5px 0;
+	border-bottom: 1px dotted #ccc;
+	color: #000;
+	font: normal 2em "Helvetica Neue", "Helvetica", sans-serif; }
+
+a{
+		color: #0f51a2;
+	text-decoration: none;
+}
+
+p {
+	margin: 0;
+	padding: 0 0 .8em 0;
+	color: #000; }
+
+a:hover{
+	text-decoration: underline;
+}
+
+p.navback{
+        text-align: left;
+        padding: 2px 0px 0 15px;
+}
+
+ul{
+margin: 0 0 0 10px;
+list-style-type: square;
+padding: 0;
+}
+
+li{
+margin: 0 0 5px 15px;
+padding: 0;
+}
+
+#nav{
+	background: transparent url(../images/links_bg.gif) top left repeat-x;
+	padding-top: 20px;
+}
+
+div.header {
+	background-image:url(../images/bg_header.jpg);
+   	background-repeat: repeat-x;
+}
+
+h1.topictitle1{
+padding:5px 5px 5px 15px;border-bottom:1px solid #000;border-top:2px dotted #ccc;margin-top:0; margin-bottom: .45em; font-size: 1.17em;font-weight:bold}
+
+.main{margin:15px 20px 0 15px}
+.parentlink{margin-left:20px}
+.relconcepts{margin-left:20px}
+.reltasks{margin-left:20px}
+.faq{background-color:#eff6fe;border:1px solid #ccc;margin:20px 20px 0 20px}
+.faq table td{padding-right:30px}
+.tablenoborder{margin:20px;}
+
+.sectionhead{margin: 10px 0;padding: 0;font-weight:bold;font-size:1.2em}
+
+* html h1.pagetitle{padding-bottom:30px}
+
+* html table th, * html table td {font-size:.75em}
+kbd{font-size:1.2em}

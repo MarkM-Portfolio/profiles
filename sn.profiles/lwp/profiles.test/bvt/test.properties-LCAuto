@@ -1,0 +1,36 @@
+# ***************************************************************** 
+#                                                                   
+# IBM Confidential                                                  
+#                                                                   
+# OCO Source Materials                                              
+#                                                                   
+# Copyright IBM Corp. 2008, 2010                                    
+#                                                                   
+# The source code for this program is not published or otherwise    
+# divested of its trade secrets, irrespective of what has been      
+# deposited with the U.S. Copyright Office.                         
+#                                                                   
+# ***************************************************************** 
+
+currentUserEmail=ajone33@janet.iris.com
+
+## DB2: default port 50000, default admin db2admin/db2inst1
+jdbc_driver=com.ibm.db2.jcc.DB2Driver
+jdbc_url=jdbc:db2://lcauto103.swg.usma.ibm.com:50000/peopledb
+jdbc_username=db2inst1
+jdbc_password=douqtiyw
+
+## Oracle: default port 1521, default instance: orcl, default admin: SYSTEM
+#jdbc_driver=oracle.jdbc.driver.OracleDriver
+#jdbc_url=jdbc:oracle:thin:@<server>:<port>:orcl
+#jdbc_username=<user>
+#jdbc_password=<password>
+
+##Sql Server: default port 1433, default admin: sa
+#jdbc_driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+#jdbc_url=jdbc:sqlserver://<server>:<port>;databaseName=PEOPLEDB
+#jdbc_username=<user>
+#jdbc_password=<password>
+
+
+

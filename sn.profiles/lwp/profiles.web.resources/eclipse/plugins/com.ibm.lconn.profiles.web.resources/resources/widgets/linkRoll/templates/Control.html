@@ -1,0 +1,58 @@
+<!--
+/* ***************************************************************** */
+/*                                                                   */
+/* IBM Confidential                                                  */
+/*                                                                   */
+/* OCO Source Materials                                              */
+/*                                                                   */
+/* Copyright IBM Corp. 2015                                          */
+/*                                                                   */
+/* The source code for this program is not published or otherwise    */
+/* divested of its trade secrets, irrespective of what has been      */
+/* deposited with the U.S. Copyright Office.                         */
+/*                                                                   */
+/* ***************************************************************** */
+-->
+<div>
+	<span dojoAttachPoint="loadingNode">${strings.linkRollLoading}</span>
+	<span dojoAttachPoint="nonLoadingNode">
+		<div class="lotusChunk">
+			<ul class="lotusList lotusEditable lotusMeta ${hiddenClassName}" dojoAttachPoint="linksNode">
+			</ul>
+			<span class="${hiddenClassName}" dojoAttachPoint="noLinksNode">${strings.linkRollNoLinks}</span>
+		</div>
+		<div class="lotusChunk ${hiddenClassName}" dojoAttachPoint="addNode">
+			<a id="${id}_addLink" dojoAttachPoint="addLinkNode" href="javascript:;" class="lotusAction" role="button" dojoAttachEvent="onclick:showAddForm" title="${strings.linkRollAddLinkAltText}">
+				${strings.linkRollAddLink}
+			</a>	
+		</div>
+		<form dojoAttachPoint="addLinkFormNode" name="add-link" class="lotusForm ${hiddenClassName}" aria-labelledby="${id}_addLink" onsubmit="return false;" dojoAttachEvent="onsubmit:saveAddLink">
+			<table cellspacing="0" cellpadding="0" border="0" class="lotusFormTable" role="presentation">
+				<tr>
+					<td class="lotusFormFieldRow">
+						<div><label dojoAttachPoint="addLinkNameLabelNode" for="${id}_namefield">${strings.linkRollName}</label></div>
+						<div><input dojoAttachPoint="addLinkNameNode" type="text" name="name" id="${id}_namefield" class="lotusText" aria-required="true"></input></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="lotusFormFieldRow">
+						<div><label dojoAttachPoint="addLinkUrlLabelNode" for="${id}_urlfield">${strings.linkRollLink}</label></div>
+						<div><input dojoAttachPoint="addLinkUrlNode" type="text" name="url" id="${id}_urlfield" class="lotusText" aria-required="true"></input></div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="lotusFormField lotusMeta">${strings.linkRollRequired}</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="lotusFormFooter">
+						<input type="submit" value="${strings.linkRollSave}" class="lotusFormButton"/>
+						<wbr>
+						<input type="button" value="${strings.linkRollCancel}" class="lotusFormButton" dojoAttachEvent="onclick:cancelAddLink"/>
+					</td>
+				</tr> 
+			</table>   
+		</form> 		
+	</span>
+</div>	

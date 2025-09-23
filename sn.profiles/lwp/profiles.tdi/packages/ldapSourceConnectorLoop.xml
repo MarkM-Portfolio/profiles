@@ -1,0 +1,1001 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<MetamergeConfig IDIversion="Created by TDI7.1.1 - 2010-03-25" created="Thu Jul 01 15:56:14 CST 2010" createdBy="tangyawei" modified="Thu Jul 01 15:56:22 CST 2010" modifiedBy="tangyawei" version="7.1.1">
+    <Folder name="AssemblyLines">
+        <AssemblyLine name="ldapSourceConnectorLoop">
+            <Settings/>
+            <Hooks/>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <SimulationConfig>
+                <SimulationStates>
+                    <Component name="DumpDebugInfomation" state="Enabled"/>
+                    <Component name="setSearchKey" state="Enabled"/>
+                    <Component name="setSearchValue" state="Enabled"/>
+                    <Component name="beginLookup" state="Enabled"/>
+                    <Component name="lookupLDAP" state="Enabled"/>
+                    <Component name="lookupLDAP_1" state="Enabled"/>
+                </SimulationStates>
+                <ProxySettings/>
+            </SimulationConfig>
+            <LogConfig>
+                <Logger name="FileRollerAppender">
+                    <InheritFrom>system:/Loggers/ibmdi.FileRollerAppender</InheritFrom>
+                    <parameter name="IDIFileRoller.Encoding">UTF-8</parameter>
+                    <parameter name="IDIFileRoller.File">logs\ldapLoop.log</parameter>
+                    <parameter name="IDIFileRoller.RollCount">5</parameter>
+                    <parameter name="Pattern.ConversionPattern">%d{ISO8601} %-5p [%c] - %m%n</parameter>
+                    <parameter name="com.ibm.di.log.layout">Pattern</parameter>
+                    <parameter name="com.ibm.di.log.level">INFO</parameter>
+                    <parameter name="enabled">true</parameter>
+                </Logger>
+            </LogConfig>
+            <ContainerEF name="EntryFeedContainer"/>
+            <ContainerDF name="DataFlowContainer">
+                <Script name="DumpDebugInfomation">
+                    <parameter name="enabled">true</parameter>
+                    <parameter name="script"><![CDATA[var opEntry = task.getOpEntry();
+if(opEntry != null) {
+	task.dumpEntry(opEntry);
+}
+else
+	throw new java.lang.Exception ("OpEntry is null !");
+
+
+var innerSearch = opEntry.getObject("search");
+if(innerSearch != null)
+{
+	var innerCriteria = innerSearch.getCriteria(0);
+	var searchkey = innerCriteria.name;
+	var searchValue = innerCriteria.value;
+	//task.logmsg("+++++++in adapter | search key from calledAL is:" + searchkey);
+	//task.logmsg("+++++++in adapter | search value from calledAL is:" + searchValue);
+}
+else
+{
+	task.logmsg(opEntry.getString("$operation"));
+}]]></parameter>
+                </Script>
+                <ALMap name="setSearchKey">
+                    <InheritFrom>[no inheritance]</InheritFrom>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>searchKeyInAdapter</Name>
+                            <Type>advanced</Type>
+                            <Script>ret.value = searchkey;</Script>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <State>Enabled</State>
+                </ALMap>
+                <ALMap name="setSearchValue">
+                    <InheritFrom>[no inheritance]</InheritFrom>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>searchValueInAdapter</Name>
+                            <Type>advanced</Type>
+                            <Script>ret.value = searchValue;</Script>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <State>Enabled</State>
+                </ALMap>
+                <Script name="beginLookup">
+                    <parameter name="script"><![CDATA[var searchCriteria = com.ibm.di.server.SearchCriteria(work.getString("searchKeyInAdapter"), com.ibm.di.server.SearchCriteria.EXACT, work.getString("searchValueInAdapter"));
+//task.logmsg("+++++++in adapter | the search criteria is:" + searchCriteria.getSearchString(0));
+
+try
+{
+	var result = lookupLDAP.connector.findEntry(searchCriteria);
+	//task.logmsg("+++++++in adapter | result is:" + result);
+	work.merge(result);
+}
+catch(e)
+{
+	task.logmsg(e);
+}]]></parameter>
+                </Script>
+                <Connector name="lookupLDAP">
+                    <InheritFrom>system:/Connectors/ibmdi.LDAP</InheritFrom>
+                    <ConnectorMode>Lookup</ConnectorMode>
+                    <ConnectorState>Passive</ConnectorState>
+                    <Configuration>
+                        <UserComment/>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="debug">false</parameter>
+                        <parameter name="ldapBinaryAttributes"><![CDATA[GUID
+objectGUID
+objectSid]]></parameter>
+                        <parameter name="ldapPassword">@SUBSTITUTE{property.profiles:source_ldap_user_password}</parameter>
+                        <parameter name="ldapReturnAttributes"><![CDATA[ibm-entryUuid
+entryUUID
+objectGUID
+nsuniqueid
+dominounid
+GUID
+*]]></parameter>
+                        <parameter name="ldapSearchBase">@SUBSTITUTE{property.profiles:source_ldap_search_base}</parameter>
+                        <parameter name="ldapSearchFilter">@SUBSTITUTE{property.profiles:source_ldap_search_filter}</parameter>
+                        <parameter name="ldapUrl">@SUBSTITUTE{property.profiles:source_ldap_url}</parameter>
+                        <parameter name="ldapUsername">@SUBSTITUTE{property.profiles:source_ldap_user_login}</parameter>
+                        <parameter name="userComment"/>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings/>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <MatchAny>false</MatchAny>
+                        <AdvancedLinkMode>false</AdvancedLinkMode>
+                        <Script><![CDATA[//ret.filter = searchkey + " LIKE '" + searchValue + "'";
+//ret.filter = searchkey + " equals '" + searchValue + "'";
+
+//task.logmsg("+++++++searchKeyInAdapter=" + work.getString("searchKeyInAdapter"));
+//task.logmsg("+++++++searchValueInAdapter=" + work.getString("searchValueInAdapter"));
+//ret.filter = work.getString("searchKeyInAdapter") + " LIKE '" + work.getString("searchValueInAdapter") + "'";
+ret.filter =  work.getString("searchKeyInAdapter") + " LIKE '" + work.getString("searchValueInAdapter") + "'";]]></Script>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Hook name="after_initialize">
+                            <Name>after_initialize</Name>
+                            <Script/>
+                            <Enabled>false</Enabled>
+                        </Hook>
+                        <Hook name="before_lookup">
+                            <Name>before_lookup</Name>
+                            <Script/>
+                            <Enabled>false</Enabled>
+                        </Hook>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+                <Connector name="lookupLDAP_1">
+                    <InheritFrom>system:/Connectors/ibmdi.LDAP</InheritFrom>
+                    <ConnectorMode>Lookup</ConnectorMode>
+                    <ConnectorState>Disabled</ConnectorState>
+                    <Configuration>
+                        <UserComment/>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="debug">false</parameter>
+                        <parameter name="ldapBinaryAttributes"><![CDATA[GUID
+objectGUID
+objectSid]]></parameter>
+                        <parameter name="ldapPassword">@SUBSTITUTE{property.profiles:source_ldap_user_password}</parameter>
+                        <parameter name="ldapReturnAttributes"><![CDATA[ibm-entryUuid
+entryUUID
+objectGUID
+nsuniqueid
+dominounid
+GUID
+*]]></parameter>
+                        <parameter name="ldapSearchBase">@SUBSTITUTE{property.profiles:source_ldap_search_base}</parameter>
+                        <parameter name="ldapSearchFilter">@SUBSTITUTE{property.profiles:source_ldap_search_filter}</parameter>
+                        <parameter name="ldapUrl">@SUBSTITUTE{property.profiles:source_ldap_url}</parameter>
+                        <parameter name="ldapUsername">@SUBSTITUTE{property.profiles:source_ldap_user_login}</parameter>
+                        <parameter name="userComment"/>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings/>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <MatchAny>false</MatchAny>
+                        <AdvancedLinkMode>true</AdvancedLinkMode>
+                        <Script><![CDATA[//ret.filter = searchkey + " LIKE '" + searchValue + "'";
+//ret.filter = searchkey + " equals '" + searchValue + "'";
+
+//task.logmsg("+++++++searchKeyInAdapter=" + work.getString("searchKeyInAdapter"));
+//task.logmsg("+++++++searchValueInAdapter=" + work.getString("searchValueInAdapter"));
+//ret.filter = work.getString("searchKeyInAdapter") + " LIKE '" + work.getString("searchValueInAdapter") + "'";
+ret.filter =  work.getString("searchKeyInAdapter") + " LIKE '" + work.getString("searchValueInAdapter") + "'";]]></Script>
+                        <LinkCriteriaItem>
+                            <Key>128af0a4fab</Key>
+                            <Attribute>$dn</Attribute>
+                            <Operator>equals</Operator>
+                            <Value>$searchValueInAdapter</Value>
+                        </LinkCriteriaItem>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Hook name="after_initialize">
+                            <Name>after_initialize</Name>
+                            <Script/>
+                            <Enabled>false</Enabled>
+                        </Hook>
+                        <Hook name="before_lookup">
+                            <Name>before_lookup</Name>
+                            <Script/>
+                            <Enabled>false</Enabled>
+                        </Hook>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+            </ContainerDF>
+            <ThreadOptions/>
+            <Operations>
+                <Operation name="findEntry">
+                    <Schema name="Input">
+                        <SchemaItem>
+                            <Name>searchKeyInFind</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>searchValueInFind</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <SchemaItem>
+                            <Name>searchKeyInFind</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>searchValueInFind</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <AttributeMap name="Input">
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                </Operation>
+                <Operation name="querySchema">
+                    <Schema name="Input">
+                        <SchemaItem>
+                            <Name>distinguishName</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output"/>
+                    <AttributeMap name="Input"/>
+                    <AttributeMap name="Output"/>
+                </Operation>
+            </Operations>
+            <InitParams>
+                <Schema name="AssemblyLineInitParams"/>
+            </InitParams>
+        </AssemblyLine>
+    </Folder>
+    <Folder name="Connectors"/>
+    <Folder name="Parsers"/>
+    <Folder name="Scripts">
+        <Script name="log_functions">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//----------------------------------------------------------
+// Load the main message bundle if not done already
+//
+// Loads messages into variable messageLookup
+//----------------------------------------------------------
+function load_message_bundle() {
+	if(!this.messageBundle) {
+		var messageBundle = java.util.PropertyResourceBundle.getBundle("profiles_messages");
+		messageLookup = new com.ibm.peoplepages.tdi.util.MessageLookup(messageBundle);
+	}
+}
+
+//----------------------------------------------------------
+// Log an untranslated message
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param text the text
+//----------------------------------------------------------
+function logmsg(level, text) {
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 0 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+//----------------------------------------------------------
+function log0(level, res) {
+	var text = messageLookup.getString(res);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log the exception stack trace
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param the exception
+//----------------------------------------------------------
+function logStackTrace(level, throwable){
+	var stringwriter = java.io.StringWriter();
+	var printWriter = java.io.PrintWriter(stringwriter);
+	throwable.printStackTrace(printWriter);
+	task.logmsg(level, stringwriter.toString());
+    return stringwriter.toString();
+}
+
+//----------------------------------------------------------
+// Log a translated message with 1 parameter
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter
+//----------------------------------------------------------
+function log1(level, res, param1) {
+	var text = messageLookup.getString1(res);
+	text = task.getLog().getString(text, param1);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 2 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+//----------------------------------------------------------
+function log2(level, res, param1, param2) {
+	var text = messageLookup.getString2(res);
+	text = task.getLog().getString(text, param1, param2);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 3 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+//----------------------------------------------------------
+function log3(level, res, param1, param2, param3) {
+	var text = messageLookup.getStringN(res, 3);
+	text = task.getLog().getString(text, [param1, param2, param3]);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Log a translated message with 4 parameters
+//
+// @param level logging level ("INFO", "WARN", "ERROR", etc)
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+// @param param1 parameter 4
+//----------------------------------------------------------
+function log4(level, res, param1, param2, param3, param4) {
+	var text = messageLookup.getStringN(res, 4);
+	text = task.getLog().getString(text, [param1, param2, param3, param4]);
+	task.logmsg(level, text);
+
+	return text;
+}
+
+//----------------------------------------------------------
+// Write an untranslated message to the console
+//
+// @param type console type ("out" or "err")
+// @param text the text
+//----------------------------------------------------------
+function consoleMsg(type, text) {
+	if(type == "out") {
+		java.lang.System.out.println(text);
+	}
+	else {
+		java.lang.System.err.println(text);
+	}
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 0 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+//----------------------------------------------------------
+function console0(type, res) {
+	var text = messageLookup.getString(res);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 1 parameter
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter
+//----------------------------------------------------------
+function console1(type, res, param1) {
+	var text = messageLookup.getString1(res);
+	text = task.getLog().getString(text, param1);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 2 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+//----------------------------------------------------------
+function console2(type, res, param1, param2) {
+	var text = messageLookup.getString2(res);
+	text = task.getLog().getString(text, param1, param2);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 3 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+//----------------------------------------------------------
+function console3(type, res, param1, param2, param3) {
+	var text = messageLookup.getStringN(res, 3);
+	text = task.getLog().getString(text, [param1, param2, param3]);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write to console a translated message with 4 parameters
+//
+// @param type console type ("out" or "err")
+// @param res the resource string to lookup
+// @param param1 parameter 1
+// @param param1 parameter 2
+// @param param1 parameter 3
+// @param param1 parameter 4
+//----------------------------------------------------------
+function console4(type, res, param1, param2, param3, param4) {
+	var text = messageLookup.getStringN(res, 4);
+	text = task.getLog().getString(text, [param1, param2, param3, param4]);
+	consoleMsg(type, text);
+}
+
+//----------------------------------------------------------
+// Write the given return code to the given file
+//
+// @param returnCode the return code
+// @param file the name of the file to write to
+//----------------------------------------------------------
+function write_return_code(returnCode, file) {
+	try
+	{
+		var out = new java.io.FileWriter(file);
+		out.write("" + returnCode + "\n");
+		out.close();
+	}
+	catch(e)
+	{
+		task.logmsg("" + e);
+	}
+}
+
+
+]]></parameter>
+        </Script>
+        <Script name="expression_utils">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//----------------------------------------
+// Try the given attribute and return if
+// not null. Otherwise, evaluate
+// the expression. 
+//----------------------------------------
+function attr_or_expression(attrName, otherwiseExpression) {
+	var result = work.getString(attrName);
+	if(result == null) {
+		result = eval_tdi_expression(otherwiseExpression)
+	}
+
+	return result;
+}
+
+//-----------------------------------------
+// Evaluate the given tdi expression, and
+// return the value. The assumption is that
+// work is the entry used for any entry
+// sourced information
+//-----------------------------------------
+function eval_tdi_expression(expression) {
+	var result = null;
+
+	var ps = new com.ibm.di.util.ParameterSubstitution(expression);
+	var map = new java.util.HashMap();
+	map.put("mc", main.getMetamergeConfig());
+	map.put("work", work);
+	result = ps.substitute(map);
+
+	return result;
+}
+
+//-----------------------------------------
+// Return the opEntry operation, if any
+//-----------------------------------------
+function getOperation() {
+	var result = null;
+
+	var opEntry = task.getOpEntry();
+	if(opEntry != null) {
+		result = opEntry.getString("$operation");
+		opEntry = null;
+	}
+
+	return result;
+}]]></parameter>
+        </Script>
+        <Script name="utilities">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//-------------------------------------------
+// Get the java class of the given object
+// or return javascript otherwise
+//-------------------------------------------
+function getClass(o) {
+	var result = null;
+
+	try
+	{
+		result = o.getClass().getName();
+	}
+	catch(e)
+	{
+		result = "javascript";
+	}
+
+	return result;
+}
+
+function fileExists(path) {
+	var f = java.io.File(path);
+	return f.exists();
+}
+
+//-------------------------------------------
+// Convert a modify operation into a replace.
+// NOTE: This only really makes sense for a
+// single-valued attribute (or multi-valued)
+// where all values being deleted and added
+//-------------------------------------------
+function convert_modify_attr_to_replace(anAttr) {
+	var op = anAttr.getOperation();
+	if((op != null) && (op == "modify")) {
+		var list = new java.util.ArrayList();
+		var newAttr = system.newAttribute(anAttr.getName());
+		for(i=0; i < anAttr.size(); ++i) {
+			var anAttrVal = anAttr.getValueAV(i);
+			var valOp = anAttrVal.getOperation();
+			if((valOp != null) && (valOp == "add")) {
+				list.add(anAttrVal.getValue());
+			}
+		}
+		anAttr.clear();
+		for(i=0; i < list.size(); ++i) {
+			anAttr.addValue(list.get(i));
+		}
+	}
+	
+}
+
+//---------------------------------------
+// Look up the path for the given
+// property store for display purposes
+//---------------------------------------
+function get_properties_file_path_for(storeName) {
+	var path = null;
+	
+	var propertiesConfig = main.getConfiguration("Properties");
+	if(propertiesConfig != null) {
+		var storeConfig = propertiesConfig.getPropertyStore(storeName);
+		if(storeConfig != null) {
+			var connConfig = storeConfig.getConnectionConfig();
+			if(connConfig != null) {
+				path = connConfig.getParameter("collection");
+			}
+		}
+	}
+
+	return path;
+}
+
+//---------------------------------------
+// Look up the path for the profiles
+// property store for display purposes
+//---------------------------------------
+function get_properties_file_path() {
+	return get_properties_file_path_for("profiles");
+}
+
+//---------------------------------------
+// Validate a given property is set and
+// not empty in given property store.
+// Abort if not set
+//---------------------------------------
+function abort_if_required_property_not_set_in(propertyName, storeName) {
+	var propVal = system.getTDIProperty(storeName, propertyName);
+	if((propVal == null) || (propVal == "")) {
+		var path = get_properties_file_path_for(storeName);
+		var msgText = null;
+		if(path != null) {
+			msgText = log2("ERROR", "err_required_property_not_set_in", propertyName, path);
+		}
+		else {
+			msgText = log1("ERROR", "err_required_property_not_set", propertyName);
+		}
+		system.abortAssemblyLine(msgText);
+	}
+}
+
+function abbreviate_notes_email(email) {
+	var result = email;
+	if(result != null) {
+		if(result.startsWith("CN=")) {
+			result = result.substring(3);
+			var pos = result.indexOf("/OU=");
+			while(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 3);
+				pos = result.indexOf("/OU=");
+			}
+			pos = result.indexOf("/O=");
+			if(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 2);
+			}
+			pos = result.indexOf("/C=");
+			if(pos > 0) {
+				pos = pos + 1;
+				result = result.substring(0, pos) + result.substring(pos + 2);
+			}
+		}
+	}
+
+	return result;
+}
+
+//---------------------------------------
+// Validate a given property is set and
+// not empty in profiles property store
+//---------------------------------------
+function abort_if_required_property_not_set(propertyName) {
+	return abort_if_required_property_not_set_in(propertyName, "profiles");
+}
+
+//---------------------------------------
+// Compare two entries for equivalence.
+// Return true if they have the same
+// attribute names and values, and 
+// false otherwise
+//
+// @param entry1 first entry
+// @param entry2 second entry
+//
+// @return true if equivalent
+//---------------------------------------
+function entriesEquiv(entry1, entry2) {
+	var result = true;
+	if(entry1.size() == entry2.size()) {
+		var names = entry1.getAttributeNames();
+ 		for (i = 0; result && (i < names.length); i++) {
+    		var attr1 = entry1.getAttribute(names[i]);
+			var attr2 = entry2.getAttribute(names[i]);
+			if((attr2 != null) && (attr1.size() == attr2.size())) {
+    			for (j = 0;result && (j < attr1.size()); j++) {
+      				if(!attr1.getValue(j).equals(attr2.getValue(j))) {
+						result = false;
+					}
+    			}
+			}
+			else {
+				result = false;
+			}
+ 		}
+	}
+	else {
+		result = false;
+	}
+
+	return result;
+}
+
+function parsePageNumber(pns) {
+	var indexOf = pns.indexOf('.');
+	return pns.substrint(0,indexOf-1);
+}
+
+function removeSpaces(s) {
+	var js = "" + s;//make sure js string
+	return js.replace(/ /g,"");
+}
+
+function escape_dn(dnVal) {
+	if(dnVal != null) {
+		var startPos = 0;
+		var pos = 0;
+		pos = dnVal.indexOf('\\', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('\\', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('+', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('+', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('<', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('<', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('>', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('>', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('#', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('#', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf(';', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf(';', startPos);
+		}
+		startPos = 0;
+		pos = dnVal.indexOf('"', startPos);
+		while(pos >= 0) {
+			dnVal = dnVal.substring(0, pos) + "\\" + dnVal.substring(pos);
+			startPos = pos + 2;
+			pos = dnVal.indexOf('"', startPos);
+		}
+	}
+	return dnVal;
+}]]></parameter>
+        </Script>
+    </Folder>
+    <JavaLibraries/>
+    <JavaProperties/>
+    <Folder name="Includes"/>
+    <Folder name="Config">
+        <LogConfig name="Logging"/>
+        <InstanceProperties name="AutoStart">
+            <AutoStart/>
+        </InstanceProperties>
+        <TombstonesConfig name="Tombstones"/>
+        <SolutionInterface name="SolutionInterface"/>
+    </Folder>
+    <Folder name="Functions"/>
+    <Folder name="AttributeMaps"/>
+    <Properties>
+        <Stores>
+            <PropertyStore name="system">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">D:/workspace/TDIWorkSpace/LDAPSourceConnector/Resources/system.properties</parameter>
+                    <parameter name="collectionType">file</parameter>
+                    <parameter name="createCollection">true</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>1000</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="java">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">D:/workspace/TDIWorkSpace/LDAPSourceConnector/Resources/java.properties</parameter>
+                    <parameter name="collectionType">file</parameter>
+                    <parameter name="createCollection">true</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>1000</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="solution">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">D:/workspace/TDIWorkSpace/LDAPSourceConnector/Resources/solution.properties</parameter>
+                    <parameter name="collectionType">file</parameter>
+                    <parameter name="createCollection">true</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>1000</CacheTimeout>
+            </PropertyStore>
+			<PropertyStore name="profiles">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <UserComment/>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">profiles_tdi.properties</parameter>
+                    <parameter name="collectionType">Default</parameter>
+                    <parameter name="debug">false</parameter>
+                    <parameter name="userComment"/>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+  </PropertyStore>
+        </Stores>
+    </Properties>
+    <Container name="Package">
+        <Container name="Resources">
+            <ParameterList name="Resource">
+                <parameter name="class">com.ibm.di.connector.LDAPConnector</parameter>
+                <parameter name="name">system:/Connectors/ibmdi.LDAP</parameter>
+                <parameter name="type">Resource</parameter>
+                <parameter name="version">2.3-di7.1.1 %I%, 20%E%</parameter>
+            </ParameterList>
+        </Container>
+        <Container name="Operations">
+            <ParameterList name="Operation">
+                <parameter name="name">findEntry</parameter>
+                <parameter name="public">true</parameter>
+            </ParameterList>
+            <ParameterList name="Operation">
+                <parameter name="name">querySchema</parameter>
+                <parameter name="public">true</parameter>
+            </ParameterList>
+        </Container>
+        <ParameterList name="Info">
+            <parameter name="date">2010-07-01</parameter>
+            <parameter name="packageid">ldapSourceConnectorLoop</parameter>
+        </ParameterList>
+    </Container>
+</MetamergeConfig>

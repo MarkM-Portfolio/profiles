@@ -1,0 +1,217 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2016                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- This component is a temporary hack to get Karaoke into the install to meet some deadlines.  -->
+
+<project name="profiles.sn.install" default="development" basedir=".">
+
+	<property name="cr.excludes.list" 
+		value="db.sql${file.separator}profiles${file.separator}*,
+		db.sql${file.separator}profiles${file.separator}*${file.separator}*"/>
+
+	<import file="${env.WPLC_IMPORT}/std_props.xml"/>
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml"/>
+	<import file="${env.WPLC_IMPORT}/copyright.xml"/>
+
+	<import file="${env.WPLC_IMPORT}/clean.xml"/>
+	<import file="${env.WPLC_IMPORT}/nojavadoc.xml"/>
+	<import file="${env.WPLC_IMPORT}/noprocess_nls.xml"/>
+	<import file="${env.WPLC_IMPORT}/noperformance.xml"/>
+	<import file="${env.WPLC_IMPORT}/manifest.xml"/>
+	<target name="development" depends="production"/>
+	<target name="production" depends="stageProfiles"/>
+
+	<target name="stageProfiles">
+		<!-- remove existing build directory -->
+		<delete dir="${dir.build}" />
+
+		<!-- Create directories for staging and bundling Profiles assests -->
+		<mkdir dir="${dir.build}/stage1/" />
+		<mkdir dir="${dir.build}/stage2/profiles/profiles" />
+		<mkdir dir="${dir.build}/stage3/" />
+
+		<!-- ************************************************************************************ -->
+		<!-- Stage1 directory holds application assests reflecting their post-install arrangement -->
+		<!-- ************************************************************************************ -->
+
+
+		<!-- Copy ear to stage 1 location: /installableApps -->
+		<locateComponent component="profiles.ear" locateBuildDir="true" property="profiles.ear.dir"/>
+		<copy todir="${dir.build}/stage1/installableApps">
+			<fileset dir="${profiles.ear.dir}/lib">
+				<exclude name="**/.copyarea.db"/>
+			</fileset>
+		</copy>
+
+		<!-- Copy jacl to stage 1 location: scripts/jacl -->
+		<copy todir="${dir.build}/stage1/scripts/jacl">
+			<fileset dir="./scripts/jacl">
+				<exclude name="**/.copyarea.db"/>
+			</fileset>
+		</copy>
+
+		<!-- Copy db.tokens.xml. This is used in data transfer -->
+		<copy todir="${dir.build}/stage1/scripts/db.tokens">
+			<fileset dir="./scripts/db.tokens">
+				<exclude name="**/.copyarea.db"/>
+			</fileset>
+		</copy>
+
+		<!-- Copy other xml/xsd to stage 1 location: /profiles.config -->
+		<copy todir="${dir.build}/stage1/profiles.config">
+			<fileset dir="../profiles.config.files/config.files">
+				<exclude name="**/.copyarea.db"/>
+				<exclude name="**/profiles-configEXAMPLE.xml"/>
+			</fileset>
+		</copy>
+
+		<!-- Copy service jython admin script to stage 1 location: scripts/jython -->
+		<locateComponent component="profiles.admin.scripts" locateBuildDir="false" property="peoplepages.admin.scripts.dir"/>
+		<copy todir="${dir.build}/stage1/scripts/jython">
+			<fileset dir="${peoplepages.admin.scripts.dir}/scripts/jython">
+				<include name="**/profilesAdmin.py"/>
+			</fileset>
+		</copy>
+
+		<!-- Copy global jython admin script to stage 1 location: scripts/jython -->
+		<locateComponent component="lc.config.svc" locateBuildDir="false" property="lc.config.svc.dir"/>
+		<copy todir="${dir.build}/stage1/scripts/jython">
+			<fileset dir="${lc.config.svc.dir}/config.scripts/jython">
+				<include name="**/connectionsConfig.py"/>
+			</fileset>
+		</copy>
+
+
+		<!-- **********************************************************************************-->
+		<!-- Stage2 directory holds profiles.jar which bundles assests copied in stage 1 -->
+		<!-- **********************************************************************************-->
+		<!-- Create a jar of app assests -->
+		<!-- Create the manifest file.  First an empty manifest file. -->
+		<touch file="${dir.build}/manifest.base" />
+		<property name="manifest.file" value="${dir.build}/manifest.base"/>
+		<!-- This call adds the manifest file content -->
+		<antcall target="manifest2" />
+
+
+		<antcall target="crConvert_1to3">
+			<param name="dir.ToConvert" value="${dir.build}/stage1"/>
+		</antcall>
+		<jar destfile="${dir.build}/stage2/profiles/profiles/profiles.jar"  manifest="${dir.build}/manifest.mf">
+			<fileset dir="${dir.build}/stage1"/>
+		</jar>
+
+		<!-- Place the IUDD.xmls for install: Product -->
+		<copy todir="${dir.build}/stage2">
+			<fileset dir="./install.xml">
+				<exclude name="**/ProfilesComponent.xml"/>
+				<exclude name="**/ProfilesOffering.xml"/>
+			</fileset>
+		</copy>
+
+		<!-- Place the IUDD.xmls for install: Offering -->
+		<copy todir="${dir.build}/stage2/profiles">
+			<fileset dir="./install.xml">
+				<exclude name="**/ProfilesComponent.xml"/>
+				<exclude name="**/profiles.xml"/>
+			</fileset>
+		</copy>
+
+		<!-- Place the IUDD.xmls for install: Component -->
+		<copy todir="${dir.build}/stage2/profiles/profiles">
+			<fileset dir="./install.xml">
+				<exclude name="**/ProfilesOffering.xml"/>
+				<exclude name="**/profiles.xml"/>
+			</fileset>
+		</copy>
+
+		<!-- ****************************************************************************** -->
+		<!-- Stage3, create the final package for  distribution                            -->
+		<!-- ****************************************************************************** -->
+		<jar destfile="${dir.build}/stage3/profiles_cd.jar"
+          basedir="${dir.build}/stage2"
+        />
+
+		<!-- ****************************************************************************** -->
+		<!-- Copy db sql outside of install package                                         -->
+		<!-- ****************************************************************************** -->
+		<locateComponent component="profiles.db/schemas" locateBuildDir="false" property="profiles.db.location"/>
+		<!-- copy files to this dir then move a subset -->
+		<echo message="PACKAGE DB2 to: ${dir.build}/db.sql/profiles/db2 from: ${profiles.db.location}/_schema.bld/gen.schemas/db2" />
+		<copy todir="${dir.build}/db.sql/profiles/db2">
+			<fileset dir="${profiles.db.location}/_schema.bld/gen.schemas/db2">
+			</fileset>
+		</copy>
+		<!-- move a subset to (fixups) to a fixup subdiretory -->
+		<echo message="PACKAGE DB2 move to: ${dir.build}/db.sql/profiles/db2/fixup from: ${dir.build}/db.sql/profiles/db2" />
+		<move todir="${dir.build}/db.sql/profiles/db2/fixup">
+			<fileset dir="${dir.build}/db.sql/profiles/db2">
+				<include name="**/fixup*.sql"/>
+				<include name="**/postfixup*.sql"/>
+	 			<!-- export fixup50j.sh migration script per RTC 137860, 137632 -->
+				<include name="**/fixup*.sh"/>
+			</fileset>
+		</move>
+
+		<!-- repeat above for oracle -->
+		<copy todir="${dir.build}/db.sql/profiles/oracle">
+			<fileset dir="${profiles.db.location}/_schema.bld/gen.schemas/oracle">
+			</fileset>
+		</copy>
+		<move todir="${dir.build}/db.sql/profiles/oracle/fixup">
+			<fileset dir="${dir.build}/db.sql/profiles/oracle">
+				<include name="**/fixup*.sql"/>
+				<include name="**/postfixup*.sql"/>
+			</fileset>
+		</move>
+
+		<!-- repeat above for sqlserver -->
+		<copy todir="${dir.build}/db.sql/profiles/sqlserver">
+			<fileset dir="${profiles.db.location}/_schema.bld/gen.schemas/sqlserver">
+			</fileset>
+		</copy>
+		<move todir="${dir.build}/db.sql/profiles/sqlserver/fixup">
+			<fileset dir="${dir.build}/db.sql/profiles/sqlserver">
+				<include name="**/fixup*.sql"/>
+				<include name="**/postfixup*.sql"/>
+			</fileset>
+		</move>
+
+		<!-- repeat above for as400 -->
+		<copy todir="${dir.build}/db.sql/profiles/db2_IBMi">
+			<fileset dir="${profiles.db.location}/_schema.bld/gen.schemas/as400">
+			</fileset>
+		</copy>
+		<move todir="${dir.build}/db.sql/profiles/db2_IBMi/fixup">
+			<fileset dir="${dir.build}/db.sql/profiles/db2_IBMi">
+				<include name="**/fixup*.sql"/>
+				<include name="**/postfixup*.sql"/>
+			</fileset>
+		</move>
+
+		<antcall target="crConvert_1to3Files">
+			<param name="files.ToConvert" value="${dir.build}/db.sql/profiles/db2/*.sql,${dir.build}/db.sql/profiles/oracle/*.sql,${dir.build}/db.sql/profiles/sqlserver/*.sql"/>
+		</antcall>
+
+		<locateComponent component="profiles.migrate" locateBuildDir="true" property="profiles.migrate.dir"/>
+		<mkdir dir="${dir.build}/db.sql/profiles/migrate.lib"/>
+		<echo> todir=${dir.build}/db.sql/profiles/migrate.lib"</echo>
+		<copy todir="${dir.build}/db.sql/profiles/migrate.lib" failonerror="true">
+			<fileset dir="${profiles.migrate.dir}/lib">
+				<exclude name="**/.copyarea.db"/>
+			</fileset>
+		</copy>
+
+	</target>
+</project>
+

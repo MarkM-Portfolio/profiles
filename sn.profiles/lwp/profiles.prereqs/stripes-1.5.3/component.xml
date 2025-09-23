@@ -1,0 +1,35 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<component name="profiles.prereqs/stripes-1.5.3" 
+           type="binary" 
+           description="Stripes 1.5.3" 
+           spec-version="1.5.3"
+           build-version=""
+           owner="Tony Estrada"
+           owner-email="testrada@us.ibm.com">
+
+   <output-group name="to_war">
+      <output type="jar" visibility="public" platform="all" location="stripes.jar" preferredInstallLocation="WEB-INF/lib" />
+   </output-group>
+
+   <output-group name="to_ear">
+      <output type="jar" visibility="public" platform="all" location="stripes.jar" preferredInstallLocation="" />
+   </output-group>
+
+   <output-group name="default">
+      <output type="jar" visibility="public" platform="all" location="stripes.jar" />
+      <output type="jar" visibility="public" platform="all" location="commons-logging.jar" />
+   </output-group>
+</component>

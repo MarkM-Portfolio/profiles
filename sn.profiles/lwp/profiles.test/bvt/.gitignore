@@ -1,0 +1,12 @@
+MANIFEST.MF
+/*.rpxconfig
+/.apt_generated
+/.classpath
+/.project
+/.settings
+/build
+/conf
+/tdi-test-conf
+/test.properties
+/testconf
+/testconftdi

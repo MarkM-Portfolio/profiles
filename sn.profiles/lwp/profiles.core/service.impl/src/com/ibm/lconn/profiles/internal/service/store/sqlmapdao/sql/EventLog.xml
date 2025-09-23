@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//iBATIS.com/DTD SQL Map 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="EventLog">
+
+    <typeAlias alias="EventLogEntry" type="com.ibm.peoplepages.data.EventLogEntry" />
+
+	<resultMap id="logEntryResult" class="EventLogEntry">
+		<result property="eventKey" column="EVENT_KEY" />
+		<result property="eventSource" column="EVENT_SOURCE" />
+		<result property="objectKey" column="OBJECT_KEY" />
+		<result property="eventName" column="EVENT_NAME" />
+		<result property="eventType" column="EVENT_TYPE" />
+		<result property="created" column="CREATED" />
+		<result property="createdByKey" column="CREATED_BY_KEY" />
+		<result property="createdByGuid" column="CREATED_BY_GUID" />
+		<result property="createdByUid" column="CREATED_BY_UID" />
+		<result property="createdByName" column="CREATED_BY_NAME" />
+		<result property="private" column="ISPRIVATE" />
+		<result property="sysEvent" column="ISSYSEVENT" />
+		<result property="tenantKey" column="TENANT_KEY" />
+		<result property="eventMetaData" column="EVENT_METADATA" />
+	</resultMap>
+
+	<sql id="sql_eventLogColumns">
+		EVENT_KEY,
+		EVENT_SOURCE,
+		OBJECT_KEY,
+		EVENT_NAME,
+		EVENT_TYPE,
+		CREATED,
+		CREATED_BY_KEY,
+		CREATED_BY_GUID,
+		CREATED_BY_UID,
+		CREATED_BY_NAME,
+		ISPRIVATE,
+		ISSYSEVENT,
+		TENANT_KEY,
+		EVENT_METADATA
+	</sql>
+	
+	<sql id="sql_checkKeys">
+		<isPropertyAvailable property="eventKey">				
+			<isNotNull prepend="AND" property="eventKey">
+				EVENT_KEY = #eventKey#
+			</isNotNull>
+		</isPropertyAvailable>
+		
+		<isPropertyAvailable property="eventKeys">				
+			<isNotEmpty prepend="AND" property="eventKeys">
+				EVENT_KEY in
+					<iterate open="(" close=")" conjunction="," property="eventKeys">#eventKeys[]#</iterate>
+			</isNotEmpty>
+		</isPropertyAvailable>
+		
+		<!-- not a retrieval option
+		<isPropertyAvailable property="createdByKey">
+			<isNotNull prepend="AND" property="createdByKey">
+				CREATED_BY_KEY = #createdByKey#
+			</isNotNull>
+		</isPropertyAvailable>
+		-->
+		
+		<!-- not a retrieval option
+		<isPropertyAvailable property="createdByGuid">
+			<isNotNull prepend="AND" property="createdByGuid">
+				CREATED_BY_GUID = #createdByGuid#
+			</isNotNull>
+		</isPropertyAvailable>
+		-->
+		
+		<!-- not a retrieval option
+		<isPropertyAvailable property="createdByUid">
+			<isNotNull prepend="AND" property="createdByUid">
+				CREATED_BY_UID = #createdByUid#
+			</isNotNull>
+		</isPropertyAvailable>
+		-->
+		
+		<!-- not a retrieval option
+		<isPropertyAvailable property="objectKey">
+			<isNotNull prepend="AND" property="objectKey">
+				OBJECT_KEY = #objectKey#
+			</isNotNull>
+		</isPropertyAvailable>
+		-->	
+	</sql>
+
+	<!-- not indexed and not a retrieval option
+	<sql id="sql_checkCreators">
+		<isPropertyAvailable property="creators">
+			<isNotEmpty prepend="AND" property="creators">
+						 
+				<isPropertyAvailable property="creatorsLength">
+					<isGreaterThan property="creatorsLength" compareValue="1">
+						CREATED_BY IN
+							<iterate property="creators" open="(" close=")" conjunction=",">#creators[]#</iterate>
+					</isGreaterThan>
+
+					<isEqual property="creatorsLength" compareValue="1">
+						CREATED_BY_NAME=#creators[0]#
+					</isEqual>
+				</isPropertyAvailable>
+				
+				<isNotPropertyAvailable property="creatorsLength">
+					CREATED_BY IN
+						<iterate property="creators" open="(" close=")" conjunction=",">#creators[]#</iterate>
+				</isNotPropertyAvailable>
+				
+			</isNotEmpty>
+		</isPropertyAvailable>
+	</sql>
+	-->
+	
+	<!-- EVENT_NAME is not indexed shold not be indexed. use EVENT_TYPE
+	<sql id="sql_checkEventNamesFrag">
+		<isPropertyAvailable property="eventNamesLength">
+			<isGreaterThan property="eventNamesLength" compareValue="1">
+				EVENT_NAME IN
+				<iterate property="eventNames" open="(" close=")" conjunction=",">#eventNames[]#</iterate>
+			</isGreaterThan>
+
+			<isEqual property="eventNamesLength" compareValue="1">
+				EVENT_NAME=#eventNames[0]#
+			</isEqual>
+		</isPropertyAvailable>
+
+		<isNotPropertyAvailable property="eventNamesLength">
+			EVENT_NAME IN
+			<iterate property="eventNames" open="(" close=")" conjunction=",">#eventNames[]#</iterate>
+		</isNotPropertyAvailable>		   
+	</sql>
+	-->
+	
+	<sql id="sql_checkEventTypes">
+		<isPropertyAvailable property="eventTypes">
+			<isGreaterThan property="eventTypesLength" compareValue="1">
+				AND EVENT_TYPE IN <iterate property="eventTypes" open="(" close=")" conjunction=",">#eventTypes[]#</iterate>
+			</isGreaterThan>
+			<isEqual property="eventTypesLength" compareValue="1">
+				AND EVENT_TYPE=#eventTypes[0]#
+			</isEqual>
+		</isPropertyAvailable>	
+	</sql>
+	
+	<!-- not used and not indexed
+    <sql id="sql_checkPrivate">
+		<isPropertyAvailable property="private">		
+		<isNotNull prepend="AND" property="private">
+			<isEqual property="private" compareValue="true">
+				ISPRIVATE = 1
+			</isEqual>
+			<isEqual property="private" compareValue="false">
+				ISPRIVATE = 0
+			</isEqual>			
+		</isNotNull>
+		</isPropertyAvailable>			
+    </sql>
+    -->
+
+	<sql id="sql_checkSystem">
+		<isPropertyAvailable property="sysEvent">
+		        <isNotNull prepend="AND" property="sysEvent">
+				ISSYSEVENT = #sysEvent#
+			</isNotNull>
+		</isPropertyAvailable>			
+	</sql>
+   
+    <sql id="sql_dateRangeFilter">
+		<isPropertyAvailable property="startDate">		
+		        <isNotNull prepend="AND" property="startDate">
+			        <![CDATA[ CREATED >=  #startDate# ]]>
+			</isNotNull>
+		</isPropertyAvailable>			
+		<isPropertyAvailable property="endDate">			
+		        <isNotNull prepend="AND" property="endDate">
+			        <![CDATA[ CREATED <  #endDate# ]]>
+			</isNotNull>
+		</isPropertyAvailable>				
+    </sql>
+
+	<insert id="insertLogEntry" parameterClass="java.util.Map" >
+		INSERT INTO EMPINST.EVENTLOG (
+		EVENT_KEY,
+		EVENT_SOURCE,
+		OBJECT_KEY,
+		EVENT_NAME,
+		EVENT_TYPE,
+		CREATED,
+		CREATED_BY_KEY,
+		CREATED_BY_GUID,
+		CREATED_BY_UID,
+		CREATED_BY_NAME,
+		ISPRIVATE,
+		ISSYSEVENT,
+		TENANT_KEY,
+		EVENT_METADATA
+		) VALUES (
+
+		#eventKey#,
+		#eventSource#,
+		#objectKey#,
+		#eventName#,
+		#eventType#,
+		#created#,
+		#createdByKey#,
+		#createdByGuid#,
+		#createdByUid#,
+		<isNull property="createdByName">
+			NULL,
+		</isNull>
+		<isNotNull property="createdByName">
+			#createdByName#,
+		</isNotNull>
+		<isNull property="private">
+			0,
+		</isNull>
+		<isNotNull property="private">
+			#private#,
+		</isNotNull>
+
+		<isNull property="sysEvent">
+			0,
+		</isNull>
+		<isNotNull property="sysEvent">
+			#sysEvent#,
+		</isNotNull>
+		#dbTenantKey#,
+		#eventMetaData#
+		)
+	</insert>
+
+    <!-- not used in 4.0
+	<update id="updateLogEntry" parameterClass="java.util.Map" >
+		UPDATE EMPINST.EVENTLOG
+		SET
+					  
+		<isNull property="eventSource">
+			EVENT_SOURCE=NULL,
+		</isNull>
+		<isNotNull property="eventSource">
+			EVENT_SOURCE=#eventSource#,
+		</isNotNull>
+
+		<isNull property="eventName">
+			EVENT_NAME=NULL,
+		</isNull>
+		<isNotNull property="eventName">
+			EVENT_NAME=#eventName#,
+		</isNotNull>
+
+		<isNull property="eventType">
+			EVENT_TYPE=NULL,
+		</isNull>
+		<isNotNull property="eventType">
+			EVENT_TYPE=#eventType#,
+		</isNotNull>
+
+		<isNull property="createdByKey">
+			CREATED_BY_KEY=NULL,
+		</isNull>
+		<isNotNull property="createdByKey">
+			CREATED_BY_KEY=#createdByKey#,
+		</isNotNull>
+
+		<isNull property="createdByGuid">
+			CREATED_BY_GUID=NULL,
+		</isNull>
+		<isNotNull property="createdByGuid">
+			CREATED_BY_GUID=#createdByGuid#,
+		</isNotNull>
+
+		<isNull property="createdByUid">
+			CREATED_BY_UID=NULL,
+		</isNull>
+		<isNotNull property="createdByUid">
+			CREATED_BY_UID=#createdByUid#,
+		</isNotNull>
+		
+		<isNull property="objectKey">
+			OBJECT_KEY=NULL,
+		</isNull>
+		<isNotNull property="objectKey">
+			OBJECT_KEY=#objectKey#,
+		</isNotNull>
+
+		<isNull property="created">
+			CREATED=NULL,
+		</isNull>
+		<isNotNull property="created">
+			CREATED=#created#,
+		</isNotNull>
+		
+		<isNull property="createdByName">
+			CREATED_BY_NAME=NULL,
+		</isNull>
+		<isNotNull property="createdByName">
+			CREATED_BY_NAME=#createdByName#,
+		</isNotNull>
+
+		<isNull property="private">
+			ISPRIVATE=0,
+		</isNull>
+		<isNotNull property="private">
+			ISPRIVATE=#private#,
+		</isNotNull>
+		
+		<isNull property="sysEvent">
+			ISSYSEVENT=0,
+		</isNull>
+		<isNotNull property="sysEvent">
+			ISSYSEVENT=#sysEvent#
+		</isNotNull>			  
+			  
+		<isEqual property="metaData" compareValue="false" >
+			<isNull property="eventMetaData">
+				EVENT_METADATA=NULL,
+			</isNull>
+			<isNotNull property="eventMetaData">
+				EVENT_METADATA=#eventMetaData#
+			</isNotNull>
+		</isEqual>
+		WHERE
+		EVENT_KEY=#eventKey#
+	</update>
+	-->
+
+	<delete id="purge" parameterClass="map">
+		delete from
+			EMPINST.EVENTLOG
+		where
+			EVENT_KEY in 
+			(
+				<include refid="snaxUtil.sql_sub_limitStart_select"/>
+					EVENT_KEY
+				from 
+					EMPINST.EVENTLOG
+				where
+				1=1
+				<include refid="EventLog.sql_checkEventTypes" />
+				<include refid="EventLog.sql_checkKeys" />
+				<!-- include refid="EventLog.sql_checkCreators" /-->
+				<include refid="EventLog.sql_dateRangeFilter" />
+				<!-- include refid="EventLog.sql_checkPrivate" /-->
+				<include refid="EventLog.sql_checkSystem" />
+				<include refid="Tenant.sql_WhereByTenantKey"/>
+				<include refid="snaxUtil.sql_sub_limitEnd"/>
+			)
+	</delete>
+
+	<delete id="deleteBatch" parameterClass="java.util.Map">
+		DELETE FROM
+			EMPINST.EVENTLOG
+		WHERE EVENT_KEY=#key#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+
+	<!-- not used in 4.0
+	<delete id="purgeAll" parameterClass="map">
+		delete from
+			EMPINST.EVENTLOG
+		where
+			EVENT_KEY in 
+			(
+				<include refid="snaxUtil.sql_sub_limitStart_select"/>
+					EVENT_KEY
+				from 
+					EMPINST.EVENTLOG
+				<include refid="snaxUtil.sql_sub_limitEnd"/>
+			)
+	</delete>
+	-->
+
+    <select id="getLogEntries" parameterClass="java.util.Map" resultMap="logEntryResult" >
+        <include refid="snaxUtil.sql_limitStart_select" />
+        <include refid="EventLog.sql_eventLogColumns" />
+        FROM
+	    EMPINST.EVENTLOG EVENTLOG
+	    WHERE
+	    1=1
+	    <include refid="EventLog.sql_checkEventTypes" />
+		<include refid="EventLog.sql_checkKeys" />
+		<!-- include refid="EventLog.sql_checkCreators" /-->
+		<include refid="EventLog.sql_dateRangeFilter" />
+		<!-- include refid="EventLog.sql_checkPrivate" /-->
+		<include refid="EventLog.sql_checkSystem" />
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+        ORDER BY CREATED
+	<include refid="snaxUtil.sql_limitEnd" />
+    </select>
+	
+	<!-- not used in 4.0
+	<select id="getOldestTDIEvent" parameterClass="map" resultMap="logEntryResult">
+		<include refid="snaxUtil.sql_limitStart_select"/>
+			<include refid="EventLog.sql_eventLogColumns" />
+		FROM
+			EMPINST.EVENTLOG
+		WHERE
+			ISSYSEVENT=#sysEvent#
+		ORDER BY
+			<-  CREATED ASC, (AhernM: removed due to tablescanning -> EVENT_KEY ASC
+		<include refid="snaxUtil.sql_limitEnd"/>
+	</select>
+	-->
+
+    <!-- not used in 4.0
+	<select id="getLogEntriesTotal" parameterClass="java.util.Map" resultClass="int" >
+		SELECT
+		COUNT ( EVENT_KEY )
+		FROM
+		EMPINST.EVENTLOG EVENTLOG
+		WHERE
+		1=1
+		<include refid="EventLog.sql_checkKeys" />
+		<include refid="EventLog.sql_checkCreators" />		
+		<include refid="EventLog.sql_dateRangeFilter" />
+		<include refid="EventLog.sql_checkEventTypes" />
+		<include refid="EventLog.sql_checkPrivate" />
+		<include refid="EventLog.sql_checkSystem" />
+	</select>
+	-->
+
+	<!-- not used in 4.0
+	<select id="getLastModified" parameterClass="map" resultClass="java.util.Date" >
+		SELECT
+		MAX ( CREATED )
+		FROM
+		EMPINST.EVENTLOG EVENTLOG
+		WHERE
+		1=1
+		<include refid="EventLog.sql_checkKeys" />
+		<include refid="EventLog.sql_checkCreators" />		
+		<include refid="EventLog.sql_dateRangeFilter" />
+		<include refid="EventLog.sql_checkEventTypes" />
+		<include refid="EventLog.sql_checkPrivate" />
+		<include refid="EventLog.sql_checkSystem" />
+	</select>
+	-->
+
+	<!-- added to facilitate batch processing. pmr 35230,122,000-->
+    <sql id="sql_OracleBatchQuery">
+		select * from (
+			select <include refid="EventLog.sql_eventLogColumns" />
+			FROM EMPINST.EVENTLOG
+			WHERE ISSYSEVENT= #sysEventVal#
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+			ORDER BY EVENT_KEY ASC
+		) LCTMPPG where ROWNUM <![CDATA[ <= ]]> $maxResults$
+	</sql>	
+
+    <sql id="sql_DB2BatchQuery">
+    	select <include refid="EventLog.sql_eventLogColumns" />
+		FROM EMPINST.EVENTLOG
+		WHERE ISSYSEVENT= #sysEventVal#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+		ORDER BY EVENT_KEY ASC FETCH FIRST $maxResults$ ROWS ONLY OPTIMIZE FOR $maxResults$ ROWS
+	</sql>
+
+    <sql id="sql_AS400BatchQuery">
+    	select <include refid="EventLog.sql_eventLogColumns" />
+		FROM EMPINST.EVENTLOG
+		WHERE ISSYSEVENT= #sysEventVal#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+		ORDER BY EVENT_KEY ASC FETCH FIRST $maxResults$ ROWS ONLY OPTIMIZE FOR $maxResults$ ROWS
+	</sql>
+
+    <sql id="sql_SQLServerBatchQuery">
+		select TOP $maxResults$ <include refid="EventLog.sql_eventLogColumns" />
+		FROM EMPINST.EVENTLOG
+		WHERE ISSYSEVENT= #sysEventVal#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+		ORDER BY EVENT_KEY ASC
+	</sql>
+
+	<select id="getBatchEvents" parameterClass="java.util.Map" resultMap="logEntryResult">
+	    <!-- tenantKey constraint in db specific queries -->
+		<isPropertyAvailable property="dbVendor">
+			<isEqual property="dbVendor" compareValue="db2">
+				<include refid="EventLog.sql_DB2BatchQuery" />
+			</isEqual>
+			<isEqual property="dbVendor" compareValue="as400">
+				<include refid="EventLog.sql_AS400BatchQuery" />
+			</isEqual>
+			<isEqual property="dbVendor" compareValue="oracle">
+				<include refid="EventLog.sql_OracleBatchQuery" />
+			</isEqual>
+			<isEqual property="dbVendor" compareValue="sqlserver">
+				<include refid="EventLog.sql_SQLServerBatchQuery" />
+			</isEqual>
+		</isPropertyAvailable>
+		<isNotPropertyAvailable property="dbVendor">
+			<include refid="EventLog.sql_DB2BatchQuery" />
+		</isNotPropertyAvailable>
+	</select>
+
+	<update id="updateIsSysEvent" parameterClass="java.util.Map" >
+		UPDATE EMPINST.EVENTLOG SET ISSYSEVENT = #isSysEventVal#
+		WHERE EVENT_KEY = #eventKey#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+
+</sqlMap>

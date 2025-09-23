@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2014
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<felement  name="sn.profiles" 
+           description="Lotus Connections Profiles"
+           owner="Chris Seekamp" 
+           owner-email=""
+           version="000.001"
+           build-platform="single"
+           execution-platform="all">
+
+  <dependency name="sn.infra" version="001.000" build-stream="IC10.0_Infra" build-level="LAST"/>
+  <dependency name="sn.infra.ui" version="001.000" build-stream="IC10.0_UI" build-level="LAST"/>
+  <dependency name="sn.prereqs" version="003.500" build-stream="IC10.0_Prereqs" build-level="LAST_GOOD"/>
+  <dependency name="vulcan.security" version="001.000" build-stream="VULSEC1.0" build-level="LAST_GOOD"/>
+
+  <build-label build-stream="VULSEC1.0" state="live"/>
+  <build-label build-stream="IC10.0_Infra" state="BVT"/>
+  <build-label build-stream="IC10.0_UI" state="BVT"/>
+  <build-label build-stream="IC10.0_Prereqs" state="live"/>
+  <build-label build-stream="IC10.0_Profiles" state="live"/>
+</felement>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ************************************************************** -->
+<!--                                                                -->
+<!-- Licensed Materials - Property of HCL                           -->
+<!--                                                                -->
+<!-- Copyright HCL Technologies Limited 2006, 2021                  -->
+<!--                                                                -->
+<!-- US Government Users Restricted Rights                          -->
+<!--                                                                -->
+<!-- ************************************************************** -->
+<component name="profiles.web/app" description="Profiles Web App" spec-version="3.0" project-type="war">
+
+	<output-group name="dist">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.web.app.jar" preferredInstallLocation="tmp" />
+		<output type="war" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.app.war" preferredInstallLocation="tmp" />
+	</output-group>
+   
+	<output-group name="to_ear">
+		<output type="war" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.app.war" preferredInstallLocation="" />
+	</output-group>
+
+	<output-group name="to_war">
+		<output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.profiles.web.app.jar" preferredInstallLocation="WEB-INF/lib" />
+	</output-group>
+  
+	<dependency name="sn.coreui" type="war" version="1.3"/>
+	
+	<dependency name="av/api" type="jar" version="3.0" />
+	<dependency name="av/pojo" type="jar" version="3.0" />
+	<dependency name="av/admin" type="jar" version="3.0" />
+	
+	<dependency name="prereqs.sn/jstl" type="jar" version="1.1"/>
+	<dependency name="prereqs.sn/struts.minimal" type="jar" version="1.2.4" />
+	<dependency name="prereqs.sn/struts.extra" type="jar" version="1.2.4" />
+	<dependency name="prereqs.sn/jakarta.commons.beanutils170" type="jar" version="1.7" />
+	<dependency name="prereqs.sn/jakarta.commons.fileupload-1.2.1" type="jar" version="1.2" />
+	<dependency name="prereqs.sn/mybatis" type="jar" version="2.3.5" />
+	<dependency name="prereqs.sn/spring256" type="jar" version="2.5" />
+	<dependency name="prereqs.sn/jawr.2.5.1" type="jar" version="2.5.1"/>
+	<dependency name="prereqs.sn/log4j2" type="jar"/>
+	<dependency name="prereqs.sn/freemarker2.3.15" type="jar" version="1.5" />
+	<dependency name="prereqs.sn/stripes" type="jar" version="1.5" />
+	
+	<dependency name="lc.appext/core/api" type="jar" version="3.0" />
+	<dependency name="lc.appext/core/impl" type="jar" version="3.0" />
+	<dependency name="lc.appext/msgvector/api" type="jar" version="3.0" />
+	
+	<dependency name="profiles.core/service.api" type="jar" version="3.0" />
+	<dependency name="profiles.core/service.impl" type="jar" version="3.0" />
+	<dependency name="profiles.web/core" type="jar" version="3.0"/>
+	<dependency name="profiles.web/rpfilter" type="jar" version="3.0" />
+	<dependency name="profiles.web/javelin" type="jar" version="3.0" />
+
+	<dependency name="lc.widgets/lc.widgets.core" type="jar" version="1.0" />
+	<dependency name="lc.widgets/lc.widgets.sand" type="jar" version="3.0" />
+	<dependency name="lc.extdatamodel/lc.extdatamodel.api" type="jar" version="1.0"/>    
+	<dependency name="lc.component.integration/profiles" type="jar" version="3.0" />
+	
+	<dependency name="lc.services/gadgets/osapiclient" type="jar" version="1.0"/>
+	
+    <dependency name="lc.web.common" type="jar" />
+	<dependency name="lc.util/web" type="jar" version="1.0" />
+
+    <!-- v4.0 microbloggging -->
+    <dependency name="lc.component.integration/news" type="jar" />
+	<dependency name="tk.rproxysvc/client" type="jar" />
+	<dependency name="tk.rproxysvc/transport" type="jar" />
+	
+	<!-- v4.0 oauth work item 68685 -->
+	<dependency name="lc.oauth/provider.web" version="1.0" type="jar" />
+	<dependency name="lc.oauth/platform" type="jar" version="1.0" />
+   	<dependency name="lc.oauth/platform.mbeans" type="jar" version="1.0" />
+   	<dependency name="lc.oauth/messages" type="jar" version="1.0" />
+
+	<!--  4.5 multitenant -->
+   <dependency name="lc.mtconfig.svc" type="jar" version="1.0"/>
+   <dependency name="lc.mtconfig.engine" type="jar" version="1.0"/>
+   <dependency name="directory.services" type="jar" version="2.0"/>
+
+   <dependency name="lc.mt.bss.provisioning/servlet" type="jar"/>
+   <dependency name="prereqs.sn/json4j" type="jar" version="1.0.0.1" />
+   <dependency name="prereqs.sn/hystrix" type="jar" />
+	
+</component>

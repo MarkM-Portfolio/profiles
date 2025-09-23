@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="OrgStructure">
+
+    <sql id="sql_selectEmplyCols">
+        <isEqual  property="dbVendor" compareValue="db2"> 
+            SELECT TBL.PROF_KEY, ROW_NUMBER() OVER(ORDER BY PROF_DISPLAY_NAME) RN
+        </isEqual>
+        <isEqual  property="dbVendor" compareValue="as400"> 
+            SELECT TBL.PROF_KEY, ROW_NUMBER() OVER(ORDER BY PROF_DISPLAY_NAME) RN
+        </isEqual>
+        <isEqual  property="dbVendor" compareValue="oracle">
+            SELECT PROF_KEY,RN FROM (
+             SELECT PROF_KEY ,ROWNUM RN FROM (
+              SELECT TBL.PROF_KEY
+        </isEqual>
+        <isEqual property="dbVendor" compareValue="sqlserver">
+            SELECT TBL.PROF_KEY, ROW_NUMBER() OVER(ORDER BY PROF_DISPLAY_NAME) RN
+        </isEqual>
+    </sql>
+
+    <sql id="sql_nodeRowPaginationCloseInner">
+	    <isEqual  property="dbVendor" compareValue="oracle">
+	        ORDER BY PROF_DISPLAY_NAME
+	        ) T1 WHERE ROWNUM <![CDATA[ <= ]]> #endPos#
+	        ) T2 WHERE RN <![CDATA[ >= ]]> #startPos#
+	    </isEqual>
+    </sql>
+
+    <sql id="sql_nodeRowPaginationCloseOuter">
+        <isNotEqual property="dbVendor" compareValue="oracle">
+            WHERE EMPLY_ROW.RN <![CDATA[ >= ]]> #startPos# AND EMPLY_ROW.RN <![CDATA[ <= ]]> #endPos# 
+        </isNotEqual>    
+    </sql>
+
+    <sql id="sql_subSelectEmployeeStateWhere">
+        <isNotNull property="employeeState">
+            AND TBL.PROF_STATE = #employeeState#
+        </isNotNull>    
+    </sql>
+
+    <sql id="sql_employeeStateWhere">
+        <isNotNull property="employeeState">
+            AND E.PROF_STATE = #employeeState#
+        </isNotNull>    
+    </sql>
+
+    <sql id="sql_nodeEmplyJoin">
+	    JOIN EMPINST.EMPLOYEE EMPLY ON EMPLY.PROF_KEY = EMPLY_ROW.PROF_KEY
+    </sql>
+
+	<select id="getPagedManagedByUid" resultMap="Profile.ProfileResult" parameterClass="map">
+		SELECT <include refid="Profile.sql_ResultSelectEMPLY"/>
+		FROM (
+			<include refid="sql_selectEmplyCols"/>
+			FROM EMPINST.EMPLOYEE TBL
+			WHERE TBL.PROF_MANAGER_UID_LOWER = #managerUid#
+			<include refid="sql_subSelectEmployeeStateWhere"/>
+			<include refid="Tenant.sql_WhereByTenantKeyTBL"/>
+			<include refid="sql_nodeRowPaginationCloseInner"/>
+		) EMPLY_ROW
+		<include refid="sql_nodeEmplyJoin"/>
+		<include refid="sql_nodeRowPaginationCloseOuter"/>
+		ORDER BY EMPLY.PROF_DISPLAY_NAME
+	</select>
+	
+	<select id="getPagedManagedByUidLite" resultMap="Profile.ProfileResult" parameterClass="map">
+		SELECT <include refid="Profile.sql_LiteResultSelectEMPLY"/>
+		FROM (
+			<include refid="sql_selectEmplyCols"/>
+			FROM EMPINST.EMPLOYEE TBL
+			WHERE TBL.PROF_MANAGER_UID_LOWER = #managerUid#
+			<include refid="sql_subSelectEmployeeStateWhere"/>
+			<include refid="Tenant.sql_WhereByTenantKeyTBL"/>
+			<include refid="sql_nodeRowPaginationCloseInner"/>
+		) EMPLY_ROW
+		<include refid="sql_nodeEmplyJoin"/>
+		<include refid="sql_nodeRowPaginationCloseOuter"/>
+		ORDER BY EMPLY.PROF_DISPLAY_NAME
+	</select>
+
+	<select id="getPagedManagedByCount" resultClass="int" parameterClass="map">
+		select count(*) from EMPINST.EMPLOYEE E
+		where E.PROF_MANAGER_UID_LOWER = #managerUid#
+		<include refid="sql_employeeStateWhere"/>
+		<include refid="Tenant.sql_WhereByTenantKeyE"/>
+	</select>
+
+    <!-- below here should become obsolete and replaced by paging - they lead to unbounded queries -->
+	<select id="getManagedByUid" resultMap="Profile.ProfileResult" parameterClass="string">
+		select
+			<include refid="Profile.sql_ResultSelect"/>
+		from
+			EMPINST.EMPLOYEE
+		where
+			PROF_MANAGER_UID_LOWER = #uid#
+			<include refid="Tenant.sql_WhereByTenantKey"/>
+		order by 
+			PROF_DISPLAY_NAME
+	</select>
+
+	<select id="getManagedByUidLite" resultMap="Profile.ProfileResult" parameterClass="string">
+		select
+			<include refid="Profile.sql_LiteResultSelect"/>
+		from
+			EMPINST.EMPLOYEE
+		where
+			PROF_MANAGER_UID_LOWER = #uid#
+		order by 
+			PROF_DISPLAY_NAME
+	</select>
+
+	<!-- notes on paging query format
+	    db2:
+		SELECT EMPLY.PROF_KEY, EMPLY.PROF_DISPLAY_NAME, ...
+		FROM (
+		    SELECT XXXX.PROF_KEY, ROW_NUMBER() OVER(ORDER BY PROF_DISPLAY_NAME) RN
+		    FROM EMPINST.EMPLOYEE XXXX
+		    WHERE XXXX.PROF_MANAGER_UID_LOWER = 'aaa'
+			AND((XXXX.PROF_DISPLAY_NAME = 'ssss' AND XXXX.PROF_KEY > 'wwww') OR XXXX.PROF_DISPLAY_NAME > 'zzzz')
+		) EMPLY_ROW
+		JOIN EMPINST.EMPLOYEE EMPLY ON EMPLY.PROF_KEY = EMPLY_ROW.PROF_KEY
+		WHERE EMPLY_ROW.RN >= 1 AND EMPLY_ROW.RN <= 5
+		ORDER BY EMPLY.PROF_DISPLAY_NAME
+		
+		oracle:
+		SELECT EMPLY.PROF_KEY, EMPLY.PROF_DISPLAY_NAME, ...
+		FROM (
+		  SELECT PROF_KEY,RN FROM (
+		    SELECT PROF_KEY ,ROWNUM RN FROM (
+		      SELECT  XXXX.PROF_KEY
+		      FROM EMPINST.EMPLOYEE XXXX
+			  WHERE XXXX.PROF_MANAGER_UID_LOWER = 'aaa'
+			  AND((XXXX.PROF_DISPLAY_NAME = 'ssss' AND XXXX.PROF_KEY > 'wwww') OR XXXX.PROF_DISPLAY_NAME > 'zzzz')
+			  ORDER BY PROF_DISPLAY_NAME
+			) T1 WHERE ROWNUM <= 5
+		  ) T2 WHERE RN >= 1
+		) EMPLY_ROW
+		JOIN EMPINST.EMPLOYEE EMPLY ON EMPLY.PROF_KEY = EMPLY_ROW.PROF_KEY
+		ORDER BY EMPLY.PROF_DISPLAY_NAME
+		
+		
+		sqlserver:		
+		SELECT EMPLY.PROF_KEY, EMPLY.PROF_DISPLAY_NAME, ...
+		FROM(
+		    SELECT XXXX.PROF_KEY, ROW_NUMBER() OVER(ORDER BY XXXX.PROF_DISPLAY_NAME) RN
+		    FROM EMPINST.EMPLOYEE XXXX
+		    WHERE XXXX.PROF_MANAGER_UID_LOWER = 'aaa'
+		    AND((XXXX.PROF_DISPLAY_NAME = 'ssss' AND XXXX.PROF_KEY > 'wwww')
+						OR XXXX.PROF_DISPLAY_NAME > 'zzzz')
+		) EMPLY_ROW
+		JOIN EMPINST.EMPLOYEE EMPLY ON EMPLY.PROF_KEY = EMPLY_ROW.PROF_KEY
+		WHERE EMPLY_ROW.RN >= 1 AND EMPLY_ROW.RN <= 5 
+        ORDER BY EMPLY.PROF_DISPLAY_NAME
+     -->
+	
+</sqlMap>

@@ -1,0 +1,60 @@
+# ***************************************************************** 
+#                                                                   
+# IBM Confidential                                                  
+#                                                                   
+# OCO Source Materials                                              
+#                                                                   
+# Copyright IBM Corp. 2011, 2015                            
+#                                                                   
+# The source code for this program is not published or otherwise    
+# divested of its trade secrets, irrespective of what has been      
+# deposited with the U.S. Copyright Office.                         
+#                                                                   
+# ***************************************************************** 
+
+# certain differences between on-prem & cloud systems; eg. cannot pass email as URL param on cloud 
+isCloud=false
+
+# The URL for the Profiles server
+baseUrl=https://lcautoN.swg.usma.ibm.com:9443
+
+# The non-SSL URL for the Profiles server - if SSL is required in the deployment, this value should be the same as baseUrl
+baseUrlHttp=https://lcautoN.swg.usma.ibm.com:9443
+
+# The user and password for the primary user to use when exercising tests
+username=ajones33
+password=jones33
+email=ajones33@janet.iris.com
+
+# The other user and password to use when exercising tests
+otherUsername=ajones44
+otherPassword=jones44
+otherEmail=ajones44@janet.iris.com 
+
+# Third user for tests
+tertiaryUserName=ajones55
+tertiaryPassword=jones55
+tertiaryEmail=ajones44@janet.iris.com
+
+# The user and password for the admin user (must be in "admin" role for the application)
+adminUsername=ajonesN
+adminPassword=jonesN
+
+# On Cloud the J2EE admin role is not assigned to individual users; for these tests to work, the Org-admin must be substituted
+
+# The user and password for the admin user with no profile (must be in "admin" role for the application)
+adminNoProfileUsername=wasadmin
+adminNoProfilePassword=xxx
+
+# The user and password for the search-admin user (must be in the "search-admin" role for the application
+searchUsername=wasadmin
+searchPassword=xxx
+
+# Set this value to true if you need to test against 3.0 legacy API for board now moved to news so it must be deployed in your environment
+testMessageBoard=true
+
+# Set this value to true if you want to test variable indexing of search
+testVariableSearchIndexing=false
+# Set this value to a profile-type id whose definition explicitly identifies the surname as not included in the fullTextIndex
+testVariableSearchIndexingProfileType=surnameNotIndexed
+

@@ -1,0 +1,35 @@
+Configuring WebSphere for Waltz against File Registry with organization id and policy support
+
+1) Copy wimxmlextension.xml into <wasprofile>/config/cells/<cellName>/wim/model
+2) Copy wimconfig.xml into <wasprofile>/config/cells/<cellName>/wim/config/wimconfig.xml
+3) Copy fileRegistry.xml into <wasprofile>/config/cells/<cellName>, overwriting the existing version.
+4) Restart WebSphere.  Verify WebSphere starts correctly.
+5) Open <wasprofile>/config/cells/<cellName>/LotusConnections-config/directory.services.xml in a text editor
+
+	Change the default Waltz provider:
+	
+		<profileProvider class="com.ibm.connections.directory.services.provider.WaltzServiceProvider" />
+	
+	to:
+	
+		<profileProvider class="com.ibm.connections.directory.services.provider.WaltzServiceProvider">
+			<property name="com.ibm.connections.directory.services.waltz.custom.user.id.attribute.type">uid</property>
+			<property name="com.ibm.connections.directory.services.waltz.custom.group.id.attribute.type">cn</property>
+			<property name="com.ibm.connections.directory.services.waltz.custom.policy.id.attribute.type">uid</property>
+			<property name="com.ibm.connections.directory.services.waltz.custom.organization.id.attribute.type">ou</property>		
+			<property name="com.ibm.connections.directory.services.returned.attribute.person">ibm-saasOrgID</property>
+			<property name="com.ibm.connections.directory.services.returned.attribute.group">ibm-saasOrgID</property>
+			<property name="com.ibm.connections.directory.services.returned.attribute.organization">ibm-vmmOrgPolicyID</property>		
+			<property name="com.ibm.connections.directory.services.attribute.id.organization">ou</property>
+			<property name="com.ibm.connections.directory.services.attribute.name.organization">cn</property>
+			<property name="com.ibm.connections.directory.services.attribute.id.policy">uid</property>		
+			<property name="com.ibm.connections.directory.services.attribute.name.policy">uid</property>
+			<property name="com.ibm.connections.directory.services.returned.attribute.policy">ibm-saasHasGroups</property>
+			<property name="com.ibm.connections.directory.services.returned.attribute.policy">ibm-saasSharingIntent</property>		
+		</profileProvider>
+	
+	This instructions Waltz to return these attributes with each user, and to use the provided custom attributes to look up
+	people, groups, policies, and organizations (instead of the default VMM external id).
+	
+6) If you have previously logged in with Files recreate your Files DB.
+7) Restart Files application.

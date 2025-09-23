@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ************************************************************** -->
+<!--                                                                -->
+<!-- Licensed Materials - Property of HCL                           -->
+<!--                                                                -->
+<!-- Copyright HCL Technologies Limited 2006, 2022                  -->
+<!--                                                                -->
+<!-- US Government Users Restricted Rights                          -->
+<!--                                                                -->
+<!-- ************************************************************** -->
+
+<project name="profiles.tdi" default="development" basedir="."> 
+
+  <import file="${env.WPLC_IMPORT}/std_props.xml"/>
+  <import file="${env.WPLC_IMPORT}/std_dirs.xml"/>
+  
+  <property name="output.jar" value="${dir.lib}/profiles_tdi.jar"/>
+    
+  <import file="${env.WPLC_IMPORT}/check.xml"/>
+  <import file="${env.WPLC_IMPORT}/compile.xml"/>
+  <import file="${env.WPLC_IMPORT}/rmic.xml"/>
+  <import file="${env.WPLC_IMPORT}/package_extra.xml"/>
+  <import file="${env.WPLC_IMPORT}/javadoc.xml"/>
+  <import file="${env.WPLC_IMPORT}/jdepend.xml"/>
+  <import file="${env.WPLC_IMPORT}/clean.xml"/>
+  <import file="${env.WPLC_IMPORT}/comp_zip.xml"/>
+  <import file="${env.WPLC_IMPORT}/std_targets.xml"/>
+  <import file="${env.WPLC_IMPORT}/process_nls.xml"/>
+  <import file="${env.WPLC_IMPORT}/performance.xml"/>
+
+  <target name="createjar" depends="package_extra.createjar">
+	<antcall target="buildtdi" />
+  </target>
+  
+  <target name="copyConfigFiles">
+	<locateComponent component="lc.config.svc" locateBuildDir="true" property="lc.config.svc" />
+	<locateComponent component="directory.services" locateBuildDir="true" property="directory.svc" />
+	<locateComponent component="lc.appext/msgvector/api" locateBuildDir="false" property="lc.appext.msgvector.api" />
+			
+	<copy todir="${tdi.config.file.dir}" overwrite="true">
+		<fileset dir="../profiles.config.files/config.files" includes="**/tdi-profiles-config.xml,**/*.xsd,**/profiles-types.xml"/>
+		<fileset dir="${lc.config.svc}/config.files" includes="**/TDI-*.xml,**/service-location.xsd,**/LotusConnections-config.xsd"/>
+		<fileset dir="${directory.svc}/XML" includes="directory.services.xml,directory.services.xsd"/>
+		<fileset dir="${lc.appext.msgvector.api}/config.files" includes="message-vector-config.xsd,profiles-theboard-config.xml"/>	    
+	</copy>
+  </target>
+  
+  <target name="copy_soln_jars">
+  	<collector componentName="${ant.project.name}" 
+               groupList="${warPkgList}" 
+               verbose="false" 
+ 	           includeDependencies="${warPkgIncludeDeps.local}"
+               recurseDependencies="${warPkgRecurse}"
+               toDir="${dir.lib}" 
+               usePreferredInstallLocation="false" 
+               visibleOutputOnly="${warPkgVisibleOutputOnly}"/>
+    <locateComponent component="prereqs.sn/slf4j" locateBuildDir="false" property="prereqs.slf4j" />
+	<copy file="${prereqs.slf4j}/jul-to-slf4j-1.7.35.jar" todir="${dir.lib}"/>
+	<copy file="${prereqs.slf4j}/slf4j-reload4j-1.7.35.jar" todir="${dir.lib}"/>
+	<delete file="${dir.lib}/slf4j-jdk14-1.7.35.jar"/>
+
+    <delete>
+      <fileset dir="${dir.lib}">
+        <include name="log4j-*.jar"/>
+      </fileset>
+    </delete>
+	           
+	<copy todir="${dir.soln.stage}/lib" overwrite="true">
+		<fileset dir="${dir.lib}">
+			<include name="*.jar"/>
+		</fileset>
+	</copy>	
+  </target>
+  
+  <!-- 
+  	Copy main js/xml .bat/.sh files
+    -->
+  <target name="copy_js_and_script_files">
+  	<copy todir="${dir.soln.stage}" overwrite="true">
+		<fileset dir="${basedir}">
+			<include name="profiles_tdi.xml"/>
+			<include name="profiles_functions.js"/>
+			<include name="profiles_tdi.properties"/>
+			<include name="profiles_tdi_partitions.properties"/>
+			<include name="collect_ldap_dns_generator.js" />
+			<include name="collect_ldap_dns_by_chunks.js" />
+			<include name="validate_dbrepos_fields.properties" />
+			<include name="map_*.properties" />
+			<include name="solution.properties" />
+			<include name="idisrv.sth" />
+			<include name="testserver.jks" />
+			<include name="*.csv" />
+		</fileset>
+		<fileset dir="${basedir}/scripts/linux">
+			<include name="clearRC.sh"/>
+			<include name="collect_dns.sh"/>
+			<include name="populate_from_dn_file.sh"/>
+			<include name="sync_all_dns.sh"/>
+			<include name="sync_all_dns1.sh"/>
+			<include name="clearLock.sh"/>
+			<include name="mark_managers.sh"/>
+			<include name="fill_country.sh"/>
+			<include name="fill_department.sh"/>
+			<include name="fill_emp_type.sh"/>
+			<include name="fill_organization.sh"/>
+			<include name="fill_workloc.sh"/>
+			<include name="load_pronounce_from_files.sh"/>
+			<include name="load_photos_from_files.sh"/>
+			<include name="load_photos_from_ldap.sh"/>
+			<include name="dump_photos_to_files.sh"/>
+			<include name="dump_pronounce_to_files.sh"/>
+			<include name="process_draft_updates.sh"/>		
+			<include name="process_draft_updates_ldap.sh"/>		
+			<include name="tdienv.sh"/>	
+			<include name="derby.sh"/>	
+			<include name="netstore.sh"/>
+			<include name="netstore"/><!-- Special case for NetStore -->
+			<include name="delete_timestamp_records.sh"/>
+			<include name="delete_or_inactivate_employees.sh"/>
+			<include name="fixup_tdi_adapters.sh"/>
+			<include name="runAl.sh"/>
+		</fileset>
+
+		<fileset dir="${basedir}/scripts/win32">
+			<include name="clearRC.bat"/>
+			<include name="collect_dns.bat"/>
+			<include name="populate_from_dn_file.bat"/>
+			<include name="sync_all_dns.bat"/>
+			<include name="sync_all_dns1.bat"/>
+			<include name="write_timestamp_file.bat"/>
+			<include name="clearLock.bat"/>
+			<include name="mark_managers.bat"/>
+			<include name="fill_country.bat"/>
+			<include name="fill_department.bat"/>
+			<include name="fill_emp_type.bat"/>
+			<include name="fill_organization.bat"/>
+			<include name="fill_workloc.bat"/>
+			<include name="load_pronounce_from_files.bat"/>
+			<include name="load_photos_from_files.bat"/>
+			<include name="load_photos_from_ldap.bat"/>
+			<include name="dump_photos_to_files.bat"/>
+			<include name="dump_pronounce_to_files.bat"/>
+			<include name="process_draft_updates.bat"/>		
+			<include name="process_draft_updates_ldap.bat"/>		
+			<include name="tdienv.bat"/>	
+			<include name="derby.bat"/>	
+			<include name="netstore.bat"/>
+			<include name="netstore"/><!-- Special case for NetStore -->
+			<include name="delete_timestamp_records.bat"/>
+			<include name="delete_or_inactivate_employees.bat"/>
+			<include name="fixup_tdi_adapters.bat"/>
+			<include name="runAl.bat"/>
+
+		</fileset>
+	</copy> 
+  </target>
+
+  <!-- 
+  	Copy archive, log and sample files
+    -->
+  <target name="copy_archive_and_samples">
+	<copy todir="${dir.soln.stage}/archive" overwrite="true">
+		<fileset dir="${dir.soln.stage}">
+			<include name="*.properties"/>
+			<include name="*.xml"/>
+			<include name="*.js"/>
+			<include name="*.csv"/>
+		</fileset>
+	</copy>
+	<mkdir dir="${dir.soln.stage}/etc" />
+	<copy todir="${dir.soln.stage}/etc" overwrite="true">
+		<fileset dir="${basedir}">
+			<include name="log4j.properties"/>
+		</fileset>
+	</copy>
+	<mkdir dir="${dir.soln.stage}/samples" />
+	<copy todir="${dir.soln.stage}/samples" overwrite="true">
+		<fileset dir="${basedir}/samples">
+			<include name="*.properties"/>
+			<include name="*.xml"/>
+			<include name="*.xsl"/>
+			<include name="*.sh"/>
+			<include name="*.bat"/>
+			<include name="*.csv"/>
+			<include name="*.in"/>
+		</fileset>
+		<fileset dir="${basedir}/scripts/linux">
+			<include name="set_draft_iterator_count.sh"/>
+			<include name="set_changelog_count.sh"/>
+			<include name="reset_changelog_state.sh"/>
+			<include name="reset_draft_iterator_state.sh"/>
+			<include name="process_tds_changes.sh"/>
+			<include name="process_ad_changes.sh"/>
+			<include name="populate_from_ldif_file.sh"/>
+			<include name="tdienv.sh"/>	
+			<include name="derby.sh"/>	
+			<include name="netstore.sh"/>
+			<include name="netstore"/><!-- Special case for NetStore -->
+			<include name="hash_ldap_iterate.sh"/>
+			<include name="generate_chunk_array.sh"/>
+		</fileset>
+		<fileset dir="${basedir}/scripts/win32">
+			<include name="set_draft_iterator_count.bat"/>
+			<include name="set_changelog_count.bat"/>
+			<include name="reset_changelog_state.bat"/>
+			<include name="reset_draft_iterator_state.bat"/>
+			<include name="process_tds_changes.bat"/>
+			<include name="process_ad_changes.bat"/>
+			<include name="populate_from_ldif_file.bat"/>
+			<include name="tdienv.bat"/>	
+			<include name="derby.bat"/>	
+			<include name="netstore.bat"/>
+			<!-- <include name="netstore"/>Special case for NetStore -->
+			<include name="hash_ldap_iterate.bat"/>
+			<include name="generate_chunk_array.bat"/>
+		</fileset>
+
+	</copy>
+  	<mkdir dir="${dir.soln.stage}/serverapi" />
+	<copy todir="${dir.soln.stage}/serverapi" overwrite="true">
+		<fileset dir="${basedir}/serverapi">
+			<include name="registry.enc"/>
+			<include name="registry.txt"/>
+			<include name="testadmin.jks"/>
+			<include name="cryptoutils.sh"/>
+			<include name="cryptoutils.bat"/>
+		</fileset>
+	</copy>
+	<mkdir dir="${dir.soln.stage}/logs" />
+  </target>
+
+  <target name="make_packages_dir">
+  	<mkdir dir="${dir.soln.stage}/packages" />
+	<copy todir="${dir.soln.stage}/packages" overwrite="true">
+		<fileset dir="${basedir}/packages">
+			<include name="*.xml"/>
+		</fileset>
+	</copy>
+  </target>
+
+ <target name="copy_overlayimages">
+   <mkdir dir="${dir.soln.stage}/overlayimages" />
+   <copy todir="${dir.soln.stage}/overlayimages" overwrite="true">
+	   <fileset dir="${basedir}/overlayimages">
+		   <include name="*.png"/>
+	   </fileset>
+   </copy>
+ </target>
+
+  <!-- 
+  	Target to refactor common parts of copy
+    -->
+  <target name="copy_common_files">
+  	<antcall target="copy_soln_jars">
+		<param name="dir.soln.stage" value="${dir.soln.stage}"/>
+	</antcall>
+  
+  	<!-- copy the config files -->
+	<antcall target="copyConfigFiles">
+		<param name="tdi.config.file.dir" value="${dir.soln.stage}/conf/LotusConnections-config"/>
+	</antcall>
+	
+	<!-- copy .js files, .bat files and .sh files -->
+	<antcall target="copy_js_and_script_files">
+		<param name="tdi.osvar" value="${tdi.osvar}"/>
+		<param name="tdi.script.ext" value="${tdi.script.ext}"/>
+		<param name="dir.soln.stage" value="${dir.soln.stage}"/>
+	</antcall>
+	
+	<!-- copy .js files, .bat files and .sh files -->
+	<antcall target="copy_archive_and_samples">
+		<param name="tdi.osvar" value="${tdi.osvar}"/>
+		<param name="tdi.script.ext" value="${tdi.script.ext}"/>
+		<param name="dir.soln.stage" value="${dir.soln.stage}"/>
+	</antcall>
+  	
+  	<!-- copy .js files, .bat files and .sh files -->
+  	<antcall target="copy_overlayimages">
+		<param name="tdi.osvar" value="${tdi.osvar}"/>
+		<param name="tdi.script.ext" value="${tdi.script.ext}"/>
+		<param name="dir.soln.stage" value="${dir.soln.stage}"/>
+	</antcall>
+	
+	<!-- create 'packages' director -->
+	<antcall target="make_packages_dir">
+		<param name="dir.soln.stage" value="${dir.soln.stage}"/>
+	</antcall>
+
+		<antcall target="crConvert_1to3">
+			<param name="dir.ToConvert" value="${dir.soln.stage}"/>
+		</antcall>
+
+  </target>
+
+  <!-- 
+  	build tdi
+    -->
+  <target name="buildtdi" >
+	<setComponentInfo/>
+	<property name="dir.linux.base" value="${wsbld}/${build.dir.name}/${component.name}/linux" />
+	<property name="dir.linux.tdi" value="${dir.linux.base}/TDI" />
+	<echo message="CRS dir.linux.tdi is ${dir.linux.tdi}" />
+	<mkdir dir="${dir.linux.base}" />
+	<mkdir dir="${dir.linux.tdi}/lib" />
+
+	<locateComponent component="lc.admin/userLifeCycle/spi" locateBuildDir="true" property="ulc" />
+	<copy file="${ulc}/lib/lc.admin.userlifecycle.spi.jar" todir="${dir.lib}" overwrite="true"/>
+
+	<antcall target="copy_common_files">
+		<param name="dir.soln.stage" value="${dir.linux.tdi}"/>
+		<param name="tdi.osvar" value="linux"/>
+		<param name="tdi.script.ext" value="sh"/>
+	</antcall>	
+
+	<!-- try to perform equivalent of dos2unix on most of the files we just copied -->
+	<fixcrlf srcdir="${dir.linux.tdi}" includes="netstore,*.sh,*.xml,*.properties,*.js,*.db2,*.csv,*.rsp,*.sql,*.sqlplus" eol="unix" />
+	<fixcrlf srcdir="${dir.linux.tdi}/archive" includes="netstore,*.xml,*.properties,*.js,*.db2,*.csv,*.rsp,*.sql,*.sqlplus" eol="unix" />
+	<fixcrlf srcdir="${dir.linux.tdi}/samples" includes="*.sh,*.xml,*.properties,*.xsl" eol="unix" />
+	<fixcrlf srcdir="${dir.linux.tdi}/samples" includes="*.db2,*.sql" eol="unix" />
+
+
+  	<tar destfile="${dir.lib}/tdisol.tar" basedir="${dir.linux.base}"/>
+  	
+  	<!-- tar file can not work on IBM i, so we use zip -->
+  	<zip destfile="${dir.lib}/tdisol.OS400.zip" basedir="${dir.linux.base}" update="false"/>
+
+	<property name="dir.win32.base" value="${wsbld}/${build.dir.name}/${component.name}/win32" />
+	<property name="dir.win32.tdi" value="${dir.win32.base}/TDI" />
+	<echo message="CRS dir.win32.tdi is ${dir.win32.tdi}" />
+	<mkdir dir="${dir.win32.base}" />
+	<mkdir dir="${dir.win32.tdi}/lib" />
+	
+	<!-- 
+		Main point to copy files
+	  -->
+	<antcall target="copy_common_files">
+		<param name="dir.soln.stage" value="${dir.win32.tdi}"/>
+		<param name="tdi.osvar" value="win32"/>
+		<param name="tdi.script.ext" value="bat"/>
+	</antcall>
+	
+  	<zip destfile="${dir.lib}/tdisol.zip" basedir="${dir.win32.base}" update="false"/>
+  </target>  
+
+</project>

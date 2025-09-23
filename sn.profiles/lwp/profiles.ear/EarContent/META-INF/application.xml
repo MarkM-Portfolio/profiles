@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<application id="Profiles" version="1.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/application_1_4.xsd">
+	<display-name>Profiles</display-name>
+	<module id="WebModule_1195517565312">
+		<web>
+			<web-uri>lc.profiles.app.war</web-uri>
+			<context-root>/profiles</context-root>
+		</web>
+	</module>
+	<module id="WebModule_1195517565313">
+		<web>
+			<web-uri>lc.profiles.ext.war</web-uri>
+			<context-root>/profiles/ext/admin</context-root>
+		</web>
+	</module>
+	<module id="WebModule_1206983691372">
+		<web>
+			<web-uri>lc.profiles.seedlist.war</web-uri>
+			<context-root>/profiles/seedlist</context-root>
+		</web>
+	</module>
+
+	<module id="EventPublish">
+	    <ejb>lc.events.publish.jar</ejb>
+	</module>
+
+	<!-- using infra scheduler for tasks-->
+	<module id="ProfilesSchedTaskEJB">
+		<ejb>lconn.scheduler.ejb.jar</ejb>
+	</module>
+
+	<security-role id="SecurityRole_1202919220253"> 
+		<description>
+		Mapped to all users in the system at all times.  This role is used to defer security checks to programatic access checking code.</description>
+		<role-name>everyone</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220263">
+		<description>
+		Logical role for read-only access to the application.  Mapped to 'everyone' by default.</description>
+		<role-name>reader</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220273">
+		<description>
+		Logical role for read/write access to the application.  Mapped to 'allAuthenticated' by default.</description>
+		<role-name>person</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220274">
+		<description>
+		Logical admin role.  No default mappings.</description>
+		<role-name>admin</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220275">
+		<description>admin-search role seedlist servlet requests</description>
+		<role-name>search-admin</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220276">
+		<description>admin-search role seedlist servlet requests</description>
+		<role-name>dsx-admin</role-name>
+	</security-role>
+	<security-role id="SecurityRole_1202919220277">
+		<description>All authenticated role for login page redirects.  DO NOT CHANGE THE MAPPING OF THIS ROLE.</description>
+		<role-name>allAuthenticated</role-name>
+	</security-role>
+   <security-role id="SecurityRole_1202919220278">
+		<description>logical role for read access to metrics.  Mapped to 'everyone' by default</description>
+        <role-name>metrics-reader</role-name>
+    </security-role>
+    <security-role id="SecurityRole_1202919220279">
+		<description>Logical organization/tenant admin role.  No default mappings.</description>
+		<role-name>org-admin</role-name>
+	</security-role>
+
+</application>

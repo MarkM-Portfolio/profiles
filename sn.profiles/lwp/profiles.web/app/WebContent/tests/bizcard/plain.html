@@ -1,0 +1,52 @@
+<html>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2012, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<head>
+	<script type="text/javascript">
+    // check for debug
+    debugMode = (location.search.indexOf("debug") > 0);
+    if(debugMode) console.log("BIZCARD IN DEBUG MODE"); 
+
+    // get lang and set rtl if necessary
+    var lang = (navigator.userLanguage? navigator.userLanguage : (navigator.language? navigator.language : "en"));
+    if( lang == "ar" || lang == "iw" || lang == "he" ) {
+        console.log("language: "+ lang);
+        var el = document.getElementsByTagName("html");
+        if(el && el[0]) {
+          el[0].lang = lang; 
+          el[0].dir = "rtl";
+        } 
+    }    
+
+    // create script node to pull bizcard js
+    var el=document.createElement("script");
+    el.src = "/profiles/ibm_semanticTagServlet/javascript/semanticTagService.js" + "?lang="+lang + (debugMode? "&debug=true" : "");
+    el.type = "text/javascript";
+             
+    var head = document.getElementsByTagName("head");
+    head[0].appendChild(el);
+  </script> 
+</head>
+<body>
+	<div class="vcard X-person-display-inline">
+		<span class="fn" style="display:none;">Amy Jones45</span>
+		<span class="email" style="display:none;">ajones45@janet.iris.com</span>
+	</div>
+	<p class="vcard">
+		<a href="javascript:void(0);"class="fn url">Amy Jones45</a>
+		<span class="email" style="display: none;">ajones45@janet.iris.com</span>
+	</p>
+</body>
+</html>

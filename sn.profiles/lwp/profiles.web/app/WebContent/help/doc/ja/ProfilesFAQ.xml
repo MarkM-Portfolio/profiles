@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="プロフィール" topic="frame.html">
+   <topic label="プロフィールの概説、ハウツー、および FAQ" href="frame.html">
+      <topic label="よくある質問" href="c_pers_faq.html"/>
+      <topic label="プロフィールへようこそ" href="c_persona_welcome.html"/>
+      <topic label="このリリースの新機能" href="c_whats_new.html"/>
+      <topic label="プロフィールの表示" href="c_pers_profiles.html"/>
+      <topic label="アクセシビリティー機能" href="pDojo_accessibility.html"/>
+      <topic label="プロフィールの検索" href="c_pers_search_options.html"/>
+      <topic label="高速検索の実行" href="t_pers_find_people.html"/>
+      <topic label="拡張検索の実行" href="t_pers_search_profiles.html"/>
+      <topic label="検索結果の表示" href="t_pers_search_results.html"/>
+      <topic label="プロフィール・ビジネス・カードの使用" href="t_pers_use_biz_card.html"/>
+      <topic label="連絡先の詳細のエクスポート" href="t_pers_export_details.html"/>
+      <topic label="ワーク・メンバーの削除" href="t_pers_delete_colleague.html"/>
+      <topic label="プロフィールの編集" href="t_pers_edit_profiles.html"/>
+      <topic label="連絡先情報の更新" href="t_pers_update_contact_info.html"/>
+      <topic label="経歴情報の変更" href="t_pers_change_bgd_info.html"/>
+      <topic label="プロフィール・イメージの変更" href="t_pers_edit_photo.html"/>
+      <topic label="音声ファイルのアップロード" href="t_pers_audiofile_upload.html"/>
+      <topic label="タグの使用" href="c_pers_tags.html"/>
+      <topic label="プロフィールのタグ付け" href="t_pers_tag_your_profile.html"/>
+      <topic label="プロフィールに外部リンクを追加する" href="t_add_external_links.html"/>
+      <topic label="ワーク・メンバーの追加" href="t_pers_add_colleagues.html"/>
+      <topic label="ワーク・メンバーの表示" href="t_pers_view_colleagues.html"/>
+      <topic label="ワーク・メンバーになることへの招待の承諾" href="t_pers_accept_invitations.html"/>
+      <topic label="ユーザーのタグ付け" href="t_pers_tag_people.html"/>
+   </topic>
+   <topic label="音声ファイルの作成" href="t_pers_audiofile_create.html"/>
+</toc>

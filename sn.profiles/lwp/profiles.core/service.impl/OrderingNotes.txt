@@ -1,0 +1,13 @@
+
+
+This file defines the values used for AOP ordering:
+
+ - 500 MethodBenchmarkingPointcut
+ 
+ - 600 OrgStructureDisabledPointcut
+
+ - 1000 Default DAO ASPECT	(../store/sqlmapdao/profiles-dao-context.xml)
+
+ - 5000 Transaction ASPECT	(META-INF/spring/lconn-service-context.xml)
+ 
+ - 100000 DAO Retry ASPECT  (../store/sqlmapdao/profiles-dao-context.xml)

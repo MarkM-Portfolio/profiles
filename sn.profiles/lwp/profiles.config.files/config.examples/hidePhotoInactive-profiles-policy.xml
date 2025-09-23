@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<config id="profiles-policy"
+	xmlns="http://www.ibm.com/profiles-policy"
+	xmlns:tns="http://www.ibm.com/profiles-policy"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ibm.com/profiles-policy profiles-policy.xsd">
+
+	<!-- FEATURE CONFIG START -->
+	<features>
+		<feature name="profile.photo">
+				<profileType type="default" enabled="true">
+					<acl name="profile.photo.view" scope="reader" dissallowNonAdminIfInactive="true"/>
+				</profileType>
+			</feature>
+	<!--  
+		All features are commented out by default.  Below is an example of some of the policies that can be defined.
+		
+		<features>
+			<feature name="profile.board">
+				<profileType type="default" enabled="true">
+					<acl name="profile.board.write.message" scope="colleagues_and_self" />
+					<acl name="profile.board.write.comment" scope="colleagues_and_self" />
+				</profileType>
+			</feature>
+		
+			<feature name="profile.status">
+				<profileType type="default" enabled="true">
+					<acl name="profile.status.update" scope="self" />
+				</profileType>
+			</feature>
+		
+			<feature name="profile.photo">
+				<profileType type="default" enabled="true">
+					<acl name="profile.photo.update" scope="self" />
+				</profileType>
+				<profileType type="contractor" enabled="true">
+					<acl name="profile.photo.update" scope="none" />
+				</profileType>
+				<profileType type="visitor" enabled="false">
+					<acl name="profile.photo.update" scope="none" />
+				</profileType>
+			</feature>
+		
+			<feature name="profile.pronunciation">
+				<profileType type="default" enabled="true">
+					<acl name="profile.pronunciation.update" scope="self" />
+				</profileType>
+			</feature>
+		
+			<feature name="profile.colleague">
+				<profileType type="default" enabled="true">
+					<acl name="profile.colleague.connect" scope="person_not_self" />
+				</profileType>
+				<profileType type="contractor" enabled="true">
+					<acl name="profile.colleague.connect" scope="none" />
+				</profileType>
+				<profileType type="visitor" enabled="false">
+					<acl name="profile.colleague.connect" scope="none" />
+				</profileType>
+			</feature>
+		
+			<feature name="profile.reportTo">
+				<profileType type="default" enabled="true">
+				</profileType>
+				<profileType type="manager" enabled="false">
+				</profileType>
+				<profileType type="contractor" enabled="false">
+				</profileType>
+			</feature>
+		
+			<feature name="profile.peopleManaged">
+				<profileType type="default" enabled="true">
+				</profileType>
+				<profileType type="executive" enabled="false">
+				</profileType>
+				<profileType type="contractor" enabled="false">
+				</profileType>
+			</feature>
+		
+			<feature name="profile.tag">
+				<profileType type="default" enabled="true">
+					<acl name="profile.tag.add" scope="person_and_self" />
+				</profileType>
+				<profileType type="contractor" enabled="true">
+					<acl name="profile.tag.add" scope="colleagues_and_self" />
+				</profileType>
+				<profileType type="visitor" enabled="false">
+					<acl name="profile.tag.add" scope="none" />
+				</profileType>
+			</feature>
+		
+			<feature name="profile.following">
+				<profileType type="default" enabled="true">
+					<acl name="profile.following.add" scope="person_not_self" />
+				</profileType>
+				<profileType type="contractor" enabled="true">
+					<acl name="profile.following.add" scope="colleagues_not_self" />
+				</profileType>
+				<profileType type="visitor" enabled="false">
+					<acl name="profile.following.add" scope="none" />
+				</profileType>
+			</feature>
+		</features>
+	-->	
+	   
+	</features>
+
+	<!-- FEATURE CONFIG END -->	
+
+</config>

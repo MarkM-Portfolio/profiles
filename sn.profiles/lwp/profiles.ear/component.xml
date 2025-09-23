@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ************************************************************** -->
+<!--                                                                -->
+<!-- Licensed Materials - Property of HCL                           -->
+<!--                                                                -->
+<!-- Copyright HCL Technologies Limited 2006, 2021                  -->
+<!--                                                                -->
+<!-- US Government Users Restricted Rights                          -->
+<!--                                                                -->
+<!-- ************************************************************** -->
+<component name="profiles.ear" description="Profiles EAR" spec-version="3.0" project-type="ear">
+
+	<output-group name="dist">
+		<output type="ear" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/profiles.ear" preferredInstallLocation="tmp" />
+	</output-group>
+	
+	<output-group name="to_ear">      
+		<output type="dir" visibility="public" platform="all" location="itv"/>
+	</output-group>
+
+	<dependency name="profiles.web/app" type="war" version="3.0" />
+	<dependency name="profiles.web/ext.shell" type="war" version="3.0" />
+	<dependency name="profiles.seedlist/retriever" type="war" version="3.0" />
+
+	<!-- Events API -->
+
+	<!-- Profiles Jars -->
+	<dependency name="prereqs.sn/jakarta.commons.digester" type="jar" version="1.1"/>
+	<dependency name="prereqs.sn/struts.minimal" type="jar" version="1.2" />
+	<dependency name="prereqs.sn/struts.extra" type="jar" version="1.2" />
+	<dependency name="prereqs.sn/jakarta.commons.fileupload-1.2.1" type="jar" version="1.2" />
+	<dependency name="prereqs.sn/jakarta.commons.beanutils170" type="jar" version="1.7" />
+	<dependency name="prereqs.sn/mybatis" type="jar" version="2.3.5" />
+	<dependency name="prereqs.sn/jstl" type="jar" version="1.1"/>
+	<dependency name="prereqs.sn/spring256" type="jar" version="2.5" />
+	<dependency name="prereqs.sn/log4j2" type="jar"/>
+	<dependency name="prereqs.sn/freemarker2.3.15" type="jar" version="2.3" />
+	<dependency name="prereqs.sn/stripes" type="jar" version="1.5" />
+
+	<dependency name="av/api" type="jar" version="3.0" />
+	<dependency name="av/pojo" type="jar" version="3.0" />
+	<dependency name="av/admin" type="jar" version="3.0" />
+	
+	<dependency name="lc.util/web" type="jar" version="3.0" />
+
+	<dependency name="lc.appext/core/api" type="jar" version="3.0" />
+	<dependency name="lc.appext/core/impl" type="jar" version="3.0" />
+	<dependency name="lc.appext/msgvector/api" type="jar" version="3.0" />
+	
+	<dependency name="lc.customauthclient" type="jar" version="0.1"/>
+	
+	<dependency name="profiles.core/service.api" type="jar" version="3.0" />
+	<dependency name="profiles.core/service.impl" type="jar" version="3.0" />
+
+	<dependency name="profiles.web/core" type="jar" version="3.0"/>
+	<dependency name="profiles.web/rpfilter" type="jar" version="3.0" />
+
+	<dependency name="lc.search/ejbInterface" type="jar" version="1.0"/>
+	<dependency name="lc.widgets/lc.widgets.core" type="jar" version="1.0" />
+	<dependency name="lc.extdatamodel/lc.extdatamodel.api" type="jar" version="1.0"/>	
+	<dependency name="lc.following/internal" type="jar" version="3.0"/>
+	
+	<dependency name="lc.component.integration/profiles" type="jar" />
+	
+	<!-- the v2 scheduler EJB -->
+	<dependency name="lc.sched.v2/core" type="source" version="3.0"/>
+	<dependency name="lc.sched.v2/ejb" type="java" version="3.0"/>
+	<dependency name="profiles.sched" type="java" />
+	
+	<!-- the core EJBs must be be declared first, so the specialized versions override them -->
+	<dependency name="lc.events.30/publish" type="jar" />
+
+	<!-- specialized EJBs -->
+	<dependency name="profiles.events.publish.ejb" type="jar" />	
+	
+	<!-- Allows install to grab the correct JAR files -->
+	<dependency name="profiles.web.resources" type="dir" />
+	
+    <dependency name="lc.web.common.ear" type="jar" />
+	
+	<dependency name="lc.services/gadgets/osapiclient" type="jar" version="1.0"/>
+	<dependency name="lc.shindig.serverapi/remote" type="jar" version="3.0"/>
+
+    <!-- v4.0 microbloggging -->
+    <dependency name="lc.component.integration/news" type="jar" />
+	<dependency name="tk.rproxysvc/client" type="jar" />
+	<dependency name="tk.rproxysvc/transport" type="jar" />
+
+	<!-- Dependency Multi-tenant enabled config -->
+	<dependency name="lc.mtconfig.svc" type="jar"/>
+	<dependency name="lc.mtconfig.engine" type="jar"/>
+	<dependency name="lc.util/jndi" type="jar"/>
+
+	<dependency name="highway/common"  type="jar" version="1.0" />
+	<dependency name="highway/client"  type="jar" version="1.0" />
+	<dependency name="home.news"       type="jar" />
+
+	<dependency name="prereqs.sn/hystrix" type="jar" />
+	
+</component>

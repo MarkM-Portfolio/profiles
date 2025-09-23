@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2016                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<!-- cloud example types file: baseline setting is in profiles-types.xml -->
+
+<!--  available attributes: description, experience, jobResp, telephoneNumber, mobileNumber,
+         faxNumber, phone1, phone2, phone3, address1, address2, address3, address4, profileLinks,
+         item1, item2, item3, item4, item5, item6, item7, item8, item9, item10 -->
+
+<config xmlns="http://www.ibm.com/profiles-types" id="profiles-types">
+	<type>
+		<parentId>snx:mtperson</parentId> <!-- keep this setting to override the same specification in profiles-types.xml -->
+		<orgId>NN</orgId> <!-- must specify org id -->
+		<id>default</id>
+		<property>
+			<ref>jobResp</ref> <!-- job title is to be read only -->
+			<updatability>read</updatability>
+		</property>
+		<property>
+			<ref>telephoneNumber</ref> <!-- telephoneNumber is to be read only -->
+			<updatability>read</updatability>
+		</property>
+	</type>
+</config>

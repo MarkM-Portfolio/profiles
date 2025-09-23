@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2006, 2014                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<sqlMap namespace="Country">
+
+	<typeAlias alias="country" type="com.ibm.lconn.profiles.data.codes.Country" />
+		
+	<resultMap id="CountryResult" class="java.util.HashMap">
+		<result property="codeId" column="PROF_ISO_COUNTRY_CODE" />
+		<result property="displayValue" column="PROF_COUNTRY_DESC" />
+		<result property="tenantKey" column="TENANT_KEY" />
+	</resultMap>
+
+	<select id="get" resultMap="CountryResult" parameterClass="map">
+		select PROF_ISO_COUNTRY_CODE, PROF_COUNTRY_DESC, TENANT_KEY from EMPINST.COUNTRY
+		where PROF_ISO_COUNTRY_CODE=#codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+
+	<select id="getAll" resultMap="CountryResult" parameterClass="map">
+		SELECT PROF_ISO_COUNTRY_CODE, PROF_COUNTRY_DESC, TENANT_KEY FROM EMPINST.COUNTRY
+		where 1=1 
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</select>
+	
+	<insert id="create" parameterClass="country">
+		insert into EMPINST.COUNTRY (PROF_ISO_COUNTRY_CODE, PROF_COUNTRY_DESC, TENANT_KEY)
+		values (#codeId#, #displayValue#, #dbTenantKey#)
+	</insert>
+	
+	<update id="update" parameterClass="map">
+		update EMPINST.COUNTRY 
+		set PROF_COUNTRY_DESC=#code.displayValue#
+		where PROF_ISO_COUNTRY_CODE = #code.codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</update>
+	
+	<delete id="delete" parameterClass="map">
+		delete from EMPINST.COUNTRY
+		where PROF_ISO_COUNTRY_CODE = #codeId#
+		<include refid="Tenant.sql_WhereByTenantKey"/>
+	</delete>
+
+</sqlMap>

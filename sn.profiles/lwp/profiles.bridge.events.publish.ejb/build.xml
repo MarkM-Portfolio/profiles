@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2017                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<project name="profiles.bridge.events.publish.ejb" default="development">
+   <!-- This EJB is based on lc.events.30/publish.  It only needs to set
+        ejb.service.id, locate the component build output, and import the specialized
+        build file -->
+   <property name="ejb.service.id" value="profilesbridge" />
+   <property name="ejb.source.component" value="lc.events.30/publish" />
+   <locateComponent component="${ejb.source.component}" locateBuildDir="false" property="ejb-specialize" />
+   <import file="${ejb-specialize}/build-specialize.xml" />
+   <import file="${env.WPLC_IMPORT}/process_nls.xml" />
+</project>

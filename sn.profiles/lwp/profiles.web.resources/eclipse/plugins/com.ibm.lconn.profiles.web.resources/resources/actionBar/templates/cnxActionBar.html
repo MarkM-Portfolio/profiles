@@ -1,0 +1,21 @@
+<span>
+	<div dojoAttachPoint="cnxButtonsNode" class="${hiddenClassName}"></div>
+<span style="overflow:visible; height:auto;">
+	<span dojoAttachPoint="stylesNode" class="${hiddenClassName}">
+		<style type="text/css">
+			.AEMenuItemIcon_${id} {
+				width: 21px;
+				height: 21px;
+			}
+		</style>
+	</span>
+	<span dojoAttachPoint="buttonsNode" class="${hiddenClassName}"></span>
+	<button dojoAttachPoint="singleButtonNode" class="iconCnxBtn ${hiddenClassName}" title="">
+		<img dojoAttachPoint="singleButtonImageNode" class="AEMenuItemIcon_${id} ${hiddenClassName}" alt="" src="${blankGif}" />
+	</button>
+	<button dojoAttachPoint="moreActionsNode" dojoAttachEvent="onclick: _showMoreActions" class="iconCnxBtn ${hiddenClassName}" title="${strings.personCardMoreActions}" aria-haspopup="true" id="moreActionsBtn_${id}">
+		<img alt="" class="iconDot" src="${blankGif}" />
+	</button>
+	<div dojoAttachPoint="menuNode" class="${hiddenClassName}" id="AEMenu_${id}"></div>
+</span>
+</span>

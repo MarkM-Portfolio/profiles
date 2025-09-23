@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * IBM Confidential
+ * 
+ * OCO Source Materials
+ * 
+ * Copyright IBM Corp. 2006, 2013
+ * 
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ * 
+-->
+<component name="profiles.nicknames/test" description="Profiles Nickname Processing Tests" spec-version="2.5" type="source">
+
+	<dependency name="profiles.core/service.api" type="jar"/>
+	<dependency name="profiles.core/service.impl" type="jar"/>
+	<dependency name="profiles.nicknames/create" type="jar"/>
+	<dependency name="prereqs.sn/was7.0" type="jar" version="7.0" />
+	<dependency name="prereqs.sn/ant170" type="jar"/>
+	<dependency name="prereqs.sn/junit" type="jar"/>
+
+</component>

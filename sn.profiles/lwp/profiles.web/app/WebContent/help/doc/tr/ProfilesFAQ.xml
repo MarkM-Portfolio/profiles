@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2010                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Profiller" topic="frame.html">
+   <topic label="Profiller - Genel Bakış, Nasıl Yapılır Soruları ve Sık Sorulan Sorular"
+          href="frame.html">
+      <topic label="Sık sorulan sorular" href="c_pers_faq.html"/>
+      <topic label="Profillere Hoş Geldiniz" href="c_persona_welcome.html"/>
+      <topic label="Bu yayındaki yenilikler" href="c_whats_new.html"/>
+      <topic label="Profilleri görüntüleme" href="c_pers_profiles.html"/>
+      <topic label="Erişilebilirlik özellikleri" href="pDojo_accessibility.html"/>
+      <topic label="Profillerde arama yapma" href="c_pers_search_options.html"/>
+      <topic label="Hızlı arama gerçekleştirme" href="t_pers_find_people.html"/>
+      <topic label="Gelişmiş arama gerçekleştirme" href="t_pers_search_profiles.html"/>
+      <topic label="Arama sonuçlarını görüntüleme" href="t_pers_search_results.html"/>
+      <topic label="Profiller kartvizitini kullanma" href="t_pers_use_biz_card.html"/>
+      <topic label="İletişim bilgilerini verme" href="t_pers_export_details.html"/>
+      <topic label="İş arkadaşlarını silme" href="t_pers_delete_colleague.html"/>
+      <topic label="Profilinizi düzenleme" href="t_pers_edit_profiles.html"/>
+      <topic label="İletişim bilgilerini güncelleştirme"
+             href="t_pers_update_contact_info.html"/>
+      <topic label="Özgeçmiş bilgilerini değiştirme" href="t_pers_change_bgd_info.html"/>
+      <topic label="Profil resminizi değiştirme" href="t_pers_edit_photo.html"/>
+      <topic label="Ses dosyası yükleme" href="t_pers_audiofile_upload.html"/>
+      <topic label="Etiketleri kullanma" href="c_pers_tags.html"/>
+      <topic label="Profilinize etiket ekleme" href="t_pers_tag_your_profile.html"/>
+      <topic label="Profilinize dış bağlantı ekleme" href="t_add_external_links.html"/>
+      <topic label="İş arkadaşları ekleme" href="t_pers_add_colleagues.html"/>
+      <topic label="İş arkadaşlarını görüntüleme" href="t_pers_view_colleagues.html"/>
+      <topic label="İş arkadaşı davetlerini kabul etme"
+             href="t_pers_accept_invitations.html"/>
+      <topic label="Kişileri etiketleme" href="t_pers_tag_people.html"/>
+   </topic>
+   <topic label="Ses dosyası oluşturma" href="t_pers_audiofile_create.html"/>
+</toc>

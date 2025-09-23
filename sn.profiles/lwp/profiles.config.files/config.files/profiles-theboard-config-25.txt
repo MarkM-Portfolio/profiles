@@ -1,0 +1,5 @@
+/config/schemaVersion
+/config/attributes
+/config/entryTypes
+/config/commentTypes
+/config/namedEntries

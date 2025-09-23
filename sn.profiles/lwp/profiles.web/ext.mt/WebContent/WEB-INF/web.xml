@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<web-app id="ProfilesExtWebApp"
+	xmlns="http://java.sun.com/xml/ns/j2ee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+	
+	<display-name>Profiles - Extension MT</display-name>
+	
+	<!-- 
+		Service wise we're part of Profiles 
+	-->
+	<context-param>
+		<param-name>service.name</param-name>
+		<param-value>profiles</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+		<param-value>com.ibm.lconn.profiles.strings.ui</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
+		<param-value>en</param-value>
+	</context-param>
+	
+	<!--  
+		The following have been deemed unnecessary for now. They can (and by default mostly will)
+		be added back in if required once this is integrated into the main Profiles	codebase -
+			- Welcome file list
+			- Antivirus
+			- Login Page
+			- Error Pages
+			- LanguageFilter
+			- OAuth (basic auth only supported)
+			- Multitenant Lookup Filter (this is off the primary URL - shouldn't be needed)
+	 -->
+
+	<!-- Enforce SSL Communications App wide if required-->
+	<filter>
+		<filter-name>HttpRequestFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.request.HttpRequestFilter</filter-class>
+	</filter>
+
+	<filter>
+		<description></description>
+		<display-name>I18NFilter</display-name>
+		<filter-name>I18NFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.util.lang.I18NFilter</filter-class>
+	</filter>
+	
+	<filter>
+		<description></description>
+		<display-name>Utf8CharactersetFilter</display-name>
+		<filter-name>Utf8CharactersetFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.util.Utf8CharsetFilter</filter-class>
+	</filter>
+	
+	<filter>
+		<description></description>
+		<display-name>BasicAuthFilter</display-name>
+		<filter-name>BasicAuthFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCBasicAuthFilter</filter-class>
+	</filter>
+	
+	<filter>
+		<description>Required filter to set thread variables for application use.</description>
+		<display-name>AppContextFilter</display-name>
+		<filter-name>AppContextFilter</filter-name>
+		<filter-class>com.ibm.lconn.profiles.web.servlet.AppContextFilter</filter-class>
+	</filter>
+
+	<!-- Only an Admin Filter is required for security . . . . it's all we do here ! -->
+	<filter>
+		<filter-name>AdminAtomSecurityFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.LCRestSecurityMultiAdminRoleFilter</filter-class>
+		<init-param>
+			<param-name>enforce.read.role</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.write.role</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>enforce.admin.role</param-name>
+			<param-value>org-admin,admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>authentication.chooser.forward</param-name>
+			<param-value>/basic/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>unauthorized.user.forward</param-name>
+			<param-value>/unauthorized</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<description>When the authenticated user changes (or the user reverts to unauthenticated), the session object should be invalidated to ensure that no private data is available on the session object. This filter should protect all URLs that may access session data.</description>
+		<display-name>SessionUserProtectionFilter</display-name>
+		<filter-name>SessionUserProtectionFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.auth.SessionUserProtectionFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>Utf8CharactersetFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>SessionUserProtectionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<filter-mapping>
+		<filter-name>I18NFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>HttpRequestFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>BasicAuthFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!--
+		NOTE: Need to put this before AppContextFilter in order to prevent http session creation
+	-->
+	<filter-mapping>
+		<filter-name>AdminAtomSecurityFilter</filter-name>
+		<url-pattern>/admin/atom/*</url-pattern>
+	</filter-mapping>
+
+	<!-- NOTE: AppContextFilter MUST be defined after BasicAuthFilter, and after TenantLookupFilter for org-admin filtering -->
+	<!-- 
+	 NOTE - for now this is not applied as the admin in question may not be a valid org user - will likely be re-added when
+	 integrated, with the admin user being part of an explicit admin org.
+	<filter-mapping>
+		<filter-name>AppContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	 -->
+
+	<!-- We could just use the basic struts servlet, but for consistency . . . -->
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>com.ibm.peoplepages.webui.servlet.ProfileStrutsServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>
+				/WEB-INF/struts-config-atom.xml,
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>validating</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<!-- 
+		Profiles's Mappings
+	 -->
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<display-name>CSRFFilter</display-name>
+		<filter-name>CSRFFilter</filter-name>
+		<filter-class>com.ibm.lconn.core.web.atom.CSRFFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+	  <filter-name>CSRFFilter</filter-name>
+	  <url-pattern>/admin/atom/*</url-pattern>
+	</filter-mapping>
+
+	<!-- 
+		Really only the admin role is needed
+	 -->
+	<security-role>
+		<description>Always mapped to 'everyone'.  Used to defer programatic access checks to application.</description>
+		<role-name>everyone</role-name>
+	</security-role>
+	<security-role>
+		<description>Logical role for read-only access to the application.  Mapped to 'everyone' by default.</description>
+		<role-name>reader</role-name>
+	</security-role>
+	<security-role>
+		<description>Logical role for read/write access to the application.  Mapped to 'allAuthenticated' by default.</description>
+		<role-name>person</role-name>
+	</security-role>
+	<security-role>
+		<description>Logical admin role.  No default mappings.</description>
+		<role-name>admin</role-name>
+	</security-role>
+	<security-role>
+		<description>All authenticated role for login page redirects.  DO NOT CHANGE THE MAPPING OF THIS ROLE.</description>
+		<role-name>allAuthenticated</role-name>
+	</security-role>
+</web-app>

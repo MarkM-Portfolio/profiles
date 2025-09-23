@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2017                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<applicationbnd:ApplicationBinding xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:applicationbnd="applicationbnd.xmi" xmi:id="ApplicationBinding_1175019997166">
+  <authorizationTable xmi:id="AuthorizationTable_1175019997166">
+    <authorizations xmi:id="RoleAssignment_1202919220253">
+      <specialSubjects xmi:type="applicationbnd:Everyone" xmi:id="Everyone_1202919220253" name="Everyone"/>
+      <role href="META-INF/application.xml#SecurityRole_1202919220253"/>
+    </authorizations>
+    <authorizations xmi:id="RoleAssignment_1202919220263">
+      <specialSubjects xmi:type="applicationbnd:Everyone" xmi:id="Everyone_1202919220253" name="Everyone"/>
+      <role href="META-INF/application.xml#SecurityRole_1202919220263"/>
+    </authorizations>
+    <authorizations xmi:id="RoleAssignment_1202919220273">
+      <specialSubjects xmi:type="applicationbnd:AllAuthenticatedUsers" xmi:id="AllAuthenticatedUsers_1202919220273" name="AllAuthenticatedUsers"/>
+      <role href="META-INF/application.xml#SecurityRole_1202919220273"/>
+    </authorizations>    
+    <authorizations xmi:id="SecurityRole_1202919220277">
+      <specialSubjects xmi:type="applicationbnd:AllAuthenticatedUsers" xmi:id="AllAuthenticatedUsers_1202919220273" name="AllAuthenticatedUsers"/>
+      <role href="META-INF/application.xml#SecurityRole_1202919220277"/>
+    </authorizations>
+    <authorizations xmi:id="RoleAssignment_1202919220278">
+      <specialSubjects xmi:type="applicationbnd:Everyone" xmi:id="Everyone_1202919220253" name="Everyone"/>
+      <role href="META-INF/application.xml#SecurityRole_1202919220278"/>
+    </authorizations>
+   </authorizationTable>
+  <application href="META-INF/application.xml#Profiles"/>
+</applicationbnd:ApplicationBinding>

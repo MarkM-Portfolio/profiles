@@ -1,0 +1,161 @@
+<config xmlns="http://www.ibm.com/profiles-types" id="profiles-types">
+<!-- note: see ocs item https://swgjazz.ibm.com:8004/jazz/web/projects/OCS#action=com.ibm.team.workitem.viewWorkItem&id=175437 -->
+	<type>
+		<parentId>snx:mtperson</parentId>
+		<orgId>20000300</orgId> <!-- CA1 IBM org -->
+		<id>default</id>
+		<property>
+			<ref>jobResp</ref> <!-- Job Responsibilities is being made editable -->
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>telephoneNumber</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>ipTelephoneNumber</ref> 
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>mobileNumber</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>faxNumber</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>description</ref> <!-- About Me: populated with What I Am Known For -->
+			<updatability>readwrite</updatability>
+			<hidden>false</hidden>
+			<richText>true</richText>
+		</property>
+		<property>
+			<ref>experience</ref> <!-- Background: hide this field -->
+			<updatability>read</updatability>
+			<hidden>true</hidden>
+			<richText>true</richText>
+		</property>
+		<property>
+			<ref>profileLinks</ref> <!-- hide this field -->
+			<updatability>readwrite</updatability>
+			<hidden>true</hidden>
+		</property>
+		<property>
+			<ref>phone1</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>phone2</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>phone3</ref> <!-- Will not be used, but apparently cannot hide -->
+			<updatability>read</updatability>
+			<hidden>true</hidden>
+		</property>
+		<property>
+			<ref>address1</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>address2</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>address3</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>address4</ref>
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>bldgId</ref> 
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>floor</ref> 
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>officeName</ref> 
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>pagerNumber</ref> 
+			<updatability>read</updatability>
+			<hidden>false</hidden>
+		</property>
+		<property>
+			<ref>item1</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Division:]]>
+			</label>
+		</property>
+		<property>
+			<ref>item2</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Department:]]>
+			</label>
+		</property>
+		<property>
+			<ref>item3</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Employee Type:]]>
+			</label>
+		</property>
+		<property>
+			<ref>item4</ref> 
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Contractor Company:]]>
+			</label>
+		</property>
+		<property>
+			<ref>item5</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Assistant:]]>
+			</label>
+		</property>
+		<property>
+			<ref>item6</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Native First Name:]]>
+			</label>
+		</property>
+		<property>
+			<ref>item7</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Native Last Name:]]>
+			</label>
+		</property>
+		<property>
+			<ref>item8</ref>
+			<updatability>read</updatability>
+			<label updatability="read">
+				<![CDATA[Preferred Contact Method:]]>
+			</label>
+		</property>
+	</type>
+</config>

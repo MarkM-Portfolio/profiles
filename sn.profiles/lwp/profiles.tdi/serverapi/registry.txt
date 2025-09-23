@@ -1,0 +1,6 @@
+# Server API Registry File
+
+[USER]
+[ID]:CN=API Admin, OU=test, O=test, L=test, ST=test, C=US
+[ROLE]:admin
+[ENDUSER]

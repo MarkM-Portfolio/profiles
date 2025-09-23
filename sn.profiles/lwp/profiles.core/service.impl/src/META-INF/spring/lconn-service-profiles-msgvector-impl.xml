@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2013                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  	   xmlns:tx="http://www.springframework.org/schema/tx"
+  	   xmlns:aop="http://www.springframework.org/schema/aop"
+  	   xmlns:context="http://www.springframework.org/schema/context"
+  	   xsi:schemaLocation="
+  	   		http://www.springframework.org/schema/beans 
+  	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+  	   		http://www.springframework.org/schema/aop
+  	   		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+  	   		http://www.springframework.org/schema/tx
+  	   		http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+  	   		http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<bean id="com.ibm.lconn.core.appext.msgvector.api.MessageVectorService" 
+		class="com.ibm.lconn.core.compint.news.microblog.impl.NewsMessageVectorServiceRemote" scope="singleton"/>
+	
+	<bean id="com.ibm.lconn.core.appext.msgvector.config.MessageVectorServiceConfig"
+		class="com.ibm.lconn.core.appext.msgvector.config.MessageVectorServiceConfig">
+		<constructor-arg ref="com.ibm.lconn.core.appext.msgvector.spi.ConfigIds"/>
+		<constructor-arg ref="com.ibm.lconn.core.appext.msgvector.spi.ConfigProps"/>
+	</bean>
+
+</beans>

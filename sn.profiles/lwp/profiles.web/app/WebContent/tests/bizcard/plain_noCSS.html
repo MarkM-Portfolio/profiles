@@ -1,0 +1,41 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2012                                          -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+<html>
+<head>
+	<!-- provide server name from where to pull the bizcard code -->
+	<script type="text/javascript" src="/profiles/ibm_semanticTagServlet/javascript/semanticTagService.js?loadCssFiles=false"></script>
+	<script type="text/javascript">
+		var s = document.getElementsByTagName("script")[0];
+		if( s && s.outerHTML.indexOf('src="/profiles/ibm_semanticTagServlet/javascript/semanticTagService.js') != -1) {
+			alert(
+				"BOGUS TEST:\n"+
+				"The application that integrates the bizcard should not be served from the same server as the bizcard itself.\n" +
+				"\nFor a realistic test:\n"+
+				"1) copy this test file to another server or machine (other than where the bizcard is served from), then\n" +
+				"2) edit it and add the bizcard server base URL to the script tag above (where semanticTagService.js is requested)" 
+			);
+		}
+	</script>
+</head>
+<body>
+	<div class="vcard X-person-display-inline">
+		<span class="fn" style="display:none;">Amy Jones45</span>
+		<span class="email" style="display:none;">ajones45@janet.iris.com</span>
+	</div>
+	<p class="vcard">
+		<a href="javascript:void(0);"class="fn url">Amy Jones45</a>
+		<span class="email" style="display: none;">ajones45@janet.iris.com</span>
+	</p>
+</body>
+</html>

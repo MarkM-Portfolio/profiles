@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<xsd:schema 
+	targetNamespace="http://www.ibm.com/profiles-types"
+	xmlns="http://www.ibm.com/profiles-types"
+	xmlns:tns="http://www.ibm.com/profiles-types"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+
+	<xsd:simpleType name="enumUpdatability">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="read" />	
+			<xsd:enumeration value="readwrite" />						
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="enumMapToNameTable">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="surname"/>
+			<xsd:enumeration value="givenName"/>
+			<xsd:enumeration value="none"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="typeId">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="64"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:complexType name="labelType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="updatability" type="tns:enumUpdatability" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="propertyType">
+		<xsd:choice maxOccurs="unbounded">
+			<xsd:element name="ref" type="xsd:string" minOccurs="1" maxOccurs="1" />				 
+			<xsd:element name="updatability" type="tns:enumUpdatability" minOccurs="1" maxOccurs="1" />
+			<xsd:element name="hidden" type="xsd:boolean" minOccurs="1" maxOccurs="1" />
+			<xsd:element name="richText" type="xsd:boolean" minOccurs="0" maxOccurs="1" />	
+			<xsd:element name="fullTextIndexed" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="mapToNameTable" type="tns:enumMapToNameTable" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="label" type="tns:labelType" minOccurs="0" maxOccurs="1" />
+		</xsd:choice>
+	</xsd:complexType>
+			
+	<xsd:complexType name="typeType">
+		<xsd:sequence>
+			<xsd:element name="parentId" type="tns:typeId" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="property" type="tns:propertyType" minOccurs="0" maxOccurs="unbounded"/>			
+		</xsd:sequence>		
+	</xsd:complexType>
+	
+	<xsd:complexType name="configType">
+		<xsd:sequence>
+			<xsd:element name="type" type="tns:typeType" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="tns:typeId"/>
+	</xsd:complexType>
+			
+	<xsd:element name="config" type="tns:configType"/>
+	
+</xsd:schema>

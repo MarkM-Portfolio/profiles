@@ -1,0 +1,41 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2008, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+	
+<project name="profiles.seedlist/retriever" default="development" basedir=".">
+
+	<import file="${env.WPLC_IMPORT}/std_props.xml"/>
+	<import file="${env.WPLC_IMPORT}/std_dirs.xml"/>
+	<import file="${env.WPLC_IMPORT}/std_targets.xml"/>
+
+    <property name="output.jar" value="${dir.lib}/lc.profiles.seedlist.retriever-3.0.jar"/>
+    <property name="output.war" value="${dir.lib}/lc.profiles.seedlist.war"/>
+    <property name="override.websrc.dir" value="${basedir}/WebContent" />
+    <property name="web.xml" value="${basedir}/WebContent/WEB-INF/web.xml" />
+	<property name="include.pattern" value="**/*.xml,**/*.properties,**/*.xsl,**/*.exsd"/>
+	<property name="war.exclude.pattern" value="WEB-INF/debug.props/**"/>
+
+	<import file="${env.WPLC_IMPORT}/check.xml"/>
+	<import file="${env.WPLC_IMPORT}/compile.xml"/>
+	<import file="${env.WPLC_IMPORT}/rmic.xml"/>
+	<import file="${env.WPLC_IMPORT}/package_extra.xml"/>
+	<import file="${env.WPLC_IMPORT}/javadoc.xml"/>
+	<import file="${env.WPLC_IMPORT}/jdepend.xml"/>
+	<import file="${env.WPLC_IMPORT}/clean.xml"/>
+	<import file="${env.WPLC_IMPORT}/comp_zip.xml"/>
+	<import file="${env.WPLC_IMPORT}/std_targets.xml"/>
+	<import file="${env.WPLC_IMPORT}/process_nls.xml"/>
+	<import file="${env.WPLC_IMPORT}/performance.xml"/>
+	<import file="${env.WPLC_IMPORT}/dependencies.xml" />
+
+</project>

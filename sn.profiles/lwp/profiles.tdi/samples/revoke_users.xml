@@ -1,0 +1,1597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2012, 2015                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<MetamergeConfig IDIversion="Created by TDI7.1.1 - 2010-06-16" created="Tue Jun 21 14:31:59 BST 2011" createdBy="Mike" 
+					modified="The Feb 05 15:33:00 BST 2015" modifiedBy="rmelanson" version="7.1.1">
+    <Folder name="AssemblyLines">
+        <AssemblyLine name="_write_revoke_log">
+            <Settings>
+                <parameter name="ALPoolSettingsDialog">showALPoolSettings</parameter>
+                <parameter name="automapattributes">false</parameter>
+                <parameter name="createTombstones">false</parameter>
+                <parameter name="debug">false</parameter>
+                <parameter name="findreturncount">10</parameter>
+                <parameter name="includeGlobalPrologs">true</parameter>
+                <parameter name="nullBehaviorDialog">showNullBehavior</parameter>
+            </Settings>
+            <Hooks>
+                <Hook name="epilog">
+                    <Name>epilog</Name>
+                    <Enabled>false</Enabled>
+                </Hook>
+                <Hook name="epilog2">
+                    <Name>epilog2</Name>
+                    <Script><![CDATA[
+logmsg("INFO", "Found " + _count + " users.");
+logmsg("INFO", "\tACTIVE:   " + _active_count);
+logmsg("INFO", "\tINACTIVE: " + _inactive_count);
+logmsg("INFO", "Of INACTIVE will retain:         " + _skip_inactive_count + " users.");
+logmsg("INFO", "Of INACTIVE will REVOKE(delete): " + _revoke_inactive_count + " users.");
+]]></Script>
+                    <Enabled>true</Enabled>
+                </Hook>
+                <Hook name="prolog0">
+                    <Name>prolog0</Name>
+                    <Script><![CDATA[
+RevokeConfInit(false);
+
+var _count = 0;
+var _active_count = 0;
+var _inactive_count = 0;
+
+var _skip_inactive_count = 0;
+var _revoke_inactive_count = 0;
+
+var _revoke_older_than = 
+	new java.lang.Long(java.lang.System.currentTimeMillis() - (RevokeConf.keep_for_days * 24 * 60 * 60 * 1000));
+ 
+var _revoke_inactive_or_active_str = RevokeConf.revoke_active_instead_of_inactive ? "active" : "inactive"; 
+logmsg("INFO", "_revoke_inactive_or_active_str: " + _revoke_inactive_or_active_str);
+ 
+logmsg("INFO", "Revoking users last updated before: " + new java.util.Date(_revoke_older_than));
+]]></Script>
+                    <Enabled>true</Enabled>
+                </Hook>
+                <Hook name="startcycle">
+                    <Name>startcycle</Name>
+                    <Script/>
+                    <Enabled>false</Enabled>
+                </Hook>
+            </Hooks>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <SimulationConfig>
+                <SimulationStates>
+                    <Component name="process_users" state="Enabled"/>
+                    <Component name="write_skip_inactive_ldif" state="Simulated"/>
+                    <Component name="write_revoke_inactive_ldif" state="Simulated"/>
+                    <Component name="iterate_db" state="Enabled"/>
+                </SimulationStates>
+                <ProxySettings/>
+            </SimulationConfig>
+            <LogConfig/>
+            <ContainerEF name="EntryFeedContainer">
+                <Connector name="iterate_db">
+                    <InheritFrom>system:/Connectors/ProfileConnector</InheritFrom>
+                    <ConnectorMode>Iterator</ConnectorMode>
+
+                    <ConnectorState>@SUBSTITUTE{javascript
+		ret.value = system.getTDIProperty("revoke_users", "iterate_db_connectorState");
+}</ConnectorState>
+
+
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="debug">false</parameter>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>displayName</Name>
+                            <Type>simple</Type>
+                            <Simple>displayName</Simple>
+                        </AttributeMapItem>
+                        <AttributeMapItem>
+                            <Name>distinguishedName</Name>
+                            <Type>simple</Type>
+                            <Simple>distinguishedName</Simple>
+                        </AttributeMapItem>
+                        <AttributeMapItem>
+                            <Name>email</Name>
+                            <Type>simple</Type>
+                            <Simple>email</Simple>
+                        </AttributeMapItem>
+                        <AttributeMapItem>
+                            <Name>guid</Name>
+                            <Type>simple</Type>
+                            <Simple>guid</Simple>
+                        </AttributeMapItem>
+                        <AttributeMapItem>
+                            <Name>key</Name>
+                            <Type>simple</Type>
+                            <Simple>key</Simple>
+                        </AttributeMapItem>
+                        <AttributeMapItem>
+                            <Name>lastUpdate</Name>
+                            <Type>simple</Type>
+                            <Simple>lastUpdate</Simple>
+                        </AttributeMapItem>
+                        <AttributeMapItem>
+                            <Name>sys_usrState</Name>
+                            <Type>simple</Type>
+                            <Simple>sys_usrState</Simple>
+                        </AttributeMapItem>
+                        <AttributeMapItem>
+                            <Name>uid</Name>
+                            <Type>simple</Type>
+                            <Simple>uid</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings>
+                        <WhenToCommit>After every database operation</WhenToCommit>
+                    </DeltaSettings>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sourceUrl</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sourceUrl</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+            </ContainerEF>
+            <ContainerDF name="DataFlowContainer">
+                <Script name="process_users">
+                    <parameter name="script"><![CDATA[
+_count++;
+
+// give intermediate updates
+if (_count % 10000 === 0) {
+	logmsg("INFO", "Reviewed... " + _count + " users...");
+}
+
+var usrState = work.getString("sys_usrState");
+var lastUpdate = work.getObject("lastUpdate");
+
+if (_revoke_inactive_or_active_str === usrState) {
+	_inactive_count++;
+	
+	if (lastUpdate.getTime() < _revoke_older_than.longValue()) {
+		_revoke_inactive_count++;
+		write_revoke_inactive_ldif.connector.putEntry(work);	
+	} else {
+		_skip_inactive_count++;
+		write_skip_inactive_ldif.connector.putEntry(work);
+	}
+	
+} else /* skip active */{
+	_active_count++;
+}]]></parameter>
+                </Script>
+                <Connector name="write_skip_inactive_ldif">
+                    <InheritFrom>/Connectors/write_ldiff</InheritFrom>
+                    <ConnectorMode>AddOnly</ConnectorMode>
+
+                    <ConnectorState>@SUBSTITUTE{javascript
+		ret.value = system.getTDIProperty("revoke_users", "write_ldif_connectorState");
+}</ConnectorState>
+
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="filePath">revoke_skip.ldiff</parameter>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings/>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+                <Connector name="write_revoke_inactive_ldif">
+                    <InheritFrom>/Connectors/write_ldiff</InheritFrom>
+                    <ConnectorMode>AddOnly</ConnectorMode>
+
+                    <ConnectorState>@SUBSTITUTE{javascript
+		ret.value = system.getTDIProperty("revoke_users","write_ldif_connectorState");
+}</ConnectorState>
+               
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="filePath">revoke.ldiff</parameter>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <DeltaSettings/>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+            </ContainerDF>
+            <ThreadOptions/>
+            <Operations/>
+            <InitParams>
+                <Schema name="AssemblyLineInitParams"/>
+            </InitParams>
+        </AssemblyLine>
+        <AssemblyLine name="summary">
+            <Settings/>
+            <Hooks>
+                <Hook name="prolog0">
+                    <Name>prolog0</Name>
+
+
+                    <Script><![CDATA[
+	RevokeConfInit(true);
+
+	system.setTDIProperty("revoke_users", "write_ldif_connectorState", "Passive");
+	system.setTDIProperty("revoke_users", "iterate_db_connectorState", "Enabled");
+]]></Script>
+
+
+                    <Enabled>true</Enabled>
+                </Hook>
+            </Hooks>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <SimulationConfig>
+                <SimulationStates>
+                    <Component name="call_write_log" state="Simulated"/>
+                </SimulationStates>
+                <ProxySettings/>
+            </SimulationConfig>
+            <LogConfig/>
+            <ContainerEF name="EntryFeedContainer"/>
+            <ContainerDF name="DataFlowContainer">
+                <Function name="call_write_log">
+                    <InheritFrom>/Functions/call_write_log</InheritFrom>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>displayName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>lastUpdate</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sys_usrState</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>displayName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>lastUpdate</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sys_usrState</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Configuration>
+                    <SandboxConfig/>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                </Function>
+            </ContainerDF>
+            <ThreadOptions/>
+            <Operations/>
+            <InitParams>
+                <Schema name="AssemblyLineInitParams"/>
+            </InitParams>
+        </AssemblyLine>
+
+
+        <AssemblyLine name="revoke">
+            <Settings/>
+            <Hooks>
+                <Hook name="prolog0">
+                    <Name>prolog0</Name>
+
+
+                    <Script><![CDATA[
+RevokeConfInit(true);
+
+if (RevokeConf.for_revoke_command_use_existing_revoke_file)
+	{
+		system.setTDIProperty("revoke_users","write_ldif_connectorState", "Disabled");
+		system.setTDIProperty("revoke_users","iterate_db_connectorState", "Disabled");
+	}
+	else
+	{
+		system.setTDIProperty("revoke_users", "write_ldif_connectorState", "Passive");
+		system.setTDIProperty("revoke_users", "iterate_db_connectorState", "Enabled");
+	}
+
+
+]]></Script>
+
+
+                    <Enabled>true</Enabled>
+                </Hook>
+            </Hooks>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <SimulationConfig>
+                <SimulationStates>
+                    <Component name="call_write_log" state="Simulated"/>
+                    <Component name="call_process_revoke_log" state="Simulated"/>
+                </SimulationStates>
+                <ProxySettings/>
+            </SimulationConfig>
+            <LogConfig/>
+            <ContainerEF name="EntryFeedContainer"/>
+            <ContainerDF name="DataFlowContainer">
+                <Function name="call_write_log">
+                    <InheritFrom>/Functions/call_write_log</InheritFrom>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>displayName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>lastUpdate</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sys_usrState</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>displayName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>lastUpdate</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sys_usrState</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Configuration>
+                    <SandboxConfig/>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                </Function>
+
+                <Function name="call_process_revoke_log">
+                    <InheritFrom>/Functions/call_write_log</InheritFrom>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>displayName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>lastUpdate</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sys_usrState</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>displayName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>lastUpdate</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sys_usrState</Name>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                        </SchemaItem>
+                    </Schema>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="assemblyLine">_process_revoke_log</parameter>
+                    </Configuration>
+                    <SandboxConfig/>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                </Function>
+            </ContainerDF>
+            <ThreadOptions/>
+            <Operations/>
+            <InitParams>
+                <Schema name="AssemblyLineInitParams"/>
+            </InitParams>
+        </AssemblyLine>
+
+        <AssemblyLine name="_process_revoke_log">
+            <Settings>
+                <parameter name="ALPoolSettingsDialog">showALPoolSettings</parameter>
+                <parameter name="automapattributes">false</parameter>
+                <parameter name="createTombstones">false</parameter>
+                <parameter name="debug">false</parameter>
+                <parameter name="findreturncount">10</parameter>
+                <parameter name="includeGlobalPrologs">true</parameter>
+                <parameter name="nullBehaviorDialog">showNullBehavior</parameter>
+            </Settings>
+            <Hooks>
+                <Hook name="epilog">
+                    <Name>epilog</Name>
+                    <Script>logmsg("INFO", "END revoke of users in revoke log.");</Script>
+                    <Enabled>true</Enabled>
+                </Hook>
+                <Hook name="prolog0">
+                    <Name>prolog0</Name>
+                    <Script><![CDATA[
+RevokeConfInit(false);
+
+var _revoke_count;
+
+var _fn_printUser = function(work) {
+	var str = ['{'];
+	var first = true;
+	var keys = ['uid', 'guid', 'displayName'];
+	for (var kidx in keys) {
+		if (first) { first = false; }
+		else { str.push(', '); }   
+		
+		var k = keys[kidx];
+		
+		str.push(k);
+		str.push(': ');
+		str.push(work.getString(k));
+	}
+	str.push('}');
+	return str.join('');
+}
+
+logmsg("INFO", "BEGIN revoke of users in revoke log.");]]></Script>
+                    <Enabled>true</Enabled>
+                </Hook>
+            </Hooks>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <SimulationConfig>
+                <SimulationStates>
+                    <Component name="print_status_start" state="Enabled"/>
+                    <Component name="delete_user" state="Simulated"/>
+                    <Component name="print_status_end" state="Enabled"/>
+                    <Component name="read_to_revoke_log" state="Enabled"/>
+                </SimulationStates>
+                <ProxySettings/>
+            </SimulationConfig>
+            <LogConfig/>
+            <ContainerEF name="EntryFeedContainer">
+                <Connector name="read_to_revoke_log">
+                    <InheritFrom>/Connectors/read_ldiff</InheritFrom>
+                    <ConnectorMode>Iterator</ConnectorMode>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="filePath">revoke.ldiff</parameter>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings>
+                        <UniqueAttribute/>
+                        <WhenToCommit>After every database operation</WhenToCommit>
+                    </DeltaSettings>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>displayName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>lastUpdate</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sys_usrState</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>displayName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>lastUpdate</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sys_usrState</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+            </ContainerEF>
+            <ContainerDF name="DataFlowContainer">
+                <Script name="print_status_start">
+                    <parameter name="script">task.logmsg("ATTEMPT - revoke of " + _fn_printUser(work));</parameter>
+                </Script>
+                <Connector name="delete_user">
+                    <InheritFrom>system:/Connectors/ProfileConnector</InheritFrom>
+                    <ConnectorMode>Delete</ConnectorMode>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="debug">false</parameter>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings/>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sourceUrl</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sourceUrl</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <LinkCriteriaItem>
+                            <Key>130b2516bf9</Key>
+                            <Attribute>key</Attribute>
+                            <Operator>equals</Operator>
+                            <Value>$key</Value>
+                        </LinkCriteriaItem>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+                <Script name="print_status_end">
+                    <parameter name="script">task.logmsg(" ===&gt; SUCCESS: " + _fn_printUser(work));</parameter>
+                </Script>
+            </ContainerDF>
+            <ThreadOptions/>
+            <Operations/>
+            <InitParams>
+                <Schema name="AssemblyLineInitParams"/>
+            </InitParams>
+        </AssemblyLine>
+        <AssemblyLine name="validate">
+            <Settings/>
+            <Hooks/>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <SimulationConfig>
+                <SimulationStates>
+                    <Component name="validate" state="Enabled"/>
+                    <Component name="read_db" state="Enabled"/>
+                </SimulationStates>
+                <ProxySettings/>
+            </SimulationConfig>
+            <LogConfig/>
+            <ContainerEF name="EntryFeedContainer">
+                <Connector name="read_db">
+                    <InheritFrom>system:/Connectors/ProfileConnector</InheritFrom>
+                    <ConnectorMode>Iterator</ConnectorMode>
+                    <ConnectorState>Enabled</ConnectorState>
+                    <Configuration>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="debug">false</parameter>
+                    </Configuration>
+                    <Parser>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <Schema name="Input">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                        <Schema name="Output">
+                            <InheritFrom>[parent]</InheritFrom>
+                        </Schema>
+                    </Parser>
+                    <AttributeMap name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
+                    </AttributeMap>
+                    <AttributeMap name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </AttributeMap>
+                    <DeltaSettings>
+                        <WhenToCommit>After every database operation</WhenToCommit>
+                    </DeltaSettings>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sourceUrl</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                        <SchemaItem>
+                            <Name>distinguishedName</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>email</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>guid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>key</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>sourceUrl</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                        <SchemaItem>
+                            <Name>uid</Name>
+                            <Syntax>java.lang.String</Syntax>
+                        </SchemaItem>
+                    </Schema>
+                    <LinkCriteria>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </LinkCriteria>
+                    <Hooks>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Hooks>
+                    <CheckpointConfig/>
+                    <SandboxConfig/>
+                    <Reconnect>
+                        <InheritFrom>[parent]</InheritFrom>
+                        <parameter name="initreconnect">false</parameter>
+                        <parameter name="numberOfRetries">1</parameter>
+                        <parameter name="retryDelay">10</parameter>
+                        <ReconnectRules/>
+                    </Reconnect>
+                    <Operations/>
+                    <PoolDefinition>
+                        <InheritFrom>[parent]</InheritFrom>
+                    </PoolDefinition>
+                    <PoolInstance/>
+                    <InitializeOption>0</InitializeOption>
+                </Connector>
+            </ContainerEF>
+            <ContainerDF name="DataFlowContainer">
+                <Script name="validate">
+                    <parameter name="script"><![CDATA[var usrState = work.getString("sys_usrState");
+
+if (usrState != null && usrState.length() > 0) {
+	logmsg("INFO",   "+++++++++ VALID TDI SOLUTION +++++++++++");
+} else {
+	logmsg("SEVERE", "XXXXXXXXX INVALID TDI SOLUTION XXXXXXXXX");
+}
+
+task.shutdown();]]></parameter>
+                </Script>
+            </ContainerDF>
+            <ThreadOptions/>
+            <Operations/>
+            <InitParams>
+                <Schema name="AssemblyLineInitParams"/>
+            </InitParams>
+        </AssemblyLine>
+    </Folder>
+    <Folder name="Connectors">
+        <Connector name="write_ldiff">
+            <InheritFrom>system:/Connectors/ibmdi.FileSystem</InheritFrom>
+            <ConnectorMode>AddOnly</ConnectorMode>
+            <ConnectorState>Enabled</ConnectorState>
+            <Configuration>
+                <UserComment/>
+                <InheritFrom>[parent]</InheritFrom>
+                <parameter name="debug">false</parameter>
+                <parameter name="fileAppend">false</parameter>
+                <parameter name="filePath">foo.ldiff</parameter>
+                <parameter name="userComment"/>
+            </Configuration>
+            <Parser>
+                <UserComment/>
+                <InheritFrom>system:/Parsers/ibmdi.LDIF</InheritFrom>
+                <parameter name="debug">false</parameter>
+                <parameter name="ldifDNAttributeName">distinguishedName</parameter>
+                <parameter name="userComment"/>
+                <Schema name="Input">
+                    <InheritFrom>[parent]</InheritFrom>
+                </Schema>
+                <Schema name="Output">
+                    <InheritFrom>[parent]</InheritFrom>
+                </Schema>
+            </Parser>
+            <AttributeMap name="Input">
+                <InheritFrom>[parent]</InheritFrom>
+            </AttributeMap>
+            <AttributeMap name="Output">
+                <InheritFrom>[parent]</InheritFrom>
+                <AttributeMapItem>
+                    <Name>*</Name>
+                    <Type>simple</Type>
+                    <Simple>*</Simple>
+                </AttributeMapItem>
+            </AttributeMap>
+            <DeltaSettings/>
+            <Schema name="Input">
+                <InheritFrom>[parent]</InheritFrom>
+            </Schema>
+            <Schema name="Output">
+                <InheritFrom>[parent]</InheritFrom>
+            </Schema>
+            <LinkCriteria>
+                <InheritFrom>[parent]</InheritFrom>
+            </LinkCriteria>
+            <Hooks>
+                <InheritFrom>[parent]</InheritFrom>
+            </Hooks>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <Reconnect>
+                <InheritFrom>[parent]</InheritFrom>
+                <parameter name="initreconnect">false</parameter>
+                <parameter name="numberOfRetries">1</parameter>
+                <parameter name="retryDelay">10</parameter>
+                <ReconnectRules/>
+            </Reconnect>
+            <Operations/>
+            <PoolDefinition>
+                <InheritFrom>[parent]</InheritFrom>
+                <Enabled>false</Enabled>
+                <MinPoolSize>0</MinPoolSize>
+                <PurgeInterval>0</PurgeInterval>
+                <InitializeAttempts>1</InitializeAttempts>
+            </PoolDefinition>
+            <PoolInstance/>
+            <InitializeOption>0</InitializeOption>
+        </Connector>
+        <Connector name="read_ldiff">
+            <InheritFrom>/Connectors/write_ldiff</InheritFrom>
+            <ConnectorMode>Iterator</ConnectorMode>
+            <ConnectorState>Enabled</ConnectorState>
+            <Configuration>
+                <InheritFrom>[parent]</InheritFrom>
+            </Configuration>
+            <Parser>
+                <InheritFrom>[parent]</InheritFrom>
+                <Schema name="Input">
+                    <InheritFrom>[parent]</InheritFrom>
+                </Schema>
+                <Schema name="Output">
+                    <InheritFrom>[parent]</InheritFrom>
+                </Schema>
+            </Parser>
+            <AttributeMap name="Input">
+                <InheritFrom>[parent]</InheritFrom>
+                <AttributeMapItem>
+                    <Name>*</Name>
+                    <Type>simple</Type>
+                    <Simple>*</Simple>
+                </AttributeMapItem>
+            </AttributeMap>
+            <AttributeMap name="Output">
+                <InheritFrom>[parent]</InheritFrom>
+            </AttributeMap>
+            <DeltaSettings>
+                <WhenToCommit>After every database operation</WhenToCommit>
+            </DeltaSettings>
+            <Schema name="Input">
+                <InheritFrom>[parent]</InheritFrom>
+            </Schema>
+            <Schema name="Output">
+                <InheritFrom>[parent]</InheritFrom>
+            </Schema>
+            <LinkCriteria>
+                <InheritFrom>[parent]</InheritFrom>
+            </LinkCriteria>
+            <Hooks>
+                <InheritFrom>[parent]</InheritFrom>
+            </Hooks>
+            <CheckpointConfig/>
+            <SandboxConfig/>
+            <Reconnect>
+                <InheritFrom>[parent]</InheritFrom>
+                <ReconnectRules/>
+            </Reconnect>
+            <Operations/>
+            <PoolDefinition>
+                <InheritFrom>[parent]</InheritFrom>
+            </PoolDefinition>
+            <PoolInstance/>
+            <InitializeOption>0</InitializeOption>
+        </Connector>
+    </Folder>
+    <Folder name="Parsers"/>
+    <Folder name="Scripts">
+        <Script name="utils">
+            <parameter name="autoInclude">true</parameter>
+            <parameter name="includeFiles"/>
+            <parameter name="script"><![CDATA[//
+// Log & config functions
+//
+
+//
+// Logging
+//
+function logmsg(level, text) {
+	task.logmsg(level, text);
+
+	return text;
+}
+
+var RevokeConf = {};
+
+//
+// Config
+//
+var RevokeConfInit = function(dump_conf){
+	
+	var _conf = {};
+	
+	//
+	// Dump config props
+	//
+	var _dumpConf = function() {
+		var sortedProps = [];
+		for (var p in _conf) { sortedProps.push(p); } 
+		sortedProps.sort();
+				
+		logmsg("INFO", "START: dump config settings");
+		for (var index in sortedProps) {
+			var p = sortedProps[index];					
+			if (p != '_dumpConfigSettings') {
+				logmsg("INFO", " - RevokeConf[" + p + "]: " + _conf[p]);
+			}	
+		}
+		logmsg("INFO", "END: dump config settings");
+	};
+	
+	// init map of values
+	var _keySet = (function(){
+		var mset = new java.util.HashSet();
+		var keys = system.getTDIProperties().getPropertyStore("revoke_users").keys();
+		while (keys.hasNext()) {
+			mset.add(keys.next());
+		}
+		
+		return mset;
+	})();
+	
+	// 
+	// Get a property
+	//
+	var _prop = function(pName) {
+		if (_keySet.contains(pName)) {
+			return system.getTDIProperty("revoke_users", pName);
+		}
+		
+		return null;
+	};
+	
+	var _defVal = function(defVal, altDef) {
+		if (defVal) {
+			return defVal;
+		} else {
+			return altDef;
+		}
+	};
+
+	// get int prop
+	var _int_prop = function(pName, defVal) {
+		var aProp = _prop(pName);
+		defVal = _defVal(defVal, 0);
+		
+		try {
+			return java.lang.Integer.parseInt(aProp);
+		} catch (e) {
+			return defVal;
+		}
+	};
+	
+	// get bool prop
+	var _bool_prop = function(pName, defVal) {
+		var aProp = _prop(pName);
+		
+		if (aProp != null)
+		{
+			if (aProp.toLowerCase() == "true")
+				return true;
+			else
+				return false;
+		}
+		else
+			return defVal;
+	};
+
+
+	// setup conf and dump
+	_conf["keep_for_days"] = _int_prop("keep_for_days", 21);
+	
+	_conf["for_revoke_command_use_existing_revoke_file"] =_bool_prop("for_revoke_command_use_existing_revoke_file", false);
+
+	_conf["revoke_active_instead_of_inactive"] =_bool_prop("revoke_active_instead_of_inactive", false);
+
+	if (dump_conf) {
+		_dumpConf();
+	}	
+	
+	// set conf
+	RevokeConf = _conf;	
+};]]></parameter>
+        </Script>
+    </Folder>
+    <JavaLibraries/>
+    <JavaProperties/>
+    <Folder name="Includes"/>
+    <Folder name="Config">
+        <LogConfig name="Logging"/>
+        <InstanceProperties name="AutoStart">
+            <AutoStart/>
+        </InstanceProperties>
+        <TombstonesConfig name="Tombstones"/>
+        <SolutionInterface name="SolutionInterface">
+            <PollInterval>-1</PollInterval>
+            <InstanceID>revoke_usrs</InstanceID>
+            <enabled>true</enabled>
+        </SolutionInterface>
+    </Folder>
+    <Folder name="Functions">
+        <Function name="call_write_log">
+            <InheritFrom>system:/Functions/ibmdi.AssemblyLineFC</InheritFrom>
+            <ConnectorState>Enabled</ConnectorState>
+            <Schema name="Input">
+                <InheritFrom>[parent]</InheritFrom>
+                <SchemaItem>
+                    <Name>displayName</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>distinguishedName</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>email</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>guid</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>key</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>lastUpdate</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>sys_usrState</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>uid</Name>
+                </SchemaItem>
+            </Schema>
+            <Schema name="Output">
+                <InheritFrom>[parent]</InheritFrom>
+                <SchemaItem>
+                    <Name>displayName</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>distinguishedName</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>email</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>guid</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>key</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>lastUpdate</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>sys_usrState</Name>
+                </SchemaItem>
+                <SchemaItem>
+                    <Name>uid</Name>
+                </SchemaItem>
+            </Schema>
+            <Hooks>
+                <InheritFrom>[parent]</InheritFrom>
+            </Hooks>
+            <Configuration>
+                <UserComment/>
+                <InheritFrom>[parent]</InheritFrom>
+                <parameter name="assemblyLine">_write_revoke_log</parameter>
+                <parameter name="debug">false</parameter>
+                <parameter name="mode">0</parameter>
+                <parameter name="shareLog">true</parameter>
+                <parameter name="userComment"/>
+            </Configuration>
+            <SandboxConfig/>
+            <AttributeMap name="Input">
+                <InheritFrom>[parent]</InheritFrom>
+            </AttributeMap>
+            <AttributeMap name="Output">
+                <InheritFrom>[parent]</InheritFrom>
+            </AttributeMap>
+        </Function>
+    </Folder>
+    <Folder name="AttributeMaps"/>
+    <Properties name="Properties">
+        <Stores>
+            <PropertyStore name="Solution-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">Solution-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="Global-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">Global-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="System-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collectionType">System-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="Java-Properties">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">@SUBSTITUTE{config.$directory}/revoke_users.properties</parameter>
+                    <parameter name="collectionType">Java-Properties</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="profiles">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <UserComment/>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">profiles_tdi.properties</parameter>
+                    <parameter name="collectionType">Default</parameter>
+                    <parameter name="debug">false</parameter>
+                    <parameter name="userComment"/>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+            <PropertyStore name="revoke_users">
+                <Parser>
+                    <Schema name="Input">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                    <Schema name="Output">
+                        <InheritFrom>[parent]</InheritFrom>
+                    </Schema>
+                </Parser>
+                <RawConnector>
+                    <UserComment/>
+                    <InheritFrom>system:/Connectors/ibmdi.Properties</InheritFrom>
+                    <parameter name="collection">revoke_users.properties</parameter>
+                    <parameter name="collectionType">Default</parameter>
+                    <parameter name="debug">false</parameter>
+                    <parameter name="userComment"/>
+                    <parameter name="autorewrite">true</parameter>
+                </RawConnector>
+                <Key>key</Key>
+                <Value>value</Value>
+                <ReadOnly>false</ReadOnly>
+                <InitialLoad>true</InitialLoad>
+                <CacheTimeout>0</CacheTimeout>
+            </PropertyStore>
+        </Stores>
+    </Properties>
+</MetamergeConfig>

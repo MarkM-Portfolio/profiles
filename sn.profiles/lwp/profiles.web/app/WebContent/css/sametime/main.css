@@ -1,0 +1,60 @@
+/* ***************************************************************** */
+/*                                                                   */
+/* IBM Confidential                                                  */
+/*                                                                   */
+/* OCO Source Materials                                              */
+/*                                                                   */
+/* Copyright IBM Corp. 2009, 2010                                    */
+/*                                                                   */
+/* The source code for this program is not published or otherwise    */
+/* divested of its trade secrets, irrespective of what has been      */
+/* deposited with the U.S. Copyright Office.                         */
+/*                                                                   */
+/* ***************************************************************** */
+
+.awareness {
+	/*font-size: 0.70em;
+	display: block;*/
+	
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	padding-left: 15px! important;
+}
+
+.available {
+	background-image: url(images/ST_Awns_Active.png);
+}
+
+.availableMobile {
+	background-image: url(images/ST_Awns_Active_Mobile.png);
+}
+
+.away {
+	background-image: url(images/ST_Awns_Away.png);
+}
+
+.awayMobile {
+	background-image: url(images/ST_Awns_Away_Mobile.png);
+}
+
+.dnd {
+	background-image: url(images/ST_Awns_DND.png);
+}
+
+.dndMobile {
+	background-image: url(images/ST_Awns_DND_Mobile.png);
+}
+
+.meeting {
+	background-image: url(images/ST_Awns_InAMtng.png);
+}
+
+.meetingMobile {
+	background-image: url(images/ST_Awns_InAMtg_Mobile.png);
+}
+
+.offline {
+	background-image: url(images/ST_Awns_Offline.png);
+}

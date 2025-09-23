@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<config id="profiles"
+	xmlns="http://www.ibm.com/profiles-config" 
+	xmlns:tns="http://www.ibm.com/profiles-config" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.ibm.com/profiles-config profiles-config.xsd">
+	
+	
+  	<!-- START PROFILES DATA MODELS SECTION -->
+	<profileDataModels>	
+		<!-- START PROFILES EXTENSION ATTRIBUTES -->
+		<profileExtensionAttributes>
+			<xmlFileAttribute extensionId="profileLinks" schemaFile="profile-links.xsd" indexBindingExpr="/linkroll/link/@name | /linkroll/link/@url" >
+				<indexFields>
+				    <indexField fieldName="linkName" fieldExpr="/linkroll/link/@name" />
+				</indexFields>
+			</xmlFileAttribute>				
+			<simpleAttribute extensionId="tieline" length="16" pattern="\d\d\d\-\d\d\d\d"/>
+			<simpleAttribute extensionId="spokenLanguages" length="64"/>
+			<simpleAttribute extensionId="AddSpokenLang" length="64" userLabel="Spoken Languages" userTypeString="string" sourceKey="spokenLang"/>
+			<simpleAttribute extensionId="property1" length="16" pattern="\d\d\d\-\d\d\d\d"/>
+			<richtextAttribute extensionId="lifestory" maxBytes="4096"/>
+			<simpleAttribute extensionId="schoolName" length="128"/>
+			<simpleAttribute extensionId="frenchField" length="128"/>
+		</profileExtensionAttributes>
+		<!-- END PROFILES EXTENSION ATTRIBUTES -->
+  	
+		<profileDataModel>
+			<!-- =================================================================================== -->
+			<!-- This section is used to define attributes that are updated via the drafting process -->
+			<!--   In most deployments you should never edit the config for this section.			 -->
+			<!-- Example: <draftableAttribute>displayName</draftableAttribute>                  	 -->
+			<!-- Example: <draftableExtensionAttribute extensionIdRef="tieline"/>    			 	 -->
+			<!-- =================================================================================== -->
+			<draftableExtensionAttribute extensionIdRef="tieline"/>
+			<draftableAttribute>description</draftableAttribute>
+			<draftableAttribute>jobResp</draftableAttribute>
+		</profileDataModel>	
+	</profileDataModels>
+	<!-- END PROFILES DATA MODELS SECTION -->
+
+
+	<!-- START LAYOUT CONFIGURATION SECTION-->
+	<layoutConfiguration>
+		
+		<!-- 
+ 			UI configuration for vcard export feature.
+ 			
+ 			The first charset defined is the default.
+ 		 -->
+ 		<vcardExport>
+			<charset name="UTF-8">
+				<label labelKey="label.vcard.encoding.utf8"/>
+			</charset>
+			<charset name="ISO-8859-1">
+				<label labelKey="label.vcard.encoding.iso88591"/>
+			</charset>
+			<charset name="Cp943c">
+				<label labelKey="label.vcard.encoding.cp943c" bundleIdRef="myres"/>
+			</charset>
+		</vcardExport>
+
+		<!-- Optional display rules for individual fields -->
+		<displayRules>
+		     <displayRule ruleId="frRule" ruleClass="com.ibm.lconn.profiles.config.ui.rules.LangDisplayRule">
+		             <property name="supportedLocales" value="fr" />
+		     </displayRule>
+		     <displayRule ruleId="zhRule" ruleClass="com.ibm.lconn.profiles.config.ui.rules.LangDisplayRule">
+		             <property name="supportedLocales" value="zh,zh_TW" />
+		     </displayRule>
+		</displayRules>
+	
+		<searchLayout>
+		    	<attribute showLabel="true">telephoneNumber</attribute>
+		    	<attribute showLabel="false">email</attribute>
+		    	<attribute showLabel="false">jobResp</attribute>
+		    	<attribute showLabel="true">organizationTitle</attribute>
+		   	 	<attribute showLabel="false">experience</attribute>
+		    	<extensionAttribute showLabel="true" extensionIdRef="spokenLanguages" />
+		</searchLayout>
+
+		<searchResultsLayout profileType="default">
+		<column>
+			<attribute hideIfEmpty="true" photo="true" uid="key" showLabel="false">profilePicture</attribute>
+		</column>
+		<column>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">telephoneNumber</attribute>
+			<attribute showLabel="false" prependHtml="" appendHtml="" hideIfEmpty="true">jobResp</attribute>
+			<attribute showLabel="false" prependHtml="" appendHtml="" hideIfEmpty="true">organizationTitle</attribute>
+			<attribute showLabel="false" prependHtml="" appendHtml="" hideIfEmpty="true">countryDisplayValue</attribute>
+			</column>
+		
+			<column>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">telephoneNumber</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true" email="true">email</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true" email="true">groupwareEmail</attribute>
+			<extensionAttribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true" extensionIdRef="spokenLanguages" />		
+			</column>			
+		</searchResultsLayout>
+
+
+		<searchResultsLayout profileType="teacher">
+			<column>
+			<attribute hideIfEmpty="true" photo="true" uid="key" showLabel="false">profilePicture</attribute>
+			</column>
+			<column>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">displayName</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">givenName</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">surname</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">workLocation.city</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">countryDisplayValue</attribute>
+			</column>
+			<column>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">telephoneNumber</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">email</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">jobResp</attribute>
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">organizationTitle</attribute>	
+			<attribute showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true">experience</attribute>
+			<extensionAttribute extensionIdRef="spokenLanguages" showLabel="true" prependHtml="&lt;strong&gt;" appendHtml="&lt;/strong&gt;" hideIfEmpty="true" />
+			</column>			
+		</searchResultsLayout>
+		
+		<businessCardLayout profileType="default" showSametimeChatAction="false" showSametimeCallAction="false">
+			<attributes>
+				<attribute showLabel="false" appendHtml="&lt;br/&gt;">displayName</attribute>
+				<attribute showLabel="false" appendHtml="&lt;br/&gt;">jobResp</attribute>
+				<attribute showLabel="false" appendHtml=", ">workLocation.city</attribute>
+				<attribute showLabel="false" appendHtml=", ">workLocation.state</attribute>
+				<attribute showLabel="false">countryDisplayValue</attribute>
+				<attribute showLabel="true" appendHtml="|">bldgId</attribute>
+				<attribute showLabel="true" appendHtml="|">floor</attribute>
+				<attribute showLabel="true" appendHtml="&lt;br/&gt;">officeName</attribute>
+				<attribute showLabel="true">telephoneNumber</attribute>
+				<attribute showLabel="false" email="true">email</attribute>
+			</attributes>
+			<actions>
+				<action urlPattern="mailto:{email}">
+					<label labelKey="personCardSendMail"/>
+				</action>
+				<action urlPattern="{profilesSvcRef}/html/wc.do?action=fr&amp;requireAuth=true&amp;widgetId=friends&amp;targetKey={key}">
+					<label labelKey="personCardAddAsColleagues"/>
+				</action>
+			</actions>
+		</businessCardLayout>
+		
+		<businessCardLayout profileType="teacher" showProfilePhoto="false" enableSametimeAwareness="false" showSametimeStatusMsg="true">
+			<attributes>
+				<attribute showLabel="false" prependHtml="&lt;h2 id='%displayNameId%'&gt;" appendHtml="&lt;/h2&gt;">displayName</attribute>
+				<attribute showLabel="false" prependHtml="&lt;p class='title'&gt;" appendHtml="&lt;/p&gt;">jobResp</attribute>
+				<attribute showLabel="false" prependHtml="&lt;p class='role'&gt;" appendHtml="&lt;/p&gt;">title</attribute>
+				<html prependHtml="&lt;div class='adr'&gt;"/>
+					<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;span class='locality'&gt;" appendHtml="&lt;/span&gt;">workLocation.city</attribute>
+					<attribute showLabel="false" hideIfEmpty="true" prependHtml=",&lt;span class='region'&gt;" appendHtml="&lt;/span&gt;">workLocation.state</attribute>
+					<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;span class='country-name'&gt;" appendHtml="&lt;/span&gt;">countryDisplayValue</attribute>
+					<html prependHtml="&lt;p class='extended-address'&gt;"/>
+						<attribute showLabel="true" hideIfEmpty="true" appendHtml="&amp;nbsp;|&amp;nbsp;" labelKey="label.contactInformation.bldgId">bldgId</attribute>
+						<attribute showLabel="true" hideIfEmpty="true" appendHtml="&amp;nbsp;|&amp;nbsp;" labelKey="label.contactInformation.floor">floor</attribute>
+						<attribute showLabel="true" hideIfEmpty="true" labelKey="label.contactInformation.officeName">officeName</attribute>
+					<html prependHtml="&lt;/p&gt;"/>
+				<html prependHtml="&lt;/div&gt;"/>
+				<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;p class='tel'&gt;" appendHtml="&lt;/p&gt;">telephoneNumber</attribute>
+				<attribute showLabel="false" hideIfEmpty="true" prependHtml="&lt;p&gt;" appendHtml="&lt;/p&gt;" email="true">email</attribute>
+			</attributes>
+			<actions>
+				<action urlPattern="mailto:{email}" emailEnabledRequired="true" liClass="lotusMenuSeparator">
+					<label labelKey="personCardSendMail"/>
+					<icon href="{profilesSvcRef}/nav/common/styles/images/iconSendMail.gif">
+						<alt labelKey="personCardSendMail"/>
+					</icon>
+				</action>
+				<action urlPattern="{profilesSvcRef}/html/wc.do?action=fr&amp;requireAuth=true&amp;widgetId=friends&amp;targetKey={key}" liClass="lotusMenuSeparator">
+					<label labelKey="personCardAddAsColleagues"/>
+				</action>
+			</actions>
+		</businessCardLayout>
+	
+		<profileLayout profileType="default">
+			<jobInformation>
+				<attribute showLabel="false" appendHtml="&lt;br/&gt;">organizationTitle</attribute>
+				<attribute showLabel="false" appendHtml="&lt;br/&gt;">employeeTypeDesc</attribute>
+				<editableAttribute showLabel="false" appendHtml="&lt;br/&gt;">jobResp</editableAttribute>
+				<editableAttribute showLabel="true" hideIfEmpty="true" hcard="true" email="secretaryEmail" uid="secretaryUid" userid="secretaryUserid" appendHtml="&lt;br/&gt;">secretaryName</editableAttribute>
+				<!-- <editableAttribute showLabel="true">secretaryUid</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true">secretaryEmail</editableAttribute> -->
+				<!-- <editableAttribute showLabel="false">isManager</editableAttribute> -->
+				<!-- <editableAttribute showLabel="false">employeeNumber</editableAttribute> -->
+				<!-- <editableAttribute showLabel="false">managerUid</editableAttribute> -->
+				<!-- <editableAttribute showLabel="false">shift</editableAttribute> -->
+				<!-- <editableAttribute showLabel="false">deptNumber</editableAttribute> -->
+				<!-- <attribute showLabel="false">workLocation.address1</attribute> -->
+				<!-- <attribute showLabel="false">workLocation.address2</attribute> -->
+				<attribute showLabel="false" appendHtml=", ">workLocation.city</attribute>
+				<attribute showLabel="false" appendHtml=", ">workLocation.state</attribute>
+				<!-- <attribute showLabel="false">workLocation.postalCode</attribute> -->
+				<attribute showLabel="false">countryDisplayValue</attribute>
+				<!-- <attribute showLabel="false">countryCode</attribute> -->
+			</jobInformation>
+			<contactInformation>
+				<!-- <editableAttribute showLabel="true">courtesyTitle</editableAttribute> -->
+				<editableAttribute showLabel="true" disabled="true">displayName</editableAttribute>
+				<!-- <editableAttribute showLabel="true">preferredFirstName</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true">preferredLastName</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true">alternateLastname</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true">nativeFirstName</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true">nativeLastName</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true">preferredLanguage</editableAttribute> -->
+				<editableAttribute showLabel="true">bldgId</editableAttribute>
+				<editableAttribute showLabel="true">floor</editableAttribute>
+				<editableAttribute showLabel="true">officeName</editableAttribute>
+				<editableAttribute showLabel="true">telephoneNumber</editableAttribute>
+				<extensionAttribute showLabel="true" editable="true" extensionIdRef="property1"/>
+				<extensionAttribute showLabel="true" editable="true" extensionIdRef="tieline"/>				<!-- tie line for the IBM customization of Profiles -->
+				<editableAttribute showLabel="true">ipTelephoneNumber</editableAttribute>
+				<editableAttribute showLabel="true">mobileNumber</editableAttribute>
+				<editableAttribute showLabel="true">pagerNumber</editableAttribute>
+				<!-- <editableAttribute showLabel="true">pagerType</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true">pagerId</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true">pagerServiceProvider</editableAttribute> -->
+				<editableAttribute showLabel="true">faxNumber</editableAttribute>
+				<attribute showLabel="true" email="true">email</attribute>
+				<!-- <editableAttribute showLabel="true">property2</editableAttribute> -->				<!-- notes mail server for the IBM customization of Profiles -->
+				<!-- <editableAttribute showLabel="true">property3</editableAttribute> -->				<!-- notes mail domain for the IBM customization of Profiles -->
+				<editableAttribute showLabel="true" email="true">groupwareEmail</editableAttribute>
+				<!-- <editableAttribute showLabel="true" link="true">calendarUrl</editableAttribute> -->
+				<!-- <editableAttribute showLabel="true" link="true">freeBusyUrl</editableAttribute> -->
+				<extensionAttribute showLabel="true" editable="true" extensionIdRef="lifestory"/>
+				<extensionAttribute showLabel="true" editable="true" extensionIdRef="frenchField" displayRules="frRule" />
+			</contactInformation>
+			<associatedInformation>
+				<editableAttribute showLabel="true">blogUrl</editableAttribute>
+				<editableAttribute showLabel="true" richtext="true" hideIfEmpty="true">description</editableAttribute>
+				<editableAttribute showLabel="true" richtext="true">experience</editableAttribute>
+			</associatedInformation>
+		</profileLayout>
+		
+		<profileLayout profileType="cokeIssue">
+			<jobInformation>
+				<attribute appendHtml="&lt;/strong&gt;&lt;br/&gt;" prependHtml="&lt;strong&gt;" showLabel="false">jobResp</attribute>
+				<attribute appendHtml="/" prependHtml="&lt;strong&gt;" showLabel="false">organizationTitle</attribute>
+				<attribute appendHtml="/" showLabel="false">telephoneNumber</attribute>
+				<attribute showLabel="false">countryCode</attribute>
+				<attribute appendHtml="&lt;/strong&gt;&lt;br/&gt;" prependHtml="-" showLabel="false">workLocation.city</attribute>
+				<editableAttribute appendHtml="(mobile)&lt;/strong&gt;&lt;br/&gt;" showLabel="false">mobileNumber</editableAttribute>
+				<attribute email="true" showLabel="false">email</attribute>
+			</jobInformation>
+			<contactInformation>
+				<attribute appendHtml="&lt;/strong>&lt;br/>" hideIfEmpty="true"	prependHtml="&lt;strong>" showLabel="true">displayName</attribute>
+				<editableAttribute showLabel="true">preferredFirstName</editableAttribute>
+				<attribute showLabel="true" labelKey="label.jobInformation.employeeNumber">employeeNumber</attribute>
+				<attribute appendHtml="&lt;br/&gt;" showLabel="true">employeeTypeDesc</attribute>
+				<attribute showLabel="true">faxNumber</attribute>
+				<attribute email="true" showLabel="true">email</attribute>
+				<attribute showLabel="true">bldgId</attribute>
+				<attribute showLabel="true">workLocation.address1</attribute>
+				<attribute showLabel="true">workLocation.city</attribute>
+				<attribute showLabel="true">workLocation.state</attribute>
+				<attribute showLabel="true">workLocation.postalCode</attribute>
+				<attribute showLabel="true">countryCode</attribute>
+				<attribute showLabel="true">deptNumber</attribute>
+				<attribute showLabel="true">departmentTitle</attribute>
+			</contactInformation>
+			<associatedInformation>
+				<editableAttribute showLabel="true" richtext="true" labelKey="label.foobar.desc">description</editableAttribute>
+				<editableAttribute showLabel="true" richtext="true" hideIfEmpty="true">experience</editableAttribute>
+			</associatedInformation>
+		</profileLayout>
+		
+	    <profileLayout profileType="teacher">
+	      <jobInformation>
+	        <attribute showLabel="false" appendHtml="&lt;br/&gt;">organizationTitle</attribute>
+	        <attribute showLabel="false" appendHtml="&lt;br/&gt;">employeeTypeDesc</attribute>
+	        <editableAttribute showLabel="false" appendHtml="&lt;br/&gt;">jobResp</editableAttribute>
+	        <attribute showLabel="false" appendHtml=", ">workLocation.city</attribute>
+	        <attribute showLabel="false">workLocation.state</attribute>
+	      </jobInformation>
+	      <contactInformation>
+	        <editableAttribute showLabel="true" disabled="true">displayName</editableAttribute>
+	        <editableAttribute showLabel="true">preferredFirstName</editableAttribute> 
+	        <editableAttribute showLabel="true">bldgId</editableAttribute>
+	        <editableAttribute showLabel="true" email="true">groupwareEmail</editableAttribute>
+	        <extensionAttribute showLabel="true" editable="true" extensionIdRef="spokenLanguages"/>
+	        <extensionAttribute showLabel="true" extensionIdRef="AddSpokenLang"/>
+	      </contactInformation>
+	      <associatedInformation>
+	        <editableAttribute showLabel="true">blogUrl</editableAttribute>
+	        <editableAttribute showLabel="true" richtext="true">description</editableAttribute>
+	        <editableAttribute showLabel="true" richtext="true">experience</editableAttribute>
+	      </associatedInformation>
+	    </profileLayout>
+		
+	    	
+	</layoutConfiguration>
+	<!-- END LAYOUT CONFIGURATION SECTION-->
+	
+	<apiConfiguration>
+		<apiModel profileType="default">
+			<editableApiAttribute>jobResp</editableApiAttribute>
+			<editableApiAttribute>secretaryUid</editableApiAttribute>
+			<!-- <editableApiAttribute>secretaryUid</editableApiAttribute> -->
+			<!-- <editableApiAttribute>secretaryEmail</editableApiAttribute> -->
+			<!-- <editableApiAttribute>isManager</editableApiAttribute> -->
+			<!-- <editableApiAttribute>employeeNumber</editableApiAttribute> -->
+			<!-- <editableApiAttribute>managerUid</editableApiAttribute> -->
+			<!-- <editableApiAttribute>shift</editableApiAttribute> -->
+			<!-- <editableApiAttribute>deptNumber</editableApiAttribute> -->
+			<!-- <editableApiAttribute>courtesyTitle</editableApiAttribute> -->
+			<!-- <editableApiAttribute>displayName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>preferredFirstName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>preferredLastName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>alternateLastname</editableApiAttribute> -->
+			<!-- <editableApiAttribute>nativeFirstName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>nativeLastName</editableApiAttribute> -->
+			<!-- <editableApiAttribute>preferredLanguage</editableApiAttribute> -->
+			<editableApiAttribute>bldgId</editableApiAttribute>
+			<editableApiAttribute>floor</editableApiAttribute>
+			<editableApiAttribute>officeName</editableApiAttribute>
+			<editableApiAttribute>telephoneNumber</editableApiAttribute>
+			<editableApiAttribute>ipTelephoneNumber</editableApiAttribute>
+			<editableApiAttribute>mobileNumber</editableApiAttribute>
+			<editableApiAttribute>pagerNumber</editableApiAttribute>
+			<!-- <editableApiAttribute>pagerType</editableApiAttribute> -->
+			<!-- <editableApiAttribute>pagerId</editableApiAttribute> -->
+			<!-- <editableApiAttribute>pagerServiceProvider</editableApiAttribute> -->
+			<editableApiAttribute>faxNumber</editableApiAttribute>
+			<editableApiAttribute>groupwareEmail</editableApiAttribute>
+			<!-- <editableApiAttribute>calendarUrl</editableApiAttribute> -->
+			<!-- <editableApiAttribute>freeBusyUrl</editableApiAttribute> -->
+			<editableApiAttribute>blogUrl</editableApiAttribute>
+			<editableApiAttribute>description</editableApiAttribute>
+			<editableApiAttribute>experience</editableApiAttribute>
+			
+			<!-- This attribute is required by the profile links feature -->
+			<editableApiExtensionAttribute extensionIdRef="profileLinks"/>
+			
+			<!-- Needed to make timezone editable in UI -->
+			<editableApiAttribute>timezone</editableApiAttribute>
+			
+			
+			<hiddenApiAttribute>email</hiddenApiAttribute>
+			<hiddenApiAttribute>pagerType</hiddenApiAttribute>
+			<hiddenApiExtensionAttribute extensionIdRef="AddSpokenLang"/>
+		</apiModel>
+	</apiConfiguration>
+  		
+	<!--  CACHE CONFIG START -->
+	<caches>
+		<fullReportsToChainCache>
+			<enabled>true</enabled>
+			<size>500</size>
+			<refreshTime>23:00</refreshTime> <!-- 24 hour time -->
+			<refreshInterval>1440</refreshInterval> <!-- minutes -->
+			<startDelay>5</startDelay> <!-- minutes -->
+			<ceouid>CEO_UID</ceouid> <!-- the uid of the top of the org structure pyramid-->
+		</fullReportsToChainCache>
+		<miniReportsToChainCache>
+			<enabled>true</enabled>
+			<size>485000</size> <!-- the expected number of entries in the mini reports to cache -->
+			<refreshTime>23:30</refreshTime> <!-- 24 hour time -->
+			<refreshInterval>1440</refreshInterval> <!-- minutes -->
+			<startDelay>10</startDelay> <!-- minutes -->
+			<filePath>${PROFILES_CACHE_DIR}/cache/reportsToData.txt</filePath>
+		</miniReportsToChainCache>
+		<profileObjectCache>
+			<refreshTime>22:30</refreshTime> <!-- 24 hour time -->
+			<refreshInterval>1440</refreshInterval> <!-- minutes -->
+			<startDelay>10</startDelay> <!-- minutes -->
+		</profileObjectCache>
+	</caches>	
+	<!--  CACHE CONFIG END -->	
+	
+	<!--  DATA ACCESS CONFIG START -->
+	<dataAccess>
+		<!-- indicates if organizational data is available (i.e. managerUid) -->
+		<organizationalStructureEnabled enabled="true"/>
+		
+		<!-- indicates which fields need to be resolved before being displayed -->
+        <!-- WARNING: in most deployments the resolvedCodes section should not be modified -->
+		<resolvedCodes>
+			<resolvedCode>workLocationCode</resolvedCode>
+			<resolvedCode>orgId</resolvedCode>
+			<resolvedCode>employeeTypeCode</resolvedCode>
+			<resolvedCode>countryCode</resolvedCode>
+			<resolvedCode>departmentCode</resolvedCode>
+		</resolvedCodes>
+		<!-- search preferences -->
+        <!-- WARNING: in most deployments the departmentSearchOnCode, departmentSearchOnCode, -->
+        <!-- and locationSearchOnCode should not be modified -->
+		<search>
+			<departmentSearchOnCode>false</departmentSearchOnCode>
+			<departmentField>organization</departmentField>
+			<locationSearchOnCode>false</locationSearchOnCode>
+			<maxRowsToReturn>250</maxRowsToReturn>
+			<pageSize>10</pageSize>
+			<firstNameSearch enabled="false" />
+			<kanjiNameSearch enabled="true" default="false" />			
+		</search>
+		
+		<!-- Directory integration configuration -->
+		<directory>
+			<!-- 
+				Specifies the profiles field that is used to resolve person records via WALTZ / Javelin 
+			-->
+			<lconnUserIdField>uid</lconnUserIdField>
+			
+			<!-- 
+				Lists fields that will be used to resolve logins against
+			 -->
+			<loginAttributes>
+				<loginAttribute>uid</loginAttribute>
+				<loginAttribute>email</loginAttribute>
+				<loginAttribute>loginId</loginAttribute>
+			</loginAttributes>
+			
+			<deferLoginResolution enabled="false"/>
+		</directory>
+		
+		<allowJsonpJavelin enabled="false"/>
+		
+		<!-- 
+			Untested/non-'supported' feature that adds 'simple' extension attributes to javelin JS for
+			implementors that manually edit javelin card JSP.
+		-->
+		<includeExtensionsInJavelinJS enabled="true"/>
+		
+		<!-- 
+			
+		 -->
+		<nameOrdering enabled="true"/>
+	</dataAccess>	
+	<!--  DATA ACCESS CONFIG END -->
+	
+	<!-- STATISTICS CONFIG START -->
+	<statistics enabled="true">
+		<statisticsFilePath>logs/profilesStatistics</statisticsFilePath>
+		<statisticsFileName>profilesStats</statisticsFileName>
+	</statistics>
+	<!-- STATISTICS CONFIG END -->
+		
+	<acf enabled="true"/>
+    <sametimeAwareness enabled="false"/>	
+	<tagOthers enabled="false"/>
+	<javelinGWMailSearch enabled="true"/>
+	
+	<properties>
+		<property name="foo" value="bar"/>
+		<property name="com.ibm.lconn.profiles.config.JsDebuggingEnabled" value="true"/>
+	</properties>
+	
+	<!-- BOARD UI ENABLEMENT -->
+	<board enabled="true"/>
+	<boardInProfileHome enabled="true" />
+	<boardInProfileView enabled="true" />
+	<statusUpdatesInProfileView enabled="true" />
+</config>

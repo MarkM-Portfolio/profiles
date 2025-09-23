@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2001, 2012                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<tdiConfig id="tdi-profiles"
+	xmlns="http://www.ibm.com/profiles-config"
+	xmlns:tns="http://www.ibm.com/profiles-config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ibm.com/profiles-config profiles-config.xsd">
+	<profileExtensionAttributes>
+		<xmlFileAttribute extensionId="profileLinks" schemaFile="profile-links.xsd" indexBindingExpr="/linkroll/link/@name | /linkroll/link/@url" >
+			<indexFields>
+			    <indexField fieldName="linkName" fieldExpr="/linkroll/link/@name" />
+			</indexFields>
+		</xmlFileAttribute>				
+		<simpleAttribute extensionId="tieline" length="16" pattern="\d\d\d\-\d\d\d\d"/>
+		<simpleAttribute extensionId="spokenLanguages" length="64"/>
+		<simpleAttribute extensionId="AddSpokenLang" length="64" userLabel="Spoken Languages" userTypeString="string" sourceKey="spokenLang"/>
+		<simpleAttribute extensionId="property1" length="16" pattern="\d\d\d\-\d\d\d\d"/>
+		<richtextAttribute extensionId="lifestory" maxBytes="4096"/>
+		<simpleAttribute extensionId="schoolName" length="128"/>
+		<simpleAttribute extensionId="frenchField" length="128"/>
+	</profileExtensionAttributes>
+
+    	<properties>
+		<property name="profiles.events.system.ignore" value="true" /> 
+    	</properties>
+
+</tdiConfig>

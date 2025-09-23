@@ -1,0 +1,23 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- IBM Confidential                                                  -->
+<!--                                                                   -->
+<!-- OCO Source Materials                                              -->
+<!--                                                                   -->
+<!-- Copyright IBM Corp. 2010, 2013                                    -->
+<!--                                                                   -->
+<!-- The source code for this program is not published or otherwise    -->
+<!-- divested of its trade secrets, irrespective of what has been      -->
+<!-- deposited with the U.S. Copyright Office.                         -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+
+<component name="profiles.events.publish.ejb" project-type="ejb" description="Development only stub for WebSphere in RAD" spec-version="3.0"
+	build-version="3.0" owner="Clayton Coleman" owner-email="claycole@us.ibm.com">
+
+   <output-group name="to_ear">
+      <output type="jar" visibility="public" platform="all" location="${env.LWP_COMP_BUILD}/lib/lc.events.publish.jar" preferredInstallLocation="/" />
+   </output-group>
+
+    <dependency name="lc.events.30/publish" type="jar" version="3.0" />
+</component>
